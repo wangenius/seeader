@@ -1,0 +1,28 @@
+html{
+    scroll-behavior: smooth;
+}
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100%;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.draggable {
+    -webkit-app-region: drag;
+}
+@font-face {
+    font-display:block;
+    font-family: "Noto_Light";
+    src: url("./style/Noto/NotoSans-Light.ttf");
+}
+
+@font-face {
+    font-display:block;
+    font-family: "Noto_Medium";
+    src: url("./style/Noto/NotoSans-Medium.ttf");
+}

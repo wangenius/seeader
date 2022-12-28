@@ -1,0 +1,1 @@
+{"version":3,"file":"render.js","sourceRoot":"","sources":["../../../electron/render/render.ts"],"names":[],"mappings":";;;AAAA,IAAM,EAAE,GAAG,OAAO,CAAC,IAAI,CAAC,CAAC;AAEzB,SAAgB,QAAQ,CAAC,IAAY;IACnC,EAAE,CAAC,QAAQ,CAAC,IAAI,EAAE,UAAC,GAAQ,EAAE,IAAY;QACvC,OAAO,CAAC,GAAG,CAAC,cAAc,CAAC,CAAC;IAC9B,CAAC,CAAC,CAAC;AACL,CAAC;AAJD,4BAIC"}
