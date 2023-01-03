@@ -1,0 +1,13 @@
+{
+  "name": "this_root",
+  "version": "1.0.0",
+  "description": "this project",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "wangenius",
+  "license": "ISC",
+  "type": "commonjs"
+}

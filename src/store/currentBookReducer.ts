@@ -1,6 +1,3 @@
-import { ThemePrototype, ThemeStandard } from "../context/ThemeProvider";
-import { Book } from "../context/BookProvider";
-
 interface book {
   type: string;
   book: Book;

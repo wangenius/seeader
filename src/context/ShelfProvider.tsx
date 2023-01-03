@@ -1,75 +1,143 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { ElementProps } from "../interface";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { changeBookStore } from "../store/currentBookReducer";
+import React, { ReactNode, useContext, useState } from "react";
 import { useEffectOnce } from "react-use";
-const path = window.require("path");
-const fs = window.require("fs");
-const iconvLite = window.require("iconv-lite");
-const { BrowserWindow, dialog, Menu, MenuItem, getCurrentWindow } =
-  window.require("@electron/remote");
-
-interface ShelfBook {
-  name: string;
-  path: string;
-  progress: number;
-}
+import { useSnackbar } from "notistack";
+import { err, voidFn } from "../method/general";
+import { jsonParse, pathParser, textDecode } from "../method/parser";
+import { ElementProps } from "elementProperty";
+import { Dialog, FileInter } from "../method/Invoke";
+import { feedState, PATH_CONS } from "../constant/state";
 
 const booksInit: ShelfBook[] = [];
 
 const ShelfContext = React.createContext({
   books: booksInit,
   addBook: () => {},
+  updateBook: (book: ShelfBook) => {
+    console.log(book);
+  },
+  deleteBook: (book: ShelfBook) => {
+    console.log(book);
+  },
+  exportShelf: voidFn,
+  backUpBook: voidFn,
 });
 
+interface bookshelfJson {
+  books: ShelfBook[];
+  name: string;
+}
+
 export const ShelfProvider = ({ children }: ElementProps) => {
-  const dispatch = useAppDispatch();
   const [books, setBooks] = useState<ShelfBook[]>(booksInit);
-  const reg =
-    /((?<=\s|\S+|\d+)【\S+】)|((?<=^|\s)第\S{1,5}章\S*\s)|((?<=^|\s)\d+.\d+\s)/g;
-  const regCheck =
-    /(【\S+】)|((?<=^|\s)第\S{1,5}章\S*\s)|((?<=^|\s)\d+.\d+\s)/g;
+  const { enqueueSnackbar } = useSnackbar();
+  useEffectOnce(loadBooks);
 
-  useEffectOnce(init);
-
-  function init() {
-    fs.readFile("bookshelf.json", (err: any, data: string) => {
-      if (err || data.length === 0)
-        return fs.writeFileSync(
-          "bookshelf.json",
+  function loadBooks() {
+    FileInter.read(PATH_CONS.bookshelfJsonPath)
+      .then((buffer) => {
+        setBooks(jsonParse(textDecode(buffer)).books);
+      })
+      .catch(() => {
+        return FileInter.save(
+          PATH_CONS.bookshelfJsonPath,
           JSON.stringify({ name: "", books: [] })
         );
-      setBooks(JSON.parse(data).books);
-    });
+      });
   }
 
   async function addBook() {
-    const res = dialog.showOpenDialogSync({
-      title: "添加", // 对话框窗口的标题
-      filters: [
-        { name: "txt", extensions: ["txt"] },
-        { name: "All Files", extensions: ["*"] },
-      ],
-    });
-    if (res === undefined) throw "false";
     try {
-      let newBook = {
-        name: path.parse(res[0]).name,
-        path: res[0],
+      const res = await Dialog.select({
+        title: "添加书籍",
+        filters: [
+          { name: "txt", extensions: ["txt"] },
+          { name: "All Files", extensions: ["*"] },
+        ],
+      });
+      if (res.canceled) err("取消选择");
+      let obj: bookshelfJson = jsonParse(
+        textDecode(await FileInter.read(PATH_CONS.bookshelfJsonPath))
+      );
+      let newBook: ShelfBook = {
+        name: pathParser(res.filePaths[0]).name,
+        path: res.filePaths[0],
         progress: 0,
       };
-      fs.readFile("bookshelf.json", (err: any, data: string) => {
-        let obj: { name: string; books: ShelfBook[] } = { name: "", books: [] };
-        if (err) {
-          obj.books.push(newBook);
-          return fs.writeFileSync("bookshelf.json", JSON.stringify(obj));
-        }
-        obj = JSON.parse(data);
-        obj.books.push(newBook);
-        fs.writeFileSync("bookshelf.json", JSON.stringify(obj));
-      });
+      for (let i = 0; i < obj.books.length; i++)
+        if (obj.books[i].path === newBook.path) err("已经添加过该书籍。");
+      obj.books.push(newBook);
+      await FileInter.save(PATH_CONS.bookshelfJsonPath, JSON.stringify(obj));
+      loadBooks();
+      enqueueSnackbar("添加成功。", feedState.SUCCESS);
     } catch (e) {
-      console.log(e);
+      enqueueSnackbar(e as string, feedState.ERROR);
+    }
+  }
+
+  async function updateBook(targetBook: ShelfBook) {
+    try {
+      let result = books;
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].path === targetBook.path) {
+          result[i] = targetBook;
+          break;
+        }
+      }
+      console.log(result.length);
+      if (result.length === 0) err();
+      await FileInter.save(
+        PATH_CONS.bookshelfJsonPath,
+        JSON.stringify({ name: "", books: result })
+      );
+      loadBooks();
+    } catch (e) {
+      enqueueSnackbar(e as string, feedState.ERROR);
+    }
+  }
+
+  async function deleteBook(targetBook: ShelfBook) {
+    let result = books;
+    for (let i = 0; i < result.length; i++) {
+      if (result[i].path === targetBook.path) {
+        result.splice(i, 1);
+        break;
+      }
+    }
+    await FileInter.save(
+      PATH_CONS.bookshelfJsonPath,
+      JSON.stringify({ name: "", books: result })
+    );
+    enqueueSnackbar("删除成功", { variant: "success" });
+    loadBooks();
+  }
+
+  async function exportShelf() {
+    try {
+      const res = await Dialog.save("bookshelf.json");
+      if (res.canceled) err("已取消导出");
+      const path = res.filePath as string;
+      await FileInter.copy(PATH_CONS.bookshelfJsonPath, path);
+      enqueueSnackbar("导出成功", { variant: "success" });
+    } catch (e) {
+      enqueueSnackbar(e as string, { variant: "error" });
+    }
+  }
+
+  async function backUpBook() {
+    try {
+      const res = await Dialog.directory();
+      if (res.canceled) err("已取消备份");
+      console.log(res.filePaths[0]);
+      for (let i = 0; i < books.length; i++) {
+        await FileInter.copy(
+          books[i].path,
+          res.filePaths[0] + `\\${books[i].name}.txt`
+        );
+      }
+      enqueueSnackbar("备份成功", { variant: "success" });
+    } catch (e) {
+      let t = e as { [propsName: string]: any };
+      enqueueSnackbar(t.message, { variant: "error" });
     }
   }
 
@@ -78,6 +146,10 @@ export const ShelfProvider = ({ children }: ElementProps) => {
       value={{
         books,
         addBook,
+        updateBook,
+        deleteBook,
+        exportShelf,
+        backUpBook,
       }}
     >
       {children as ReactNode}
@@ -85,11 +157,4 @@ export const ShelfProvider = ({ children }: ElementProps) => {
   );
 };
 
-export function useShelf() {
-  const { books, addBook } = useContext(ShelfContext);
-
-  return {
-    books: books,
-    addBook: addBook,
-  };
-}
+export const useShelf = () => useContext(ShelfContext);

@@ -1,16 +1,22 @@
-import { SxProps } from "@mui/system";
+const Z_INDEX = {
+  BODY: 0,
+  HEADER: 300,
+  MODAL: 600,
+  POP: 800,
+  SNACKBAR: 1000,
+};
+const HEIGHT_VALUE = {
+  HEADER: 34,
+};
+const CLASSNAMES = {
+  MENU_ANCHOR: "MENU_ANCHOR",
+  MENU_SUB_ANCHOR: "MENU_SUB_ANCHOR",
+  MENU_ITEM: "MENU_ITEM",
+  BUTTON: "BUTTON",
+};
 
-export type Style<Theme extends object = {}> = SxProps<Theme>;
-export type Styles<Theme extends object = {}> = Style<Theme>[];
-
-export function sxAssigner(sxList: Styles, newSx: any): [] {
-  let result: [];
-  if (newSx === undefined) return sxList as [];
-  result = sxList.concat([...(Array.isArray(newSx) ? newSx : [newSx])]) as [];
-  return result;
-}
-
-export const scrollbarSx: Style = {
+export { Z_INDEX, HEIGHT_VALUE, CLASSNAMES };
+export const scrollbarSx: Style.SX = {
   "::-webkit-scrollbar": {
     display: "block",
     width: "18px",
@@ -33,8 +39,7 @@ export const scrollbarSx: Style = {
     border: "solid 4px transparent",
   },
 };
-
-export const AppSx: Style = {
+export const AppSx: Style.SX = {
   height: "100vh",
   width: "100vw",
   maxWidth: "100vw",
@@ -42,8 +47,7 @@ export const AppSx: Style = {
   overflow: "hidden",
   position: "relative",
 };
-
-export const overFlowY: Style = {
+export const overFlowY: Style.SX = {
   overflowY: "scroll",
   transition: "all 300ms ease",
   scrollBehavior: "smooth",

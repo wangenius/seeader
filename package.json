@@ -1,60 +1,86 @@
 {
-  "name": "my-app",
-  "version": "0.2.0",
-  "author": "Your Name",
-  "description": "React-TypeScript-Electron sample with Create React App and Electron Builder",
+  "name": "seeader",
+  "version": "1.0.0",
+  "author": "wangenius",
   "homepage": ".",
   "main": "build/electron/main.js",
+  "description": "txt book reader",
   "license": "UNLICENSED",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "postinstall": "electron-builder install-app-deps",
-    "electron:dev": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://127.0.0.1:3000 && tsc -p electron -w\" \"wait-on http://127.0.0.1:3000 && tsc -p electron && electron .\"",
-    "electron:build": "yarn build && tsc -p electron && electron-builder",
-    "eject": "react-scripts eject"
+    "package": "tsc -p electron && electron-builder",
+    "devStart": "concurrently \"cross-env BROWSER=none npm run start\" \"wait-on http://127.0.0.1:3000 && tsc -p electron -w\" \"wait-on http://127.0.0.1:3000 && tsc -p electron && electron .\"",
+    "buildAndPackage": "npm run build && tsc -p electron && electron-builder"
   },
   "dependencies": {
     "@electron/remote": "^2.0.9",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@mui/base": "^5.0.0-alpha.112",
     "@mui/icons-material": "^5.11.0",
     "@mui/system": "^5.11.1",
     "@react-spring/web": "^9.6.1",
+    "@reduxjs/toolkit": "^1.9.1",
+    "@types/nedb": "^1.8.12",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
+    "history": "^5.3.0",
+    "i18next": "^22.0.5",
     "iconv-lite": "^0.6.3",
+    "jschardet": "^3.0.0",
+    "notistack": "^2.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hotkeys-hook": "^4.3.2",
+    "react-redux": "^8.0.4",
+    "react-router": "^6.6.1",
     "react-router-dom": "^6.4.2",
     "react-scripts": "^5.0.1",
-    "typescript": "^4.9.3",
-    "react-redux": "^8.0.4",
+    "react-spring": "^9.5.5",
     "react-use": "^17.4.0",
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
-    "@reduxjs/toolkit": "^1.9.1",
-    "notistack": "^2.0.8",
-    "react-spring": "^9.5.5",
-    "i18next": "^22.0.5"
+    "typescript": "^4.9.3"
   },
   "devDependencies": {
     "concurrently": "^7.5.0",
     "cross-env": "^7.0.3",
     "electron": "^22.0.0",
     "electron-builder": "^23.6.0",
+    "electron-packager": "^17.1.1",
     "wait-on": "^6.0.1"
   },
   "build": {
+    "productName": "seeader",
+    "appId": "com.wangenius.seeader",
     "extends": null,
     "files": [
       "build/**/*"
     ],
     "directories": {
+      "output": "output",
       "buildResources": "assets"
+    },
+    "win": {
+      "icon": "public/icon.ico",
+      "target": [
+        {
+          "target": "nsis"
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./public/icon.ico",
+      "createDesktopShortcut": true,
+      "shortcutName": "seeader"
     }
   },
   "browserslist": {

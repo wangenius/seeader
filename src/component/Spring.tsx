@@ -1,18 +1,7 @@
 import { animated, useSpring } from "@react-spring/web";
 import { forwardRef, ReactNode } from "react";
-import { ElementProps } from "../interface";
-
-export interface AnimatedProps extends ElementProps {
-  onExit: () => void;
-  onEnter: () => void;
-  delay?: number | undefined;
-  open: boolean;
-  from?: Function | {};
-  to?: Function | {};
-  config?: {};
-  pause?: boolean;
-  loop?: boolean | Function;
-}
+import { styled } from "@mui/system";
+import { AnimatedProps } from "elementProperty";
 
 export const Spring = forwardRef((props: AnimatedProps, ref: any) => {
   const {
@@ -29,7 +18,13 @@ export const Spring = forwardRef((props: AnimatedProps, ref: any) => {
       opacity: open ? 1 : 0,
     },
     config = { duration: 200 },
+    cssString = "",
   } = props;
+
+  const AnimatedContainer = styled(animated.div)`
+    ${cssString}
+  `;
+
   const style = useSpring({
     from: from,
     to: to,
@@ -44,8 +39,19 @@ export const Spring = forwardRef((props: AnimatedProps, ref: any) => {
     },
   });
   return (
-    <animated.div ref={ref} style={style}>
+    <AnimatedContainer ref={ref} style={style}>
       {children as ReactNode}
-    </animated.div>
+    </AnimatedContainer>
   );
 });
+
+export const SpringContainer = forwardRef(
+  (props: { [propsName: string]: any }, ref: any) => {
+    const { style, children, ...other } = props;
+    return (
+      <animated.div ref={ref} style={style} {...other}>
+        {children as ReactNode}
+      </animated.div>
+    );
+  }
+);

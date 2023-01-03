@@ -1,141 +1,163 @@
-import { ElementProps } from "../interface";
-import { forwardRef, useEffect, useRef, useState } from "react";
-import { AirDrop, Container } from "../component/Container";
-import { Button } from "../component/Button";
-import { overFlowY, scrollbarSx, sxAssigner } from "../style/sx";
-import { ListButtonValue, ListContainer } from "../component/List";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
+import { Hangover, Container } from "../component/Container";
+import { IconButton } from "../component/Button";
+import { ListContainer } from "../component/List";
 import { useTheme } from "../context/ThemeProvider";
 import { useBook } from "../context/BookProvider";
-const { shell } = window.require("electron");
-const fs = window.require("fs");
-const iconvLite = window.require("iconv-lite");
-interface ArticleProps extends ElementProps {
-  children?: string;
-}
+import { useMeasure, useWindowSize } from "react-use";
+import { Edit, MyLocation } from "@mui/icons-material";
+import { Divider } from "../component/Accessory";
+import { useSnackbar } from "notistack";
+import { SpringContainer } from "../component/Spring";
+import { useSpring } from "@react-spring/web";
+import { ElementProps, ListButtonValue } from "elementProperty";
+import { overFlowY, scrollbarSx } from "../constant/theme";
+import { sxParser } from "../method/parser";
 
-export const Article = forwardRef((props: ArticleProps, ref) => {
-  const textRef = useRef<any>();
+export const Article = forwardRef((props: ElementProps, ref) => {
   const ContentRef = useRef<any>();
   const { theme } = useTheme();
   const [listItems, setListItems] = useState<ListButtonValue[]>([]);
-  const { book, changeCurrentChapter, currentChapter } = useBook();
-  const [index, setIndex] = useState(currentChapter);
-
+  const { book, changeCurrentChapter, chapterDocker } = useBook();
+  const [outRef, { height }] = useMeasure();
+  const { width } = useWindowSize();
+  const [animateInit, setAnimateInit] = useState(chapterDocker ? 250 : 0);
+  const [contentWidth, setContentWidth] = useState<number>();
   useEffect(() => {
+    setContentWidth(width - 250);
+  }, [width]);
+  const { enqueueSnackbar } = useSnackbar();
+  useEffect(() => changeChapters(book.chapters), [book.chapters]);
+  useEffect(() => ContentRef.current.scroll(0, 0), [book.progress]);
+  const chapterBar_sx: Style.SXs = [
+    {
+      paddingLeft: "18px",
+      height: "100%",
+      width: 250,
+      borderRightColor: theme.palette.container.focus,
+      borderRightWidth: 0.5,
+      borderRightStyle: "solid",
+    },
+  ];
+  const content_sx: Style.SXs = [
+    {
+      pl: 1.5,
+      justifyContent: "left",
+      backgroundColor: theme.palette.background.main,
+      height: "100%",
+      overflowY: "scroll",
+      transition: "all 300ms ease",
+      scrollBehavior: "smooth",
+      scrollbarWidth: "8px",
+      position: "relative",
+      boxShadow: "rgba(0, 0, 0, 0.54)" + "0px 0px 60px -20px",
+    },
+  ];
+  const chapterBarTitle_sx = {
+    lineHeight: "60px",
+    maxWidth: "70%",
+    height: 60,
+    pl: 2,
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    fontSize: "1.4rem",
+  };
+  const contentParagraph_sx = {
+    mt: 1,
+    textIndent: "2rem",
+    fontSize: "1rem",
+    lineHeight: "1.6rem",
+  };
+
+  function changeChapters(chapters: Chapter[]) {
     let lists: ListButtonValue[] = [];
-    for (let i = 0; i < book.chapters.length; i++) {
+    for (let i = 0; i < chapters.length; i++) {
       lists.push({
         index: i,
         startIcon: i + 1,
-        label: book.chapters[i].title,
-        onClick: () => {
-          changeCurrentChapter(i);
-        },
+        label: chapters[i].title,
+        onClick: () => changeCurrentChapter(i),
       });
     }
     setListItems(lists);
-  }, [book.chapters]);
-
-  useEffect(() => {
-    ContentRef.current.scroll(0, 0);
-  }, [currentChapter]);
+  }
 
   const text = (): string[] => {
     let result: string[] = [];
-    book.chapters[currentChapter]?.content.split(/\r\n|\n/).map((item, key) => {
+    book.chapters[book.progress]?.content.split(/\r\n|\n/).map((item, key) => {
       result.push(item.replace(/(^\s+)|(\s+$)/g, "").replace(/\s/g, ""));
     });
     return result;
   };
 
-  return (
-    <>
-      <Container
-        sx={sxAssigner(
-          [
-            {
-              height: "100%",
-              width: 250,
-              borderRightColor: theme.palette.container.focus,
-              borderRightWidth: 0.5,
-              borderRightStyle: "solid",
-            },
-          ],
-          overFlowY
-        )}
-        flex
-        col
-      >
-        <Container
-          sx={{
-            width: "100%",
-            whiteSpace: "nowrap",
-            textOverflow: "ellipsis",
-            my: 2,
-            ml: 5,
-          }}
-        >
-          {"目录"}
-        </Container>
-        <AirDrop sx={{ width: "100%" }}>
-          <ListContainer index={currentChapter} listItems={listItems} />
-        </AirDrop>
-      </Container>
-      <AirDrop
-        sx={sxAssigner(
-          [
-            {
-              height: "100%",
-              overflowY: "scroll",
-              transition: "all 300ms ease",
-              scrollBehavior: "smooth",
-              scrollbarWidth: "8px",
-              position: "relative",
-            },
-          ],
-          scrollbarSx
-        )}
-        ref={ContentRef}
-      >
-        <Container sx={{ m: 4, fontSize: "1.52rem" }}>
-          {book.chapters[currentChapter]?.title}
-        </Container>
-        <Container
-          full
-          sx={{
-            borderBottom: `1px solid ${theme.palette.container.focus}`,
-            mb: 2,
-          }}
-        ></Container>
+  const style = useSpring({
+    from: { width: animateInit, height: "100%" },
+    to: {
+      width: chapterDocker ? 250 : 0,
+    },
+    config: {},
+    delay: 0,
+    loop: false,
+  });
 
-        <Container ref={ref} sx={{ textAlign: "justify", px: 3 }}>
-          {text().map((it, keys) => {
-            return (
-              <Container sx={{ mt: 1, textIndent: "2rem" }} key={keys}>
-                {it}
-              </Container>
-            );
-          })}
-          <Container flex col sx={{ position: "fixed", bottom: 60, right: 30 }}>
-            {/*<Button*/}
-            {/*  label={"目录"}*/}
-            {/*  onClick={() => {*/}
-            {/*    setOpenContent((pre) => !pre);*/}
-            {/*  }}*/}
-            {/*/>*/}
-            <Button
-              open={currentChapter !== 0}
-              label={"上一章"}
-              onClick={() => changeCurrentChapter(currentChapter - 1)}
+  return (
+    <Container open={book.path !== ""} ref={outRef} flexLayout full vertex>
+      <SpringContainer style={style}>
+        <Container sx={sxParser(chapterBar_sx, overFlowY)}>
+          <Container sx={{ height: 60 }} full flexLayout>
+            <Container sx={chapterBarTitle_sx}>{book.name}</Container>
+            <Hangover />
+            <IconButton
+              sx={{ mr: 2 }}
+              icon={<MyLocation />}
+              onClick={() =>
+                enqueueSnackbar("暂未开放该功能", {
+                  variant: "warning",
+                })
+              }
             />
-            <Button
-              open={currentChapter !== book.chapters.length - 1}
-              label={"下一章"}
-              onClick={() => changeCurrentChapter(currentChapter + 1)}
+            <IconButton
+              sx={{ mr: 2 }}
+              icon={<Edit />}
+              onClick={() =>
+                enqueueSnackbar("暂未开放该功能", {
+                  variant: "warning",
+                })
+              }
             />
           </Container>
+          <ListContainer
+            sx={{ width: "100%", height: height - 60 }}
+            activeIndex={book.progress}
+            listItems={listItems}
+          />
         </Container>
-      </AirDrop>
-    </>
+      </SpringContainer>
+
+      <Container full sx={sxParser(content_sx, scrollbarSx)} ref={ContentRef}>
+        <Container flexLayout col full>
+          <Container
+            ref={ref}
+            sx={{
+              m: 2,
+              width: width - (chapterDocker ? 250 : 0),
+              maxWidth: 900,
+              textAlign: "justify",
+              px: 3,
+              fontSize: "1.62rem",
+            }}
+          >
+            <Container>{`第${book.progress + 1}章`}</Container>
+            {book.chapters[book.progress]?.title}
+            <Divider />
+            {text().map((it, keys) => (
+              <Container sx={contentParagraph_sx} key={keys}>
+                {it}
+              </Container>
+            ))}
+          </Container>
+        </Container>
+      </Container>
+    </Container>
   );
 });

@@ -1,10 +1,3 @@
-import { ThemePrototype, ThemeStandard } from "./ThemeProvider";
-
-export const colorPalette = {
-  white: "#fff",
-  black: "#000",
-};
-
 export const DefaultTheme: ThemeStandard = {
   mode: "default",
   breakpoints: {

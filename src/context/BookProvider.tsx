@@ -1,26 +1,15 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { ElementProps } from "../interface";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { changeBookStore } from "../store/currentBookReducer";
-
-const path = window.require("path");
-
-const fs = window.require("fs");
-const iconvLite = window.require("iconv-lite");
-const { BrowserWindow, dialog, Menu, MenuItem, getCurrentWindow } =
-  window.require("@electron/remote");
-interface Chapter {
-  index: number;
-  title: string;
-  content: string;
-}
-
-export interface Book {
-  name: string;
-  path: string;
-  chapters: Chapter[];
-  progress: number;
-}
+import { useShelf } from "./ShelfProvider";
+import { useNavigate } from "react-router-dom";
+import { bufferDecode } from "../method/parser";
+import { useSnackbar } from "notistack";
+import { useHotkeys } from "react-hotkeys-hook";
+import { voidFn } from "../method/general";
+import { usePath } from "../hook/usePath";
+import { ElementProps } from "elementProperty";
+import { FileInter } from "../method/Invoke";
 
 const bookInit: Book = {
   name: "",
@@ -31,32 +20,89 @@ const bookInit: Book = {
 
 const BookContext = React.createContext({
   book: bookInit,
-  changBook: (book: Book) => {},
-  openBook: () => {},
-  changeCurrentChapter: (index: number) => {},
-  currentChapter: 0,
+  openBook: voidFn,
+  nextPage: voidFn,
+  lastPage: voidFn,
+  changeCurrentChapter: voidFn,
+  toggleChapterDocker: voidFn,
+  chapterDocker: true,
 });
 
 export const BookProvider = ({ children }: ElementProps) => {
-  const currentBook = useAppSelector((state) => state.currentBook);
   const dispatch = useAppDispatch();
-  const [book, setBook] = useState<Book>(currentBook);
-  const [currentChapter, setCurrentChapter] = useState<number>(0);
+  const nav = useNavigate();
+  const { updateBook } = useShelf();
+  const book = useAppSelector((state) => state.currentBook);
+  const { enqueueSnackbar: snackbar } = useSnackbar();
+  const [chapterDocker, setChapterDocker] = useState<boolean>(
+    localStorage.getItem("chapterDocker") !== null
+  );
+  const [totalIndex, setTotalIndex] = useState(book.chapters.length);
+  const [currentPage, setCurrentPage] = useState<number>(book.progress);
+  const { isReading } = usePath();
+  const { enqueueSnackbar } = useSnackbar();
+  useHotkeys("right", nextPage, {
+    enabled: currentPage < totalIndex - 1 && isReading,
+  });
+  useHotkeys("left", lastPage, { enabled: currentPage > 0 && isReading });
+
   const reg =
     /((?<=\s|\S+|\d+)【\S+】)|((?<=^|\s)第\S{1,5}章\S*\s)|((?<=^|\s)\d+.\d+\s)/g;
   const regCheck =
     /(【\S+】)|((?<=^|\s)第\S{1,5}章\S*\s)|((?<=^|\s)\d+.\d+\s)/g;
 
-  useEffect(() => {
-    setBook(currentBook);
-  }, [currentBook]);
+  function toggleChapterDocker() {
+    setChapterDocker((pre) => {
+      if (!pre) {
+        localStorage.setItem("chapterDocker", "true");
+      } else {
+        localStorage.removeItem("chapterDocker");
+      }
 
-  /** @overview 更改章节*/
-  function changeCurrentChapter(index: number) {
-    setCurrentChapter(index);
+      return !pre;
+    });
   }
 
-  async function generateChapters(text: string) {
+  useEffect(() => {
+    setCurrentPage(book.progress);
+    setTotalIndex(book.chapters.length);
+  }, [book]);
+
+  useEffect(() => {
+    if (currentPage > 0 || currentPage + 1 < book.chapters.length) {
+      dispatch(
+        changeBookStore({
+          name: book.name,
+          path: book.path,
+          chapters: book.chapters,
+          progress: currentPage,
+        })
+      );
+      return;
+    }
+    if (currentPage < 0) {
+      enqueueSnackbar("前面没有内容", { variant: "info" });
+      setCurrentPage(0);
+      return;
+    }
+    if (currentPage + 1 >= book.chapters.length) {
+      enqueueSnackbar("已经到最后一章了", { variant: "info" });
+      setCurrentPage(book.chapters.length - 1);
+      return;
+    }
+  }, [currentPage]);
+
+  function nextPage() {
+    setCurrentPage((prevState) => prevState + 1);
+  }
+  function lastPage() {
+    setCurrentPage((prevState) => prevState - 1);
+  }
+  function changeCurrentChapter(index: number) {
+    setCurrentPage(index);
+  }
+
+  function generateChapters(text: string) {
     const chapterArray2 = text.split(reg).filter(Boolean);
     let arrayItem = {
       index: 0,
@@ -82,43 +128,42 @@ export const BookProvider = ({ children }: ElementProps) => {
     return chaptersList;
   }
 
-  async function openBook() {
-    const res = dialog.showOpenDialogSync({
-      title: "读取文件", // 对话框窗口的标题
-      filters: [
-        { name: "txt", extensions: ["txt"] },
-        { name: "All Files", extensions: ["*"] },
-      ],
-    });
-    if (res === undefined) throw "false";
+  async function openBook(targetBook: ShelfBook) {
     try {
-      const { contents, paths } = parserTextFile(res[0]);
-      const data = await generateChapters(contents);
-
+      /*更新当前书状态*/
+      updateBook({
+        name: book.name,
+        path: book.path,
+        progress: book.progress,
+      });
+      /*打开书*/
+      const res = await FileInter.read(targetBook.path);
+      const text = bufferDecode(res);
+      const data = generateChapters(text);
       dispatch(
         changeBookStore({
-          name: path.parse(paths).name || "未命名",
-          path: paths,
+          name: targetBook.name,
+          path: targetBook.path,
           chapters: data,
-          progress: currentChapter,
+          progress: targetBook.progress,
         })
       );
+      nav("./");
     } catch (e) {
-      console.log(e);
+      let t = e as { [propsName: string]: any };
+      snackbar(t.message, { variant: "error" });
     }
-  }
-
-  async function changBook(book: Book) {
-    setBook(book);
   }
 
   return (
     <BookContext.Provider
       value={{
         book,
-        changBook,
         changeCurrentChapter,
-        currentChapter,
+        nextPage,
+        lastPage,
+        toggleChapterDocker,
+        chapterDocker,
         openBook,
       }}
     >
@@ -127,26 +172,4 @@ export const BookProvider = ({ children }: ElementProps) => {
   );
 };
 
-export function useBook() {
-  const { book, changBook, changeCurrentChapter, currentChapter, openBook } =
-    useContext(BookContext);
-
-  return {
-    book: book,
-    openBook: openBook,
-    changBook: changBook,
-    changeCurrentChapter: changeCurrentChapter,
-    currentChapter: currentChapter,
-  };
-}
-
-const parserTextFile = (path: string): { contents: string; paths: string } => {
-  let contents = fs.readFileSync(path);
-  if (contents[0] === 0xef && contents[1] === 0xbb && contents[2] === 0xbf) {
-    contents = contents.slice(3);
-  } else {
-    contents = iconvLite.decode(contents, "gbk");
-  }
-  contents = contents.toString();
-  return { contents: contents, paths: path };
-};
+export const useBook = () => useContext(BookContext);
