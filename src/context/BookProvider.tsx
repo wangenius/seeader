@@ -1,157 +1,207 @@
 import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { changeBookStore } from "../store/currentBookReducer";
 import { useShelf } from "./ShelfProvider";
 import { useNavigate } from "react-router-dom";
-import { bufferDecode } from "../method/parser";
-import { useSnackbar } from "notistack";
 import { useHotkeys } from "react-hotkeys-hook";
-import { voidFn } from "../method/general";
 import { usePath } from "../hook/usePath";
 import { ElementProps } from "elementProperty";
-import { FileInter } from "../method/Invoke";
+import { Data } from "../method/remote";
+import { bookSlice } from "../store/slice_book";
+import { Container } from "../component/Container";
+import __ from "lodash";
+import { TextInput } from "../component/Input";
+import { useModal } from "./ModalProvider";
+import { useTheme } from "./ThemeProvider";
+import { Book } from "../@types/object";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
-const bookInit: Book = {
-  name: "",
-  path: "",
-  chapters: [],
-  progress: 0,
-};
+interface BookContextProps {
+  book: Book;
+  currentBody: string[];
+  openBook(target?: Book): void;
+  nextPage(): void;
+  lastPage(): void;
+  jumpToPage(index: number): void;
+  modalAddBookmark(content?: string): void;
+  updateBook(book?: Partial<Book>): void;
+  changeBook(pair: Partial<Book>): void;
+  deleteBook(book?: Book): void;
+  modalEditBook(book?: Book): void;
+}
 
-const BookContext = React.createContext({
-  book: bookInit,
-  openBook: voidFn,
-  nextPage: voidFn,
-  lastPage: voidFn,
-  changeCurrentChapter: voidFn,
-  toggleChapterDocker: voidFn,
-  chapterDocker: true,
-});
+// @ts-ignore
+const BookContext = React.createContext<BookContextProps>({});
 
 export const BookProvider = ({ children }: ElementProps) => {
+  const book = useAppSelector((state) => state.book);
   const dispatch = useAppDispatch();
   const nav = useNavigate();
-  const { updateBook } = useShelf();
-  const book = useAppSelector((state) => state.currentBook);
-  const { enqueueSnackbar: snackbar } = useSnackbar();
-  const [chapterDocker, setChapterDocker] = useState<boolean>(
-    localStorage.getItem("chapterDocker") !== null
-  );
-  const [totalIndex, setTotalIndex] = useState(book.chapters.length);
-  const [currentPage, setCurrentPage] = useState<number>(book.progress);
+  const { loadShelf } = useShelf();
   const { isReading } = usePath();
-  const { enqueueSnackbar } = useSnackbar();
+  const { modal, closeModal } = useModal();
+  const [currentBody, setCurrentBody] = useState<string[]>([]);
+  const { theme } = useTheme();
+  const { t } = useTranslation();
+
+  /** 当book改变时，重新加载章节内容 */
+  useEffect(loadChapterBody, [book, book.progress]);
+
   useHotkeys("right", nextPage, {
-    enabled: currentPage < totalIndex - 1 && isReading,
+    enabled: book.progress < book.total - 1 && isReading,
   });
-  useHotkeys("left", lastPage, { enabled: currentPage > 0 && isReading });
 
-  const reg =
-    /((?<=\s|\S+|\d+)【\S+】)|((?<=^|\s)第\S{1,5}章\S*\s)|((?<=^|\s)\d+.\d+\s)/g;
-  const regCheck =
-    /(【\S+】)|((?<=^|\s)第\S{1,5}章\S*\s)|((?<=^|\s)\d+.\d+\s)/g;
+  useHotkeys("left", lastPage, {
+    enabled: book.progress > 0 && isReading,
+  });
 
-  function toggleChapterDocker() {
-    setChapterDocker((pre) => {
-      if (!pre) {
-        localStorage.setItem("chapterDocker", "true");
-      } else {
-        localStorage.removeItem("chapterDocker");
-      }
+  /** @Description 更改当前书籍信息 */
+  const changeBook = async (book: Partial<Book>) =>
+    dispatch(bookSlice.actions.changeBook(book));
 
-      return !pre;
-    });
+  /** @Description 跳转章节 */
+  async function jumpToPage(index: number) {
+    await changeBook({ progress: index });
   }
-
-  useEffect(() => {
-    setCurrentPage(book.progress);
-    setTotalIndex(book.chapters.length);
-  }, [book]);
-
-  useEffect(() => {
-    if (currentPage > 0 || currentPage + 1 < book.chapters.length) {
-      dispatch(
-        changeBookStore({
-          name: book.name,
-          path: book.path,
-          chapters: book.chapters,
-          progress: currentPage,
-        })
-      );
-      return;
-    }
-    if (currentPage < 0) {
-      enqueueSnackbar("前面没有内容", { variant: "info" });
-      setCurrentPage(0);
-      return;
-    }
-    if (currentPage + 1 >= book.chapters.length) {
-      enqueueSnackbar("已经到最后一章了", { variant: "info" });
-      setCurrentPage(book.chapters.length - 1);
-      return;
-    }
-  }, [currentPage]);
 
   function nextPage() {
-    setCurrentPage((prevState) => prevState + 1);
+    dispatch(bookSlice.actions.nextProgress());
   }
   function lastPage() {
-    setCurrentPage((prevState) => prevState - 1);
-  }
-  function changeCurrentChapter(index: number) {
-    setCurrentPage(index);
+    dispatch(bookSlice.actions.lastProgress());
   }
 
-  function generateChapters(text: string) {
-    const chapterArray2 = text.split(reg).filter(Boolean);
-    let arrayItem = {
-      index: 0,
-      title: "",
-      content: "",
-    };
-    let chaptersList: Chapter[] = [];
-    for (let i = 0; i < chapterArray2.length; i++) {
-      if (regCheck.test(chapterArray2[i])) {
-        arrayItem.title = arrayItem.title + chapterArray2[i];
-      } else if (!regCheck.test(chapterArray2[i])) {
-        arrayItem.content = arrayItem.content + chapterArray2[i];
-      }
-      if (
-        i !== 0 &&
-        regCheck.test(chapterArray2[i - 1]) &&
-        !regCheck.test(chapterArray2[i])
-      ) {
-        chaptersList.push(arrayItem);
-        arrayItem = { index: chaptersList.length, title: "", content: "" };
-      }
-    }
-    return chaptersList;
+  /** @description 从数据库中加载书籍信息 */
+  async function loadBook(target?: Book) {
+    const res = await Data.select<Book>("bookshelf", {
+      _id: target?._id || book._id,
+    });
+    await dispatch(bookSlice.actions.switchBook(res[0]));
   }
 
-  async function openBook(targetBook: ShelfBook) {
-    try {
-      /*更新当前书状态*/
-      updateBook({
-        name: book.name,
-        path: book.path,
-        progress: book.progress,
+  /** @Description 打开书籍(1.更新当前书数据库信息 2.加载目标书籍) */
+  async function openBook(target: Book) {
+    await updateBook();
+    await loadBook(target);
+    nav("/");
+  }
+
+  /** @Description 加载书籍正文内容 */
+  function loadChapterBody() {
+    Data.select("bookBody", { _id: book._id }, { [book.progress + 1]: 1 })
+      .then((res) => {
+        let result: string[] = [];
+        res[0][book.progress + 1].content
+          .split(/\r\n|\n/)
+          .map((item: string) => {
+            result.push(item.replace(/(^\s+)|(\s+$)/g, "").replace(/\s/g, ""));
+          });
+        setCurrentBody(result);
+      })
+      .catch((e) => {
+        console.log(e);
       });
-      /*打开书*/
-      const res = await FileInter.read(targetBook.path);
-      const text = bufferDecode(res);
-      const data = generateChapters(text);
-      dispatch(
-        changeBookStore({
-          name: targetBook.name,
-          path: targetBook.path,
-          chapters: data,
-          progress: targetBook.progress,
-        })
-      );
-      nav("./");
+  }
+
+  /** @Description 更新当前数据库信息 无参数时更新当前书籍信息，一个参数时更新目标书籍信息（参数内含有_id），两个参数时更新_id=id的对象信息 */
+  async function updateBook(targetBook?: Partial<Book>, id?: string) {
+    await Data.update<Book>(
+      "bookshelf",
+      { _id: id || targetBook?._id || book._id },
+      targetBook || book
+    );
+    await loadShelf();
+  }
+
+  /** @Description 编辑书籍信息 */
+  async function editBook(pair: Partial<Book>, target?: Book) {
+    /*当编辑书籍是正在阅读书籍时，上传最新书籍信息*/
+    if (target?._id === book._id || !target?._id) await updateBook();
+    /*更新书籍编辑信息*/
+    await updateBook(pair, target?._id || book._id);
+    /*当编辑书籍是正在阅读书籍时，重新加载书籍*/
+    if (target?._id === book._id || !target?._id) await loadBook();
+    toast.success(t("update successfully"));
+  }
+
+  /** @Description 编辑书籍信息，当前仅支持修改标题 */
+  async function modalEditBook(target?: Book) {
+    modal(
+      <Container sx={{ width: 500, height: 300 }}>
+        <TextInput
+          button
+          onClick={async (value) => {
+            await editBook({ name: value }, target);
+            closeModal();
+          }}
+          placeholder={"重命名"}
+          defaultValue={target?.name || book.name}
+        ></TextInput>
+      </Container>
+    );
+  }
+
+  /** @Description 添加书签 */
+  function modalAddBookmark(content?: string) {
+    modal(
+      <>
+        <Container
+          sx={{
+            backgroundColor: "rgba(40,40,40,0.68)",
+            p: 1,
+            mb: 3,
+            mt: 3,
+            overflow: "visible",
+            boxSizing: "border-box",
+            width: 400,
+            height: 110,
+            borderRadius: 2,
+            zIndex: 0,
+            color: "rgb(250,250,250)",
+            backdropFilter: "blur(10px)",
+            ":after": {
+              content: "''",
+              position: "absolute",
+              top: "100%",
+              left: "10%",
+              marginLeft: 0,
+              borderWidth: 12,
+              borderStyle: "solid",
+              borderColor:
+                "rgba(40,40,40,0.68) transparent transparent transparent",
+              zIndex: -1,
+            },
+          }}
+        >
+          {__.truncate(content || window.getSelection()?.toString(), {
+            length: 120,
+          })}
+        </Container>
+        <TextInput
+          sx={{
+            width: 500,
+            borderRadius: 2,
+            backgroundColor: theme.docker.backgroundColor?.default,
+          }}
+          placeholder={"书签内容"}
+          button
+          onClick={(value) => {
+            console.log(value);
+          }}
+        />
+      </>
+    );
+  }
+
+  /** @Description 删除书籍 */
+  async function deleteBook(targetBook?: Book) {
+    try {
+      await Data.remove("bookshelf", { _id: targetBook?._id || book._id });
+      await Data.remove("bookBody", { _id: targetBook?._id || book._id });
+      loadShelf();
+      toast.success(t("delete successfully"));
     } catch (e) {
-      let t = e as { [propsName: string]: any };
-      snackbar(t.message, { variant: "error" });
+      toast(e as string);
     }
   }
 
@@ -159,12 +209,16 @@ export const BookProvider = ({ children }: ElementProps) => {
     <BookContext.Provider
       value={{
         book,
-        changeCurrentChapter,
+        modalAddBookmark,
+        changeBook,
+        updateBook,
+        deleteBook,
         nextPage,
         lastPage,
-        toggleChapterDocker,
-        chapterDocker,
         openBook,
+        jumpToPage,
+        currentBody,
+        modalEditBook,
       }}
     >
       {children as ReactNode}

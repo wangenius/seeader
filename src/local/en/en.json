@@ -1,0 +1,29 @@
+{
+  "zh":"chinese",
+  "language": "language",
+  "theme": "theme",
+  "default": "default",
+  "dark": "dark",
+  "chinese": "chinese",
+  "english": "english",
+  "en": "english",
+
+
+  "settings": "settings",
+  "common": "common",
+  "preference": "preference",
+  "shelf": "shelf",
+  "reading": "reading",
+  "download": "download",
+  "sync": "sync",
+  "book cover": "book cover",
+  "font size": "font size",
+  "update successfully": "update successfully",
+  "successfully": "successfully",
+  "add": "add",
+  "delete successfully": "delete successfully",
+  "add successfully": "add successfully",
+
+  "starts at boot time": "starts at boot time",
+  "close the main panel minimized to the tray (takes effect on next startup)": "Close the main panel minimized to the tray (takes effect on next startup)"
+}

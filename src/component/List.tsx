@@ -1,23 +1,26 @@
 import * as React from "react";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { Button } from "./Button";
 import { Container } from "./Container";
 import { useTheme } from "../context/ThemeProvider";
 import { voidFn } from "../method/general";
 import { ElementProps, ListButtonValue } from "elementProperty";
-import { scrollbarSx } from "../constant/theme";
+import { SX } from "../@constant/theme";
 import { sxParser } from "../method/parser";
+import { useEffectOnce } from "react-use";
+import { getOffsetTop } from "@mui/material";
 
 export const ListButton = forwardRef((props: ListButtonValue, ref) => {
   const { theme } = useTheme();
-  const { isActive, sx, ...other } = props;
+  const { isActive, sx, label, onClick, ...other } = props;
   return (
     <Button
-      {...other}
+      label={label}
+      onClick={onClick}
       sx={sxParser(
         [
           {
-            width: "calc(100% - 10px)",
+            width: "100%",
             mx: "auto",
             height: 40,
             borderRadius: 3,
@@ -26,8 +29,8 @@ export const ListButton = forwardRef((props: ListButtonValue, ref) => {
           },
           isActive
             ? {
-                backgroundColor: theme.palette.button.hover,
-                color: theme.palette.primary.reverse,
+                backgroundColor: theme.button.backgroundColor?.hover,
+                color: theme.button.color?.hover,
               }
             : {},
         ],
@@ -39,44 +42,28 @@ export const ListButton = forwardRef((props: ListButtonValue, ref) => {
 });
 
 interface ListProps extends ElementProps {
-  listItems: ListButtonValue[];
-  activeIndex: number;
+  defaultPosition?: number;
 }
 
 export const ListContainer = forwardRef((props: ListProps, ref) => {
-  const { activeIndex = 0 } = props;
-  const { theme } = useTheme();
   return (
     <Container
       sx={sxParser(
         [
           {
+            position: "relative",
             overflowY: "scroll",
             transition: "all 300ms ease",
             scrollBehavior: "smooth",
             pb: 2,
           },
-          scrollbarSx,
+          SX.scrollbarSx,
         ],
         props.sx
       )}
       ref={ref}
     >
-      {props.listItems.map((item, key) => {
-        const { index, label, onClick = voidFn, ...other } = item;
-        return (
-          <ListButton
-            index={item.index}
-            key={key}
-            label={item.label}
-            onClick={() => {
-              onClick();
-            }}
-            isActive={activeIndex === item.index}
-            {...other}
-          ></ListButton>
-        );
-      })}
+      {props.children}
     </Container>
   );
 });

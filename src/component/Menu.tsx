@@ -3,92 +3,148 @@ import { useRef } from "react";
 import { Container, Hangover } from "./Container";
 import { Button, SvgIcon } from "./Button";
 import { useTheme } from "../context/ThemeProvider";
-import { CLASSNAMES } from "../constant/theme";
-import { MenuItemProperty, MenuProperty } from "elementProperty";
+import { CLASSNAMES, THEME_CONSTANT } from "../@constant/theme";
+import {
+  MenuButtonProperty,
+  MenuItemProperty,
+  MenuProperty,
+} from "elementProperty";
 import { usePop } from "../context/PopProvider";
 import { Divider } from "./Accessory";
 import { voidFn } from "../method/general";
-import { ArrowRight } from "@mui/icons-material";
+import { MdCheck, MdKeyboardArrowRight } from "react-icons/md";
+import { useModal } from "../context/ModalProvider";
+import { sxParser } from "../method/parser";
+import __ from "lodash";
 
 export const Menu = (props: MenuProperty) => {
-  const { children, ...other } = props;
+  const { children } = props;
+  const { theme } = useTheme();
+  const menuStyle = [
+    {
+      mt: 1,
+      pb: 0.4,
+      px: 0.4,
+      pt: 0.05,
+      overflow: "visible",
+      backgroundColor: theme.docker.backgroundColor?.default,
+      borderRadius: 2,
+      boxShadow: theme.docker.shadow?.default,
+    },
+  ];
+
+  return (
+    <Container sx={sxParser(menuStyle, props.sx)}>
+      {children.sub?.map((item, key) => (
+        <MenuItem key={key}>{item}</MenuItem>
+      ))}
+    </Container>
+  );
+};
+
+export const MenuButton = (props: MenuButtonProperty) => {
+  const { context, ...other } = props;
   const anchorELRef: any = useRef();
-  const { rootPop, rootOpen } = usePop();
+  const { setRoot, rootOpen } = usePop();
 
-  const menuStyle = {
-    mt: 1,
-    p: 0.4,
-    overflow: "visible",
-    backgroundColor: "#fff",
-    borderRadius: 2,
-    boxShadow:
-      "rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px",
-  };
-
-  const handleClick = () =>
-    rootPop(
-      anchorELRef.current,
-      <Container sx={menuStyle}>
-        {children.sub?.map((item, key) => (
-          <MenuItem key={key}>{item}</MenuItem>
-        ))}
-      </Container>
-    );
+  const setRootContent = () =>
+    setRoot({
+      anchor: { node: anchorELRef.current },
+      content: <Menu>{context}</Menu>,
+    });
 
   return (
     <Button
-      onMouseEnter={handleClick}
+      onMouseEnter={setRootContent}
       ref={anchorELRef}
-      className={CLASSNAMES.MENU_ANCHOR}
+      className={CLASSNAMES.POP_BUTTON}
       {...other}
       onClick={rootOpen}
-      label={children.label}
+      label={context.label as string}
     />
   );
 };
 
 export const MenuItem = (props: MenuItemProperty): JSX.Element => {
   const { theme } = useTheme();
-  const { children, startIcon, ...other } = props;
+  const { children, startIcon, open, ...other } = props;
+  const { onClick = voidFn } = children;
   const Ref: any = useRef();
-  const { stemPop, stem, stemClose, stemOpen, rootClose } = usePop({
+  const { closeModal } = useModal();
+  const { setStem, stem, stemClose, stemOpen, rootClose } = usePop({
     anchor: Ref.current,
   });
   const outStyle: Style.SXs = [
     {
-      height: 24,
-      width: "fit-content",
       position: "relative",
       whiteSpace: "nowrap",
-      cursor: "pointer",
+      cursor: THEME_CONSTANT.CURSORS.pointer,
       userSelect: "none",
-      borderRadius: 2,
-      backgroundColor: theme.palette.button.default,
-      color: theme.palette.buttonChar.default,
-      transition: "all 200ms ease",
-      px: 1,
-      mx: 0.2,
+      borderRadius: 1.8,
+      backgroundColor: "transparent",
+      color: theme.button.color?.default,
+      px: 0.4,
+      height: 32,
+      m: 0,
+      width: "100%",
+      minWidth: 200,
+      svg: {
+        mx: 1,
+        scale: "1.1",
+      },
+      ".shortcuts": {
+        fontSize: "0.785rem",
+        color: "#9f9f9f",
+      },
       ":hover": {
-        backgroundColor: theme.palette.button.hover,
-        color: theme.palette.buttonChar.hover,
+        transition: "all 200ms ease",
+
+        backgroundColor: theme.button.backgroundColor?.hover,
+        color: theme.button.color?.hover,
+        svg: {
+          fill: theme.button.color?.hover,
+        },
+        ".shortcuts": {
+          color: theme.button.color?.hover,
+        },
       },
       "*": {
         pointerEvents: "none",
       },
     },
-    { height: 32, m: 0, width: "100%", minWidth: 200 },
+    children.allowed === false && {
+      cursor: THEME_CONSTANT.CURSORS.arrow,
+      backgroundColor: "transparent",
+      color: "#eaeaea",
+      svg: {
+        fill: "#eaeaea",
+      },
+      ".shortcuts": {
+        color: "#eaeaea",
+      },
+      ":hover": {
+        backgroundColor: "transparent",
+        color: "#eaeaea",
+        svg: {
+          fill: "#eaeaea",
+        },
+        ".shortcuts": {
+          color: "#eaeaea",
+        },
+      },
+    },
   ];
 
   function handleOpen() {
-    stemPop(
+    setStem(
       <Container
         sx={{
           p: 0.4,
-          backgroundColor: "#fff",
+          pt: 0.1,
+          backgroundColor: theme.docker.backgroundColor?.default,
           borderRadius: 2,
           overflow: "visible",
-          boxShadow:
-            "rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px",
+          boxShadow: theme.docker.shadow?.default,
         }}
       >
         {children.sub?.map((item, key) => (
@@ -99,15 +155,18 @@ export const MenuItem = (props: MenuItemProperty): JSX.Element => {
     stemOpen();
   }
   function pressItem() {
-    children.onClick && children.onClick();
+    closeModal();
     rootClose();
+    onClick();
   }
 
   return ["item", "menu"].includes(children.type) ? (
     <Container
+      open={children.open}
       sx={{
         position: "relative",
         overflow: "visible",
+        mt: 0.4,
       }}
       full
       onMouseLeave={children.type === "menu" ? stemClose : voidFn}
@@ -115,13 +174,19 @@ export const MenuItem = (props: MenuItemProperty): JSX.Element => {
       <Container
         ref={Ref}
         onMouseEnter={children.type === "menu" ? handleOpen : voidFn}
-        onClick={children.type === "menu" ? handleOpen : pressItem}
+        onClick={
+          children.allowed !== false
+            ? children.type === "menu"
+              ? handleOpen
+              : pressItem
+            : voidFn
+        }
         className={CLASSNAMES.MENU_SUB_ANCHOR}
         flexLayout
-        sx={outStyle}
+        sx={sxParser(outStyle, children.style)}
         {...other}
       >
-        <SvgIcon>{startIcon || null}</SvgIcon>
+        {children.icon || null}
         <Hangover
           sx={{
             whiteSpace: "nowrap",
@@ -129,20 +194,34 @@ export const MenuItem = (props: MenuItemProperty): JSX.Element => {
             pr: 5,
           }}
         >
-          {children.label}
+          {__.capitalize(children.label as string)}
         </Hangover>
-        <Container sx={{ fontSize: "0.785rem", color: "#9f9f9f" }}>
+        <Container
+          className={"shortcuts"}
+          sx={{ fontSize: "0.785rem", color: "#9f9f9f" }}
+        >
           {children.shortcuts}
         </Container>
-        <SvgIcon>
-          {children.type === "menu" ? <ArrowRight /> : startIcon || null}
-        </SvgIcon>
+        {children.type === "menu" ? (
+          <MdKeyboardArrowRight />
+        ) : children.check ? (
+          <MdCheck />
+        ) : (
+          <MdCheck opacity={0} />
+        )}
       </Container>
       {stem}
     </Container>
   ) : children.type === "divider" ? (
-    <Divider />
+    <Divider sx={{ mt: 0.4 }} />
   ) : (
-    <Container>{children.label}</Container>
+    <Container
+      sx={sxParser(
+        [{ color: theme.button.color?.default, mx: 0.5, my: 0.4, mt: 0.7 }],
+        children.style
+      )}
+    >
+      {children.label}
+    </Container>
   );
 };

@@ -1,144 +1,118 @@
 import React, { ReactNode, useContext, useState } from "react";
 import { useEffectOnce } from "react-use";
-import { useSnackbar } from "notistack";
-import { err, voidFn } from "../method/general";
-import { jsonParse, pathParser, textDecode } from "../method/parser";
+import { err } from "../method/general";
+import { chaptersParser, is, jsonParse, pathParser } from "../method/parser";
 import { ElementProps } from "elementProperty";
-import { Dialog, FileInter } from "../method/Invoke";
-import { feedState, PATH_CONS } from "../constant/state";
+import { Data, Dialog, FileInter } from "../method/remote";
+import { toast } from "react-toastify";
+import { Book, BookBody } from "../@types/object";
+import { useTranslation } from "react-i18next";
 
-const booksInit: ShelfBook[] = [];
-
-const ShelfContext = React.createContext({
-  books: booksInit,
-  addBook: () => {},
-  updateBook: (book: ShelfBook) => {
-    console.log(book);
-  },
-  deleteBook: (book: ShelfBook) => {
-    console.log(book);
-  },
-  exportShelf: voidFn,
-  backUpBook: voidFn,
-});
-
-interface bookshelfJson {
-  books: ShelfBook[];
-  name: string;
+interface ShelfContextProps {
+  books: Book[];
+  addBook(path: string): void;
+  exportShelf(): void;
+  importShelf(): void;
+  loadShelf(): void;
+  backUpBook(): void;
 }
+// @ts-ignore
+const ShelfContext = React.createContext<ShelfContextProps>({});
 
 export const ShelfProvider = ({ children }: ElementProps) => {
-  const [books, setBooks] = useState<ShelfBook[]>(booksInit);
-  const { enqueueSnackbar } = useSnackbar();
-  useEffectOnce(loadBooks);
+  const [books, setBooks] = useState<Book[]>([]);
+  const { t } = useTranslation();
+  useEffectOnce(loadShelf);
 
-  function loadBooks() {
-    FileInter.read(PATH_CONS.bookshelfJsonPath)
-      .then((buffer) => {
-        setBooks(jsonParse(textDecode(buffer)).books);
-      })
-      .catch(() => {
-        return FileInter.save(
-          PATH_CONS.bookshelfJsonPath,
-          JSON.stringify({ name: "", books: [] })
-        );
-      });
+  /** 加载书架 */
+  function loadShelf() {
+    Data.select<Book>("bookshelf", {}).then((res) => {
+      setBooks(res);
+    });
   }
 
+  /** @Description 添加书籍 */
   async function addBook() {
     try {
-      const res = await Dialog.select({
+      const filePaths = await Dialog.select({
         title: "添加书籍",
         filters: [
-          { name: "txt", extensions: ["txt"] },
+          { name: "txt", extensions: ["txt", "epub"] },
           { name: "All Files", extensions: ["*"] },
         ],
       });
-      if (res.canceled) err("取消选择");
-      let obj: bookshelfJson = jsonParse(
-        textDecode(await FileInter.read(PATH_CONS.bookshelfJsonPath))
-      );
-      let newBook: ShelfBook = {
-        name: pathParser(res.filePaths[0]).name,
-        path: res.filePaths[0],
-        progress: 0,
-      };
-      for (let i = 0; i < obj.books.length; i++)
-        if (obj.books[i].path === newBook.path) err("已经添加过该书籍。");
-      obj.books.push(newBook);
-      await FileInter.save(PATH_CONS.bookshelfJsonPath, JSON.stringify(obj));
-      loadBooks();
-      enqueueSnackbar("添加成功。", feedState.SUCCESS);
+      await parserBook(filePaths[0]);
+      toast.success(t("add successfully"));
     } catch (e) {
-      enqueueSnackbar(e as string, feedState.ERROR);
+      toast.error(e as string);
     }
   }
 
-  async function updateBook(targetBook: ShelfBook) {
-    try {
-      let result = books;
-      for (let i = 0; i < result.length; i++) {
-        if (result[i].path === targetBook.path) {
-          result[i] = targetBook;
-          break;
-        }
-      }
-      console.log(result.length);
-      if (result.length === 0) err();
-      await FileInter.save(
-        PATH_CONS.bookshelfJsonPath,
-        JSON.stringify({ name: "", books: result })
-      );
-      loadBooks();
-    } catch (e) {
-      enqueueSnackbar(e as string, feedState.ERROR);
-    }
+  /** @Description 添加path路径的图书 */
+  async function parserBook(path: string) {
+    /*判断是否shelf中含有该书*/
+    const data = await Data.select("bookshelf", { path: path });
+    data.length && err("已经添加过该书籍。");
+    /*解析书籍*/
+    const { Chapters, length, titles } = await chaptersParser(path);
+    /*保存body数据库*/
+    const { _id } = await Data.insert<BookBody>("bookBody", Chapters);
+    const book: Book = {
+      _id: _id,
+      name: pathParser(path).name,
+      path: path,
+      total: length,
+      progress: 0,
+      titles: titles,
+    };
+    /*保存shelf数据库*/
+    await Data.insert<Book>("bookshelf", book);
+    loadShelf();
   }
 
-  async function deleteBook(targetBook: ShelfBook) {
-    let result = books;
-    for (let i = 0; i < result.length; i++) {
-      if (result[i].path === targetBook.path) {
-        result.splice(i, 1);
-        break;
-      }
-    }
-    await FileInter.save(
-      PATH_CONS.bookshelfJsonPath,
-      JSON.stringify({ name: "", books: result })
-    );
-    enqueueSnackbar("删除成功", { variant: "success" });
-    loadBooks();
-  }
-
+  /** @Description 导出书架 */
   async function exportShelf() {
     try {
-      const res = await Dialog.save("bookshelf.json");
-      if (res.canceled) err("已取消导出");
-      const path = res.filePath as string;
-      await FileInter.copy(PATH_CONS.bookshelfJsonPath, path);
-      enqueueSnackbar("导出成功", { variant: "success" });
+      const res = await Dialog.save("index.bookshelf");
+      res.canceled && err("已取消导出");
+      await FileInter.save(
+        res.filePath as string,
+        JSON.stringify({ books: books })
+      );
+      toast.success("导出成功");
     } catch (e) {
-      enqueueSnackbar(e as string, { variant: "error" });
+      toast.error(e as string);
     }
   }
 
-  async function backUpBook() {
+  /** @Description 导入书架 */
+  async function importShelf() {
     try {
-      const res = await Dialog.directory();
-      if (res.canceled) err("已取消备份");
-      console.log(res.filePaths[0]);
-      for (let i = 0; i < books.length; i++) {
-        await FileInter.copy(
-          books[i].path,
-          res.filePaths[0] + `\\${books[i].name}.txt`
-        );
-      }
-      enqueueSnackbar("备份成功", { variant: "success" });
+      /*选择书架文件*/
+      const res = await Dialog.select({
+        title: "打开书架",
+        filters: [{ name: "bookshelf", extensions: ["bookshelf"] }],
+      });
+      /*解析书架文件*/
+      const shelf = jsonParse(await FileInter.read(res[0]));
+      /*判断文件格式*/
+      !is<Book>(shelf, "books") && err("文件内容错误");
+      /*循环解析书架书籍*/
+      for (let book of shelf.books) await parserBook(book.path);
+      toast.success("导入成功");
     } catch (e) {
-      let t = e as { [propsName: string]: any };
-      enqueueSnackbar(t.message, { variant: "error" });
+      toast.error(e as string);
     }
+  }
+
+  /** @Description 备份当前书架的所有书籍 */
+  async function backUpBook() {
+    /*选择目录地址*/
+    const res = await Dialog.directory();
+    res.canceled && err("已取消备份");
+    /*顺序复制书籍到置顶目录*/
+    for (const item of books)
+      await FileInter.copy(item.path, res.filePaths[0] + `\\${item.name}.txt`);
   }
 
   return (
@@ -146,9 +120,9 @@ export const ShelfProvider = ({ children }: ElementProps) => {
       value={{
         books,
         addBook,
-        updateBook,
-        deleteBook,
+        loadShelf,
         exportShelf,
+        importShelf,
         backUpBook,
       }}
     >

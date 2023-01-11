@@ -1,5 +1,5 @@
 {
-  "name": "this_root",
+  "name": "a_root",
   "version": "1.0.0",
   "description": "this project",
   "main": "index.js",
@@ -7,7 +7,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "wangenius",
+  "author": {
+    "name": "wangenius",
+    "email": "wangenius@qq.com"
+  },
   "license": "ISC",
   "type": "commonjs"
 }

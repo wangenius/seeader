@@ -10,7 +10,7 @@ import {
   BrowserWindowConstructorOptions,
 } from "electron";
 import { ipcListener } from "./ipcListener";
-import { ENV } from "this_root";
+import { ENV } from "a_root";
 
 const WIN32 = process.platform === "win32";
 const BrowserConfig: BrowserWindowConstructorOptions = {
@@ -18,7 +18,7 @@ const BrowserConfig: BrowserWindowConstructorOptions = {
   width: 1280,
   height: 760,
   minWidth: 560,
-  minHeight: 400,
+  minHeight: 660,
   icon: path.join(__dirname, "../../public/icon.png"),
   webPreferences: {
     preload: path.join(__dirname, "preload.js"),
@@ -30,7 +30,7 @@ const BrowserConfig: BrowserWindowConstructorOptions = {
 async function createWindow() {
   const mainWindows = new BrowserWindow(BrowserConfig);
   if (app.isPackaged) {
-    await mainWindows.loadURL(`file://${__dirname}/../index.html`);
+    await mainWindows.loadURL(`file://${__dirname}/../../index.html`);
   } else {
     await mainWindows.loadURL("http://localhost:3000/index.html");
     if (ENV.IS_DEV)

@@ -1,0 +1,19 @@
+{
+  "zh":"中文",
+  "en":"英语",
+  "default": "默认",
+  "dark": "黑暗",
+  "chinese": "中文",
+  "english": "英文",
+  "theme": "主题",
+  "language": "语言",
+
+
+  "settings": "设置",
+  "common": "常规",
+  "preference": "外观",
+  "shelf": "书架",
+  "reading": "阅读",
+  "download": "下载",
+  "sync": "同步"
+}

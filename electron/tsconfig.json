@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "commonjs",
-    "sourceMap": true,
-    "strict": true,
-    "outDir": "../build",
+    "target": "ES6",
+    "module": "CommonJS",
+    "moduleResolution": "NodeNext",
+    "outDir": "../electBuild/",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "rootDir": "../",
     "noEmitOnError": true,
     "typeRoots": [
-      "node_modules/@types"]
+      "../node_modules/@types"
+    ]
   }
 }

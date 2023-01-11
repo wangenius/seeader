@@ -605,3 +605,17 @@ export function BackTopIcon() {
     </svg>
   );
 }
+export function Remove() {
+  return (
+    <svg
+      className="icon"
+      viewBox="0 0 1024 1024"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+      width="200"
+      height="200"
+    >
+      <path d="M224 470.4h576v83.2h-576v-83.2z" fill={`#595959`}></path>
+    </svg>
+  );
+}

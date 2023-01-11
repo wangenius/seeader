@@ -1,17 +1,16 @@
-import { useTheme } from "../context/ThemeProvider";
 import { useEffectOnce } from "react-use";
-import { ReactNode, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
+import { THEME_CONSTANT } from "../@constant/theme";
 
 export function useWindows() {
-  const { theme } = useTheme();
   const [size, setSize] = useState({
-    width: document.documentElement.clientWidth,
-    height: document.documentElement.clientHeight,
+    win_width: document.documentElement.clientWidth,
+    win_height: document.documentElement.clientHeight,
   });
   const onResize = useCallback(() => {
     setSize({
-      width: document.documentElement.clientWidth,
-      height: document.documentElement.clientHeight,
+      win_width: document.documentElement.clientWidth,
+      win_height: document.documentElement.clientHeight,
     });
   }, []);
   useEffectOnce(() => {
@@ -21,8 +20,8 @@ export function useWindows() {
     };
   });
   return {
-    x: size.width,
-    y: size.height,
-    size: size.width > theme.breakpoints.md,
+    win_width: size.win_width,
+    win_height: size.win_height,
+    size: size.win_width > THEME_CONSTANT.breakpoints.md,
   };
 }

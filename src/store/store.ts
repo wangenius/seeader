@@ -4,7 +4,9 @@ import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { currentBookReducer } from "./currentBookReducer";
+import { bookSlice } from "./slice_book";
+import { settingsSlice } from "./slice_settings";
+import { themeSlice } from "./slice_theme";
 type RootState = ReturnType<typeof store.getState>;
 type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -19,7 +21,9 @@ const storageConfig = {
 
 //组合压缩器
 const combinedReducer = combineReducers({
-  currentBook: currentBookReducer,
+  book: bookSlice.reducer,
+  settings: settingsSlice.reducer,
+  theme: themeSlice.reducer,
 });
 
 const persistedReducer = persistReducer(storageConfig, combinedReducer);

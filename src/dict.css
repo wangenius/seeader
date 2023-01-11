@@ -1,0 +1,66 @@
+.DC {
+  display: none;
+}
+
+.DX {
+  display: block;
+  font-size: 2rem;
+  color: #e89a24;
+}
+
+.YX {
+  font-size: 3rem;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.CB {
+  font-size: 1.2rem;
+  margin: 2px;
+  padding-left: 6px;
+}
+
+.JX {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+  color: #000000;
+}
+
+hr {
+  display: none;
+}
+
+.LJ {
+  padding-left: 10px;
+  display: block;
+  margin: 5px;
+}
+
+.LS {
+  opacity: 0.8;
+  padding-left: 1rem;
+}
+
+.entryDot {
+  display: none;
+}
+
+.section_title {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+.JS > .YX {
+  font-size: 3rem;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.JS > .CY {
+  display: block;
+  margin-bottom: 10px;
+}
+
+/*# sourceMappingURL=dict.css.map */

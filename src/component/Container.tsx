@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import { useTheme } from "../context/ThemeProvider";
 import { ContainerProps } from "elementProperty";
 import { sxParser } from "../method/parser";
+import { SX } from "../@constant/theme";
 
 export const Container = forwardRef(
   (props: ContainerProps, ref: ForwardedRef<any>) => {
@@ -15,6 +16,7 @@ export const Container = forwardRef(
       col,
       id,
       flexLayout,
+      overflowY,
       full,
       vertex,
       verticalCenter,
@@ -24,9 +26,12 @@ export const Container = forwardRef(
     } = props;
     const newStyle: Style.SXs = [
       {
+        backgroundColor: "transparent",
         display: open ? (flexLayout ? "flex" : "block") : "none",
         alignItems: "center",
         justifyContent: "center",
+        userSelect: "none",
+        color: theme.default.color?.default,
         fontSize: "0.875rem",
         overflow: "hidden",
         width: full ? "100%" : "fit-content",
@@ -34,8 +39,9 @@ export const Container = forwardRef(
         flexDirection: col ? "column" : "row",
         flex: proportion,
         boxSizing: "border-box",
-        fontFamily: theme.typography.fontFamily,
+        fontFamily: theme.default.font,
       },
+      overflowY && SX.overFlowY,
     ];
     return (
       <Box
@@ -54,3 +60,7 @@ export const Container = forwardRef(
 export const Hangover = ({ proportion, ...other }: ContainerProps) => (
   <Container proportion={proportion || 1} {...other} />
 );
+
+export const Docker = (props: ContainerProps) => {
+  return <Container></Container>;
+};

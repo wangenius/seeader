@@ -1,34 +1,95 @@
 import { Container, Hangover } from "../component/Container";
 import { Button, IconButton, SvgIcon } from "../component/Button";
 import { useTheme } from "../context/ThemeProvider";
-import { Close, CropSquare, Remove } from "@mui/icons-material";
 import { Logo } from "../component/Icons";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { useBook } from "../context/BookProvider";
-import { HEIGHT_VALUE, Z_INDEX } from "../constant/theme";
-import { Menu } from "../component/Menu";
+import { THEME_CONSTANT } from "../@constant/theme";
+import { MenuButton } from "../component/Menu";
 import { useShelf } from "../context/ShelfProvider";
 import { voidFn } from "../method/general";
 import { useHotkeys } from "react-hotkeys-hook";
-import { ENV } from "this_root";
+import { ENV } from "a_root";
 import { usePath } from "../hook/usePath";
-import { useSnackbar } from "notistack";
-import { useTools } from "../hook/useTools";
-import { Dialog, invoke } from "../method/Invoke";
+import { Dialog, remote, Shell } from "../method/remote";
 import { useWindowSize } from "react-use";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { settingsSlice } from "../store/slice_settings";
+import { toast } from "react-toastify";
+import { useSettings } from "../hook/useSettings";
+import {
+  VscChromeMinimize,
+  VscClose,
+  VscPrimitiveSquare,
+} from "react-icons/vsc";
+import { Menu_Options } from "elementProperty";
+import {
+  MdAccountCircle,
+  MdAdd,
+  MdBackup,
+  MdCloudQueue,
+  MdContentCopy,
+  MdCopyAll,
+  MdDarkMode,
+  MdDeleteSweep,
+  MdDeveloperBoard,
+  MdDriveFileRenameOutline,
+  MdExitToApp,
+  MdFullscreen,
+  MdInfoOutline,
+  MdInvertColors,
+  MdKeyboardArrowUp,
+  MdLanguage,
+  MdLibraryBooks,
+  MdLightMode,
+  MdMoreHoriz,
+  MdOutlineAccessibility,
+  MdOutlineAddBox,
+  MdOutlineAddCircleOutline,
+  MdOutlineApps,
+  MdOutlineBookmarkAdd,
+  MdOutlineBookmarks,
+  MdOutlineCheckBox,
+  MdOutlineClearAll,
+  MdOutlineCloud,
+  MdOutlineCloudQueue,
+  MdOutlineEdit,
+  MdOutlineFileUpload,
+  MdOutlineFilterList,
+  MdOutlineKeyboardArrowDown,
+  MdOutlineLanguage,
+  MdOutlinePersonAddAlt,
+  MdOutlinePolicy,
+  MdOutlineReport,
+  MdOutlineSelectAll,
+  MdOutlineSettings,
+  MdOutlineSupport,
+  MdOutlineUpdate,
+  MdPalette,
+  MdRefresh,
+  MdSearch,
+  MdSettingsBackupRestore,
+  MdShare,
+  MdVerticalSplit,
+} from "react-icons/md";
+import { CONTENTS } from "../@constant/state";
+import { RxReader } from "react-icons/rx";
+import { useMethod } from "../hook/useMethod";
 
 export function Header() {
   const { theme } = useTheme();
   const nav = useNavigate();
-  const { book, nextPage, lastPage, toggleChapterDocker } = useBook();
-  const { addBook, updateBook, deleteBook, exportShelf, backUpBook } =
-    useShelf();
-  const { enqueueSnackbar } = useSnackbar();
-  const { isShelf, isReading } = usePath();
-  const { copyText } = useTools();
+  const dispatch = useAppDispatch();
+  const { book, jumpToPage, modalAddBookmark } = useBook();
+  const { nextPage, lastPage } = useBook();
+  const { addBook, exportShelf, backUpBook, importShelf } = useShelf();
+  const { isShelf, isSetting, isReading } = usePath();
+  const settings = useAppSelector((state) => state.settings);
+  const { saveSettings, closeApp, refreshSettings } = useSettings();
   const { width } = useWindowSize();
-
+  const { changeTheme } = useTheme();
+  const { copyText } = useMethod();
   const list: Menu_Options = {
     type: "menu",
     label: "菜单",
@@ -40,12 +101,17 @@ export function Header() {
           {
             type: "item",
             label: "添加书籍",
+            icon: <MdOutlineAddCircleOutline />,
             shortcuts: "Ctrl+O",
             onClick: addBook,
+            allowed: isShelf,
           },
           {
             type: "item",
             label: "书籍信息",
+            icon: <MdInfoOutline />,
+            shortcuts: "Ctrl+I",
+            allowed: isReading,
             onClick: () =>
               Dialog.message(
                 `名称: ${book.name}\n 路径：${book.path} \n 当前进度：第${
@@ -59,18 +125,27 @@ export function Header() {
           {
             type: "item",
             label: "打开书架",
+            icon: <MdOutlineAddBox />,
             shortcuts: "ctrl+shift+O",
-            onClick: () => {},
+            allowed: isShelf,
+
+            onClick: importShelf,
           },
           {
             type: "item",
             label: "导出书架",
+            icon: <MdOutlineFileUpload />,
             shortcuts: "ctrl+E",
+            allowed: isShelf,
+
             onClick: exportShelf,
           },
           {
             type: "item",
             label: "重命名书架",
+            allowed: isShelf,
+
+            icon: <MdDriveFileRenameOutline />,
             onClick: voidFn,
           },
           {
@@ -79,27 +154,36 @@ export function Header() {
           {
             type: "item",
             label: "分享",
+            icon: <MdShare />,
             shortcuts: "ctrl+shift+s",
+            allowed: isReading,
+
             onClick: voidFn,
           },
           {
             type: "item",
             label: "开启同步",
+            icon: <MdCloudQueue />,
             shortcuts: "ctrl+shift+U",
             onClick: voidFn,
           },
           {
             type: "item",
             label: "备份",
+            icon: <MdBackup />,
             onClick: backUpBook,
+            allowed: isShelf,
           },
           {
             type: "item",
             label: "重新加载",
+            icon: <MdRefresh />,
             onClick: voidFn,
+            allowed: isShelf,
           },
           {
             type: "item",
+            icon: <MdDeleteSweep />,
             label: "清理缓存",
             onClick: voidFn,
           },
@@ -109,8 +193,9 @@ export function Header() {
           {
             type: "item",
             label: "退出",
+            icon: <MdExitToApp />,
             shortcuts: "ctrl+W",
-            onClick: () => confirm("确定退出?"),
+            onClick: () => Dialog.confirm("确定退出?"),
           },
         ],
       },
@@ -121,14 +206,57 @@ export function Header() {
         sub: [
           {
             type: "item",
+            label: "正在阅读",
+            icon: <RxReader />,
+            check: isReading,
+            shortcuts: "Shift+R",
+            onClick: () => {
+              nav("/");
+            },
+          },
+          {
+            type: "item",
+            label: "书架",
+            check: isShelf,
+            icon: <MdLibraryBooks />,
+            shortcuts: "Shift+S",
+            onClick: () => {
+              nav("/shelf");
+            },
+          },
+          { type: "divider" },
+          {
+            type: "item",
             label: "显示目录",
-            shortcuts: "ctrl+b",
-            onClick: toggleChapterDocker,
+            icon: <MdVerticalSplit />,
+            allowed: isReading,
+            shortcuts: "B",
+            check: settings.reading.contentOpen,
+            onClick: () => {
+              dispatch(settingsSlice.actions.toggleChaptersOpen());
+            },
           },
           {
             type: "item",
             label: "显示书签",
+            allowed: isReading,
+            icon: <MdOutlineBookmarks />,
             onClick: Dialog.message,
+          },
+          { type: "divider" },
+          {
+            type: "item",
+            label: "排序",
+            icon: <MdOutlineClearAll />,
+            onClick: Dialog.message,
+            allowed: isShelf,
+          },
+          {
+            type: "item",
+            label: "筛选",
+            icon: <MdOutlineFilterList />,
+            onClick: Dialog.message,
+            allowed: isShelf,
           },
         ],
       },
@@ -139,14 +267,21 @@ export function Header() {
           {
             type: "item",
             label: "复制",
+            icon: <MdContentCopy />,
             shortcuts: "Ctrl+C",
-            onClick: Dialog.message,
+            allowed: isReading,
+            onClick: copyText,
           },
           {
             type: "item",
             label: "复制路径",
+            allowed: isReading,
+
             shortcuts: "Ctrl+D",
-            onClick: () => copyText(book.path),
+            icon: <MdCopyAll />,
+            onClick() {
+              copyText(book.path);
+            },
           },
           {
             type: "divider",
@@ -154,12 +289,20 @@ export function Header() {
           {
             type: "item",
             label: "添加书签",
-            onClick: Dialog.message,
+            allowed: isReading,
+
+            onClick: () => {
+              modalAddBookmark(book.titles[book.progress]?.title);
+            },
+            icon: <MdOutlineBookmarkAdd />,
           },
           {
             type: "item",
             label: "编辑书签",
+            allowed: isReading,
+
             onClick: Dialog.message,
+            icon: <MdOutlineEdit />,
           },
           {
             type: "divider",
@@ -168,18 +311,27 @@ export function Header() {
             type: "item",
             label: "选择",
             onClick: Dialog.message,
+            allowed: isReading,
+
+            icon: <MdOutlineCheckBox />,
           },
           {
             type: "item",
             label: "选择全部",
             shortcuts: "Ctrl+A",
+            allowed: isReading,
+
             onClick: Dialog.message,
+            icon: <MdOutlineSelectAll />,
           },
           {
             type: "item",
             label: "查找",
             shortcuts: "Ctrl+F",
+            allowed: isReading,
+
             onClick: Dialog.message,
+            icon: <MdSearch />,
           },
         ],
       },
@@ -190,17 +342,20 @@ export function Header() {
           {
             type: "item",
             label: "最大化/还原",
-            onClick: () => invoke("window_resize"),
+            onClick: () => remote("window_resize"),
+            icon: <MdFullscreen />,
           },
           {
             type: "item",
             label: "最大化",
-            onClick: () => invoke("window_max"),
+            onClick: () => remote("window_max"),
+            icon: <MdKeyboardArrowUp />,
           },
           {
             type: "item",
             label: "最小化",
-            onClick: () => invoke("window_min"),
+            onClick: () => remote("window_min"),
+            icon: <MdOutlineKeyboardArrowDown />,
           },
         ],
       },
@@ -211,37 +366,49 @@ export function Header() {
           {
             type: "item",
             label: "黑暗模式",
-            onClick: voidFn,
+            onClick: () => {
+              changeTheme("dark");
+            },
+            icon: <MdInvertColors />,
           },
           {
             type: "menu",
             label: "主题",
+            icon: <MdPalette />,
             sub: [
               {
                 type: "item",
                 label: "默认",
-                onClick: voidFn,
+                check: theme.name === "default",
+                onClick: () => changeTheme("default"),
+                icon: <MdLightMode />,
               },
               {
                 type: "item",
                 label: "黑暗",
-                onClick: voidFn,
+                check: theme.name === "dark",
+                onClick: () => changeTheme("dark"),
+                icon: <MdDarkMode />,
               },
             ],
           },
           {
             type: "menu",
             label: "语言",
+            icon: <MdLanguage />,
             sub: [
               {
                 type: "item",
                 label: "中文",
                 onClick: voidFn,
+                check: true,
+                icon: <MdOutlineLanguage />,
               },
               {
                 type: "item",
                 label: "英文",
                 onClick: voidFn,
+                icon: <MdOutlineLanguage />,
               },
               {
                 type: "menu",
@@ -252,8 +419,10 @@ export function Header() {
                     label: "添加语言",
                     onClick: voidFn,
                     shortcuts: "Ctrl+T",
+                    icon: <MdAdd />,
                   },
                 ],
+                icon: <MdMoreHoriz />,
               },
             ],
           },
@@ -263,7 +432,45 @@ export function Header() {
           {
             type: "item",
             label: "设置",
-            onClick: voidFn,
+            shortcuts: "Ctrl+K",
+            onClick: () => {
+              nav("/setting");
+            },
+            icon: <MdOutlineSettings />,
+          },
+        ],
+      },
+      {
+        type: "menu",
+        label: "同步",
+        sub: [
+          {
+            type: "item",
+            label: "开启同步",
+            icon: <MdOutlineCloud />,
+          },
+          {
+            type: "item",
+            label: "我的账户",
+            icon: <MdAccountCircle />,
+            onClick() {
+              Dialog.message("该功能未开放。");
+            },
+          },
+          {
+            type: "menu",
+            label: "服务器设置",
+            icon: <MdSettingsBackupRestore />,
+            sub: [{ type: "item", label: "webdav", icon: <MdOutlineCloud /> }],
+          },
+
+          {
+            type: "divider",
+          },
+          {
+            type: "item",
+            label: "同步设置",
+            icon: <MdOutlineCloudQueue />,
           },
         ],
       },
@@ -276,29 +483,34 @@ export function Header() {
             open: ENV.IS_DEV,
             shortcuts: "f12",
             label: "打开开发工具",
-            onClick: () => invoke("window_toggleDevTools"),
+            icon: <MdDeveloperBoard />,
+            onClick: () => remote("window_toggleDevTools"),
           },
           {
             type: "item",
             label: "刷新页面",
             shortcuts: "ctrl+R",
             onClick: () => window.location.reload(),
+            icon: <MdRefresh />,
           },
           { type: "divider" },
           {
             type: "item",
             label: "关于",
-            onClick: Dialog.message,
+            onClick: () => toast("wow so easy"),
+            icon: <MdInfoOutline />,
           },
           {
             type: "item",
             label: "检查更新",
             onClick: Dialog.message,
+            icon: <MdOutlineUpdate />,
           },
           {
             type: "item",
             label: "报告问题",
             onClick: Dialog.message,
+            icon: <MdOutlineReport />,
           },
           { type: "divider" },
           {
@@ -306,55 +518,76 @@ export function Header() {
             label: "我的产品",
             shortcuts: "ctrl+shift+r",
             onClick: () => window.shell.openExternal("http://39.96.54.181"),
+            icon: <MdOutlineApps />,
           },
           {
             type: "item",
             label: "获得支持",
             onClick: Dialog.message,
+            icon: <MdOutlineSupport />,
           },
           {
             type: "item",
             label: "注册",
             onClick: Dialog.message,
+            icon: <MdOutlinePersonAddAlt />,
           },
           { type: "divider" },
           {
             type: "item",
             label: "隐私政策",
-            onClick: Dialog.message,
+            onClick: () => Dialog.message(CONTENTS.POLICY),
+            icon: <MdOutlinePolicy />,
           },
           {
             type: "item",
             label: "查看许可",
-            onClick: Dialog.message,
+            onClick: async () => {
+              await Shell.openFile("LICENSE.txt");
+            },
+            icon: <MdOutlineAccessibility />,
           },
         ],
       },
     ],
   };
-  iterate(list);
+
+  activeShortCuts(list);
+
   return (
     <Container
       flexLayout
       full
       sx={{
-        zIndex: Z_INDEX.HEADER,
-        height: HEIGHT_VALUE.HEADER,
+        zIndex: THEME_CONSTANT.Z_INDEX.HEADER,
+        height: THEME_CONSTANT.HEIGHT_VALUE.HEADER,
         px: 1,
-        backgroundColor: theme.palette.background.main,
-        borderBottom: theme.palette.border.default,
+        backgroundColor: theme.default.backgroundColor?.default,
+        borderBottom: theme.divider.border?.default,
       }}
     >
-      <SvgIcon icon={<Logo />} size={30} />
+      <SvgIcon icon={<Logo />} size={30} />{" "}
       <Button
-        label={isShelf ? `阅读` : "书架"}
-        onClick={() => nav(isShelf ? "./" : "./shelf")}
+        sx={{
+          backgroundColor: "#2d2d2d",
+          pl: 1.5,
+          color: "#f8f8f8",
+          borderRadius: 3,
+          letterSpacing: 4,
+          ":hover": {
+            backgroundColor: "#1f1f1f",
+
+            color: "#ffffff",
+          },
+        }}
+        label={isSetting ? "设置" : isShelf ? `书架` : "阅读"}
+        onClick={() => (isSetting ? nav(-1) : nav(isShelf ? "./" : "./shelf"))}
       />
       {width >= 800 &&
         list.sub?.map((item, key) => {
-          return <Menu key={key} children={item} />;
+          return <MenuButton key={key} context={item} />;
         })}
-      <Menu open={width < 800} label={"菜单"} children={list} />
+      <MenuButton open={width < 800} label={"菜单"} context={list} />
       <Hangover className={"draggable"} sx={{ height: "100%" }} />
       <Button
         open={isShelf}
@@ -362,38 +595,33 @@ export function Header() {
         onClick={() => nav("./")}
       />
       <Button
-        open={isReading && book.progress !== 0}
+        open={isReading && book.progress !== 0 && book.path !== ""}
         label={"上一章"}
         onClick={lastPage}
       />
       <Button
-        open={isReading && book.progress !== book.chapters.length - 1}
+        open={isReading && book.progress !== book.total - 1 && book.path !== ""}
         label={"下一章"}
         onClick={nextPage}
       />
-      <IconButton icon={<Remove />} onClick={() => invoke("window_min")} />
       <IconButton
-        icon={<CropSquare />}
-        onClick={() => invoke("window_resize")}
+        icon={<VscChromeMinimize />}
+        onClick={() => remote("window_min")}
       />
       <IconButton
-        icon={<Close />}
-        onClick={() =>
-          Dialog.confirm("确认关闭?").then(() => invoke("window_close"))
-        }
+        icon={<VscPrimitiveSquare />}
+        onClick={() => remote("window_resize")}
       />
+      <IconButton icon={<VscClose />} onClick={closeApp} />
     </Container>
   );
 }
-function iterate(item: Menu_Options) {
-  item.sub?.map((item, key) => {
-    if (item.type === "item" && item.shortcuts && item.onClick && item.open) {
-      useHotkeys(item.shortcuts, item.onClick, {
-        enabled: true,
+function activeShortCuts(item: Menu_Options) {
+  item.sub?.map((item) => {
+    if (item.type === "item" && item.shortcuts)
+      useHotkeys(item.shortcuts, item.onClick as any, {
+        enabled: item.open,
       });
-    }
-    if (item.type === "menu") {
-      iterate(item);
-    }
+    if (item.type === "menu") activeShortCuts(item);
   });
 }

@@ -1,27 +1,25 @@
-import React, { ReactNode, useContext, useState } from "react";
-import { DefaultTheme } from "../constant/themes";
+import React, { ReactNode, useContext } from "react";
+import { DefaultTheme, themes } from "../@constant/themes";
 import { ElementProps } from "elementProperty";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { themeSlice } from "../store/slice_theme";
+import { useEffectOnce } from "react-use";
+import { voidFn } from "../method/general";
 
 const ThemeContext = React.createContext({
   theme: DefaultTheme,
-  changeTheme: (theme: ThemePrototype) => {},
+  changeTheme: (theme: ThemeName) => voidFn(theme),
 });
 export const ThemeProvider = ({ children }: ElementProps) => {
-  const [theme, setTheme] = useState<ThemeStandard>(DefaultTheme);
+  const theme = useAppSelector((state) => state.theme);
+  const dispatch = useAppDispatch();
 
-  async function GenerateTheme(theme: ThemePrototype | ThemeStandard) {
-    return (await Object.assign<{}, ThemeStandard, ThemePrototype>(
-      {},
-      DefaultTheme,
-      theme
-    )) as ThemeStandard;
-  }
+  useEffectOnce(() => {
+    dispatch(themeSlice.actions.changeTheme(themes[theme.name as ThemeName]));
+  });
 
-  async function changeTheme(theme: ThemePrototype) {
-    const C = await GenerateTheme(theme);
-    setTheme(C);
-    // dispatch(changeThemeReducer(C));
-  }
+  const changeTheme = (theme: ThemeName) =>
+    dispatch(themeSlice.actions.changeTheme(themes[theme]));
 
   return (
     <ThemeContext.Provider value={{ theme, changeTheme }}>
@@ -30,11 +28,4 @@ export const ThemeProvider = ({ children }: ElementProps) => {
   );
 };
 
-export function useTheme() {
-  const { theme, changeTheme } = useContext(ThemeContext);
-
-  return {
-    theme: theme,
-    changeTheme: changeTheme,
-  };
-}
+export const useTheme = () => useContext(ThemeContext);

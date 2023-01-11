@@ -6,6 +6,8 @@ import { SxProps, Theme } from "@mui/system";
 import { voidFn } from "../method/general";
 import { ButtonProperty, ElementProps } from "elementProperty";
 import { sxParser } from "../method/parser";
+import { THEME_CONSTANT } from "../@constant/theme";
+import __ from "lodash";
 
 export const Button = forwardRef((props: ButtonProperty, ref) => {
   const { theme } = useTheme();
@@ -28,20 +30,21 @@ export const Button = forwardRef((props: ButtonProperty, ref) => {
     {
       height: small ? 24 : 32,
       maxWidth: 300,
-      width: "fit-content",
+      x: "fit-content",
       position: "relative",
       whiteSpace: "nowrap",
-      cursor: loading ? "not-allowed" : "pointer",
+      cursor: loading ? "not-allowed" : THEME_CONSTANT.CURSORS.pointer,
+
       userSelect: "none",
-      borderRadius: 2,
-      backgroundColor: theme.palette.button.default,
-      color: theme.palette.buttonChar.default,
+      borderRadius: 3,
+      backgroundColor: theme.button.backgroundColor?.default,
+      color: theme.button.color?.default,
       transition: "all 200ms ease",
       px: 1,
-      mx: 0.2,
+      mx: 0.1,
       ":hover": {
-        backgroundColor: theme.palette.button.hover,
-        color: theme.palette.buttonChar.hover,
+        backgroundColor: theme.button.backgroundColor?.hover,
+        color: theme.button.color?.hover,
       },
       "*": {
         pointerEvents: "none",
@@ -70,7 +73,7 @@ export const Button = forwardRef((props: ButtonProperty, ref) => {
           fontSize: small ? "0.825rem" : "0.875rem",
         }}
       >
-        {label || children}
+        {__.capitalize(label) || children}
       </Container>
       <Hangover
         flexLayout
@@ -101,19 +104,20 @@ export const IconButton = forwardRef((props: IconButtonProps, ref) => {
       sx={sxParser(
         [
           {
-            width: 24,
-            height: 24,
-            cursor: "pointer",
+            x: 24,
+            win_height: 24,
+            cursor: THEME_CONSTANT.CURSORS.pointer,
+            transition: "all 300ms ease",
             borderRadius: 3,
             mx: 0.4,
             backgroundColor: "transparent",
             svg: {
-              fill: theme.palette.logo.default,
+              fill: theme.icon.color?.default,
             },
             ":hover": {
-              backgroundColor: theme.palette.button.hover,
+              backgroundColor: theme.icon.backgroundColor?.hover,
               svg: {
-                fill: theme.palette.primary.reverse,
+                fill: theme.icon.color?.hover,
               },
             },
           },
@@ -145,16 +149,16 @@ export function SvgIcon(props: SvgIconProps): SvgIconPrototype {
       sx={sxParser(
         [
           {
-            width: size,
+            x: size,
             height: size,
-            minWidth: size,
+            width: size,
             minHeight: size,
             maxWidth: size,
             maxHeight: size,
             borderRadius: size / 2,
             p: 0.36,
             svg: {
-              fill: theme.palette.logo.default,
+              fill: theme.icon.color?.default,
               width: "100%",
               height: "100%",
             },
@@ -167,3 +171,17 @@ export function SvgIcon(props: SvgIconProps): SvgIconPrototype {
     </Container>
   );
 }
+
+export const FontButton = forwardRef((props: ButtonProperty, ref) => {
+  const { sx, ...other } = props;
+  const style: Style.SXs = [
+    {
+      backgroundColor: "transparent",
+      ":hover": {
+        backgroundColor: "transparent",
+        color: "#000",
+      },
+    },
+  ];
+  return <Button sx={sxParser(style, sx)} {...other} ref={ref} />;
+});
