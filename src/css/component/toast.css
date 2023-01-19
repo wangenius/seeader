@@ -1,0 +1,13 @@
+.Toastify__toast {
+  border-radius: 14px;
+  padding: 14px;
+  /*cursor: url("/public/icon/Rem/arrow.cur"), auto;*/
+  min-width: 160px;
+}
+
+.Toastify__toast-body {
+  margin: 0;
+  padding: 0;
+}
+
+/*# sourceMappingURL=toast.css.map */

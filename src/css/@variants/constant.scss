@@ -1,0 +1,139 @@
+/*font size*/
+$fs_default:0.875rem;
+$fs_button:0.815rem;
+
+/*border radius*/
+$br_default:8px;
+$br_iconButton:50%;
+$br_menu:8px;
+$br_btn:8px;
+
+/*padding*/
+$p_input:15px;
+
+/*height and size*/
+$full: 100%;
+$height_button: 24px;
+$height_listButton:40px;
+$size_icon:20px;
+$height_header: 30px;
+$height_menuButton: 32px;
+$height_body: calc(100vh - $height_header);
+
+/*width*/
+$width_contents: 250px;
+
+/*cursor*/
+$pointer:url("/public/icon/hand.png"), pointer;
+$arrow:url('/public/icon/default.png'), auto;
+$text:url('/public/icon/text.png'), text;
+
+/*transition*/
+$trans_default:all 200ms ease;
+
+
+/*z index*/
+$z_header: 200;
+$z_pop: 800;
+$z_focusItem: 700;
+$z_modal:600;
+$z_snack:1000;
+
+
+/*border*/
+$Divider_Border: 1px solid #dedede;
+
+
+
+/*font*/
+$default_font: "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
+$button_font: "Noto_Medium", "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
+
+/*shadow*/
+$boxShadow: rgba(0, 0, 0, 0.16) 0 10px 36px 0, rgba(0, 0, 0, 0.06) 0 0 0 1px;
+
+
+
+
+
+@mixin title_font {
+  font-size: 1.2em;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@mixin ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+@mixin Max {
+  height: 100%;
+  width: 100%;
+}
+
+@mixin NoBubbling {
+  * {
+    pointer-events: none;
+  }
+}
+/*
+Flex
+*/
+
+@mixin Flex {
+  display: flex;
+}
+
+@mixin yFlex {
+  @include Flex;
+  flex-direction: column;
+}
+
+@mixin xFlex {
+  @include Flex;
+  flex-direction: row;
+}
+
+@mixin FlexCenter {
+  align-items: center;
+  justify-content: center;
+}
+
+/*
+
+scroll*/
+@mixin ScrollY {
+  @include ScrollBar;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  transition: all 300ms ease;
+  scrollbar-width: 8px;
+  padding-left: 8px;
+  padding-right: 2px;
+}
+
+@mixin ScrollBar {
+  &::-webkit-scrollbar {
+    display: block;
+    width: 14px;
+    background-color: transparent;
+    background-clip: content-box;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(140, 140, 140, 0.3);
+    height: 60px;
+    border-radius: 20px;
+    border: 3px solid #fff;
+    &:hover {
+      background-color: rgba(140, 140, 140, 0.5);
+    }
+  }
+  &::-webkit-scrollbar-track {
+    margin: 20px 0;
+    background-color: transparent;
+  }
+}

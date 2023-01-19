@@ -1,0 +1,15 @@
+@import "../@variants/constant";
+.Modal {
+  @include xFlex;
+  @include FlexCenter;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  .ContentBox {
+    z-index: $z_pop;
+    overflow: visible;
+    > div {
+      box-shadow: $boxShadow
+    }
+  }
+}

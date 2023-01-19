@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import __ from "lodash";
 import { Settings } from "../@types/object";
 
-export const initialTheme: Settings = {
+export const initialSettings: Settings = {
   common: {
     startWithWin: false,
     minWithTray: false,
@@ -29,7 +29,7 @@ export const initialTheme: Settings = {
 
 export const settingsSlice = createSlice({
   name: "book",
-  initialState: initialTheme,
+  initialState: initialSettings,
   reducers: {
     toggleChaptersOpen(state, action: PayloadAction<boolean | undefined>) {
       state.reading.contentOpen = action.payload || !state.reading.contentOpen;

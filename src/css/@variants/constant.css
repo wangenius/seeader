@@ -1,0 +1,8 @@
+.ScrollY {
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  transition: all 300ms ease;
+  scrollbar-width: 8px;
+}
+
+/*# sourceMappingURL=constant.css.map */

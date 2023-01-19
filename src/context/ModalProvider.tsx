@@ -1,38 +1,27 @@
-import React, {
-  ReactNode,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { ElementProps } from "elementProperty";
-import { useTheme } from "./ThemeProvider";
-import { Spring } from "../component/Spring";
-import { Container } from "../component/Container";
-import { useSpring } from "@react-spring/web";
-import { voidFn } from "../method/general";
-import ClickAwayListener from "../component/ClickAwayListener";
-import { THEME_CONSTANT } from "../@constant/theme";
-import Z_INDEX = THEME_CONSTANT.Z_INDEX;
+import React, {ReactNode, useCallback, useContext, useState,} from "react";
+import {ElementProps} from "elementProperty";
+import {Spring} from "../component/Spring";
+import {Container} from "../component/Container";
+import {useSpring} from "@react-spring/web";
+import {voidFn} from "../method/general";
+import {Fn, ModalContextProps} from "../@types/context";
+import {ClickAwayListener} from "@mui/material";
 
-const ModalContext = React.createContext({
-  closeModal: () => {},
-  modal: (content: ReactNode, config?: { blur?: boolean }) =>
-    voidFn(content, config),
-});
+// @ts-ignore
+const ModalContext = React.createContext<ModalContextProps>({});
 
 const ModalProvider = ({ children }: ElementProps) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const { theme } = useTheme();
   const [content, setContent] = useState<ReactNode>();
 
-  const modal = (content: ReactNode, config?: { blur?: boolean }) => {
+  const modal = useCallback<Fn>((content: ReactNode) => {
     setContent(content);
     setModalOpen(true);
-  };
-  const closeModal = () => {
+  }, []);
+
+  const closeModal = useCallback<Fn>((content: ReactNode) => {
     setModalOpen(false);
-  };
+  }, []);
 
   const spring = useSpring({
     onStart: voidFn,
@@ -46,42 +35,25 @@ const ModalProvider = ({ children }: ElementProps) => {
 
   return (
     <ModalContext.Provider value={{ closeModal, modal }}>
-      {modalOpen && (
-        <Container
-          sx={{ position: "absolute", width: "100%", height: "100vh" }}
-          verticalCenter
-          horizonCenter
-          flexLayout
-        >
-          <ClickAwayListener onClickAway={closeModal}>
-            <Container
-              sx={{
-                zIndex: Z_INDEX.POP,
-                overflow: "visible",
-                ".": {
-                  boxShadow: theme.docker.shadow?.default,
-                },
-              }}
-            >
-              {content}
-            </Container>
-          </ClickAwayListener>
-          <Spring
-            spring={spring}
-            style={`
+      <Container open={modalOpen} cls={"Modal"}>
+        <ClickAwayListener onClickAway={closeModal}>
+          <Container cls={"ContentBox"}>{content}</Container>
+        </ClickAwayListener>
+        <Spring
+          spring={spring}
+          style={`
                position: absolute;
               width: 100vw;
               height: 100vh;
-              z-index:${Z_INDEX.MODAL};
-              background-color:${theme.modal.backgroundColor?.default};
+              z-index:600;
+              background-color:$bc_button_hover;
               display: flex;
               align-items: center;
               justify-content: center;
               backdrop-filter:${"blur(5px)"};
                         `}
-          />
-        </Container>
-      )}
+        />
+      </Container>
 
       {children as ReactNode}
     </ModalContext.Provider>

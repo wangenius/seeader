@@ -6,7 +6,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { bookSlice } from "./slice_book";
 import { settingsSlice } from "./slice_settings";
-import { themeSlice } from "./slice_theme";
 type RootState = ReturnType<typeof store.getState>;
 type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -23,7 +22,6 @@ const storageConfig = {
 const combinedReducer = combineReducers({
   book: bookSlice.reducer,
   settings: settingsSlice.reducer,
-  theme: themeSlice.reducer,
 });
 
 const persistedReducer = persistReducer(storageConfig, combinedReducer);

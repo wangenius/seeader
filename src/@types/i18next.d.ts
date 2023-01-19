@@ -1,6 +1,6 @@
 import "i18next";
-import zh from "../local/zh/zh.json";
-import en from "../local/en/en.json";
+import zh from "../locales/zh/zh.json";
+import en from "../locales/en/en.json";
 
 // react-i18next versions higher than 11.11.0
 declare module "i18next" {

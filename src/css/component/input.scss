@@ -1,0 +1,49 @@
+@import "../@variants/constant";
+@import "../@variants/color";
+
+.TextInput {
+  width: $full;
+  transition: $trans_default;
+  border-radius: $br_default;
+  background-color: $bc_input;
+  max-width: 600px;
+  position: relative;
+  padding: $p_input;
+
+  :hover {
+    background-color: $bc_input_hover;
+  }
+
+  :focus-within {
+    background-color: $bc_input_focus;
+  }
+
+  .TextButton {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    scale: 1.1;
+    background-color: $bc_textBtn;
+    border-radius: $br_default;
+    &:hover {
+      @include dynamic_shadow;
+      scale: 1;
+    }
+    svg {
+      fill: $fill_textBtn;
+    }
+  }
+
+  textarea {
+    width: $full;
+    height: $full;
+    background-color: $transparent;
+    font-family: $default_font;
+    flex: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}

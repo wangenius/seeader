@@ -3,10 +3,10 @@
     "target": "ES6",
     "module": "CommonJS",
     "moduleResolution": "NodeNext",
-    "outDir": "../electBuild/",
+    "outDir": "../end/",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "rootDir": "../",
+    "rootDir": "./",
     "noEmitOnError": true,
     "typeRoots": [
       "../node_modules/@types"

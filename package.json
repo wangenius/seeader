@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "author": "wangenius",
   "homepage": ".",
-  "main": "electBuild/index.cjs",
+  "main": "end/main.js",
   "description": "txt book reader",
   "license": "UNLICENSED",
   "scripts": {
@@ -13,7 +13,8 @@
     "postinstall": "electron-builder install-app-deps",
     "package": "tsc -p electron && electron-builder",
     "devStart": "concurrently \"cross-env BROWSER=none npm run start\" \"wait-on http://127.0.0.1:3000 && tsc -p electron -w\" \"wait-on http://127.0.0.1:3000 && tsc -p electron && electron .\"",
-    "buildAndPackage": "npm run build && tsc -p electron && electron-builder"
+    "buildAndPackage": "npm run build && tsc -p electron && electron-builder",
+    "testBuild": "npm run build && tsc -p electron && electron-builder --dir"
   },
   "dependencies": {
     "@electron/remote": "^2.0.9",
@@ -29,6 +30,8 @@
     "@use-gesture/react": "^10.2.23",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
+    "clsx": "^1.2.1",
+    "electron-reload": "^2.0.0-alpha.1",
     "esm": "^3.2.25",
     "history": "^5.3.0",
     "i18next": "^22.4.8",
@@ -67,14 +70,15 @@
     "appId": "com.wangenius.seeader",
     "extends": null,
     "files": [
-      "build/**/*"
+      "build/**/*",
+      "end/**/*",
+      "end/*"
     ],
     "directories": {
-      "output": "output",
-      "buildResources": "assets"
+      "output": "release"
     },
     "win": {
-      "icon": "public/icon.ico",
+      "icon": "./build/icon/icon.ico",
       "target": [
         {
           "target": "nsis"
@@ -85,7 +89,7 @@
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "./public/icon.ico",
+      "installerIcon": "./build/icon/icon.ico",
       "createDesktopShortcut": true,
       "shortcutName": "seeader"
     }

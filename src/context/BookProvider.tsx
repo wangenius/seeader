@@ -1,39 +1,25 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react";
+import React, { memo, ReactNode, useContext, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useShelf } from "./ShelfProvider";
 import { useNavigate } from "react-router-dom";
 import { useHotkeys } from "react-hotkeys-hook";
 import { usePath } from "../hook/usePath";
 import { ElementProps } from "elementProperty";
-import { Data } from "../method/remote";
 import { bookSlice } from "../store/slice_book";
 import { Container } from "../component/Container";
-import __ from "lodash";
+import _ from "lodash";
 import { TextInput } from "../component/Input";
 import { useModal } from "./ModalProvider";
-import { useTheme } from "./ThemeProvider";
-import { Book } from "../@types/object";
+import { Book, BookBodies } from "../@types/object";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-
-interface BookContextProps {
-  book: Book;
-  currentBody: string[];
-  openBook(target?: Book): void;
-  nextPage(): void;
-  lastPage(): void;
-  jumpToPage(index: number): void;
-  modalAddBookmark(content?: string): void;
-  updateBook(book?: Partial<Book>): void;
-  changeBook(pair: Partial<Book>): void;
-  deleteBook(book?: Book): void;
-  modalEditBook(book?: Book): void;
-}
+import { Data } from "../method/data";
+import { BookContextProps } from "../@types/context";
 
 // @ts-ignore
 const BookContext = React.createContext<BookContextProps>({});
 
-export const BookProvider = ({ children }: ElementProps) => {
+export const BookProvider = memo(({ children }: ElementProps) => {
   const book = useAppSelector((state) => state.book);
   const dispatch = useAppDispatch();
   const nav = useNavigate();
@@ -41,7 +27,6 @@ export const BookProvider = ({ children }: ElementProps) => {
   const { isReading } = usePath();
   const { modal, closeModal } = useModal();
   const [currentBody, setCurrentBody] = useState<string[]>([]);
-  const { theme } = useTheme();
   const { t } = useTranslation();
 
   /** 当book改变时，重新加载章节内容 */
@@ -61,13 +46,16 @@ export const BookProvider = ({ children }: ElementProps) => {
 
   /** @Description 跳转章节 */
   async function jumpToPage(index: number) {
+    setCurrentBody([]);
     await changeBook({ progress: index });
   }
 
   function nextPage() {
+    setCurrentBody([]);
     dispatch(bookSlice.actions.nextProgress());
   }
   function lastPage() {
+    setCurrentBody([]);
     dispatch(bookSlice.actions.lastProgress());
   }
 
@@ -88,14 +76,17 @@ export const BookProvider = ({ children }: ElementProps) => {
 
   /** @Description 加载书籍正文内容 */
   function loadChapterBody() {
-    Data.select("bookBody", { _id: book._id }, { [book.progress + 1]: 1 })
+    Data.select<BookBodies>(
+      "bookBody",
+      { _id: book._id },
+      { [book.progress]: 1 }
+    )
       .then((res) => {
+        if (!res.length) return;
         let result: string[] = [];
-        res[0][book.progress + 1].content
-          .split(/\r\n|\n/)
-          .map((item: string) => {
-            result.push(item.replace(/(^\s+)|(\s+$)/g, "").replace(/\s/g, ""));
-          });
+        res[0][book.progress]?.content.split(/\r\n|\n/).map((item: string) => {
+          result.push(item.replace(/(^\s+)|(\s+$)/g, "").replace(/\s/g, ""));
+        });
         setCurrentBody(result);
       })
       .catch((e) => {
@@ -173,7 +164,7 @@ export const BookProvider = ({ children }: ElementProps) => {
             },
           }}
         >
-          {__.truncate(content || window.getSelection()?.toString(), {
+          {_.truncate(content || window.getSelection()?.toString(), {
             length: 120,
           })}
         </Container>
@@ -181,7 +172,6 @@ export const BookProvider = ({ children }: ElementProps) => {
           sx={{
             width: 500,
             borderRadius: 2,
-            backgroundColor: theme.docker.backgroundColor?.default,
           }}
           placeholder={"书签内容"}
           button
@@ -224,6 +214,6 @@ export const BookProvider = ({ children }: ElementProps) => {
       {children as ReactNode}
     </BookContext.Provider>
   );
-};
+});
 
 export const useBook = () => useContext(BookContext);

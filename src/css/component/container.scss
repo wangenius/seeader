@@ -1,0 +1,17 @@
+@import "../@variants/constant";
+@import "../@variants/color";
+
+div {
+  background-color: $transparent;
+  color: $color_default;
+  font-family: $default_font;
+  font-size: $fs_default;
+  overflow: hidden;
+  user-select: none;
+  width: fit-content;
+  height: fit-content;
+}
+
+.Hangover {
+  flex: 1;
+}

@@ -1,0 +1,55 @@
+@import "../@variants/constant";
+
+$Title_Height: 60px;
+$Contents_Height: calc(100% - $Title_Height);
+
+.BookPage {
+  @include xFlex;
+  width: $full;
+  height: $height_body;
+  .BookContents {
+    height: $full;
+    width: $width_contents;
+    border-right: $Divider_Border;
+    .Title {
+      @include xFlex;
+      @include FlexCenter;
+      width: $full;
+      height: $Title_Height;
+      padding: 0 10px;
+      > :first-child {
+        @include title_font;
+        max-width: 60%;
+        padding-left: 10px;
+      }
+    }
+    .Contents {
+      @include ScrollY;
+      width: $full;
+      height: $Contents_Height;
+      padding-bottom: 20px;
+    }
+  }
+  .BookArea {
+    @include ScrollY;
+    @include ScrollBar;
+    @include Max;
+    .BookBody {
+      margin: auto;
+      width: min(100%, 900px);
+      padding: 20px 20px 200px;
+      .BodyTitle {
+        width: 100%;
+        font-size: 2rem;
+        height: 3pc;
+        color: #3b423b;
+      }
+      .BodyPara {
+        width: 100%;
+        font-size: 1rem;
+        user-select: text;
+        text-indent: 2rem;
+      }
+    }
+  }
+}

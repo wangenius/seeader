@@ -1,0 +1,12 @@
+@import "../@variants/constant";
+.Header {
+  @include xFlex;
+  @include FlexCenter;
+  width: $full;
+  height: $height_header;
+  min-height: $height_header;
+  max-height: $height_header;
+  z-index: $z_header;
+  border-bottom: $Divider_Border;
+  padding: 0 4pt;
+}

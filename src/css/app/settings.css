@@ -1,0 +1,27 @@
+@font-face {
+  font-display: block;
+  font-family: "Noto_Light";
+  src: url("/public/Noto/NotoSans-Light.ttf");
+}
+@font-face {
+  font-display: block;
+  font-family: "Noto_Medium";
+  src: url("/public/Noto/NotoSans-Medium.ttf");
+}
+/*
+common
+*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+.Setting {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow: visible;
+}
+
+/*# sourceMappingURL=settings.css.map */

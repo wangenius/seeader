@@ -1,25 +1,20 @@
-import React, { ReactNode, useContext, useState } from "react";
+import React, { memo, ReactNode, useContext, useState } from "react";
 import { useEffectOnce } from "react-use";
 import { err } from "../method/general";
 import { chaptersParser, is, jsonParse, pathParser } from "../method/parser";
 import { ElementProps } from "elementProperty";
-import { Data, Dialog, FileInter } from "../method/remote";
 import { toast } from "react-toastify";
-import { Book, BookBody } from "../@types/object";
+import { Book, BookBodies } from "../@types/object";
 import { useTranslation } from "react-i18next";
+import { Data } from "../method/data";
+import { File } from "../method/file";
+import { Dialog } from "../method/dialog";
+import { ShelfContextProps } from "../@types/context";
 
-interface ShelfContextProps {
-  books: Book[];
-  addBook(path: string): void;
-  exportShelf(): void;
-  importShelf(): void;
-  loadShelf(): void;
-  backUpBook(): void;
-}
 // @ts-ignore
 const ShelfContext = React.createContext<ShelfContextProps>({});
 
-export const ShelfProvider = ({ children }: ElementProps) => {
+export const ShelfProvider = memo(({ children }: ElementProps) => {
   const [books, setBooks] = useState<Book[]>([]);
   const { t } = useTranslation();
   useEffectOnce(loadShelf);
@@ -54,14 +49,14 @@ export const ShelfProvider = ({ children }: ElementProps) => {
     const data = await Data.select("bookshelf", { path: path });
     data.length && err("已经添加过该书籍。");
     /*解析书籍*/
-    const { Chapters, length, titles } = await chaptersParser(path);
+    const { Chapters, total, titles } = await chaptersParser(path);
     /*保存body数据库*/
-    const { _id } = await Data.insert<BookBody>("bookBody", Chapters);
+    const { _id } = await Data.insert<BookBodies>("bookBody", Chapters);
     const book: Book = {
       _id: _id,
       name: pathParser(path).name,
       path: path,
-      total: length,
+      total: total,
       progress: 0,
       titles: titles,
     };
@@ -75,10 +70,7 @@ export const ShelfProvider = ({ children }: ElementProps) => {
     try {
       const res = await Dialog.save("index.bookshelf");
       res.canceled && err("已取消导出");
-      await FileInter.save(
-        res.filePath as string,
-        JSON.stringify({ books: books })
-      );
+      await File.save(res.filePath as string, JSON.stringify({ books: books }));
       toast.success("导出成功");
     } catch (e) {
       toast.error(e as string);
@@ -94,7 +86,7 @@ export const ShelfProvider = ({ children }: ElementProps) => {
         filters: [{ name: "bookshelf", extensions: ["bookshelf"] }],
       });
       /*解析书架文件*/
-      const shelf = jsonParse(await FileInter.read(res[0]));
+      const shelf = jsonParse<{ books: Book[] }>(await File.read(res[0]));
       /*判断文件格式*/
       !is<Book>(shelf, "books") && err("文件内容错误");
       /*循环解析书架书籍*/
@@ -112,7 +104,7 @@ export const ShelfProvider = ({ children }: ElementProps) => {
     res.canceled && err("已取消备份");
     /*顺序复制书籍到置顶目录*/
     for (const item of books)
-      await FileInter.copy(item.path, res.filePaths[0] + `\\${item.name}.txt`);
+      await File.copy(item.path, res.filePaths[0] + `\\${item.name}.txt`);
   }
 
   return (
@@ -129,6 +121,6 @@ export const ShelfProvider = ({ children }: ElementProps) => {
       {children as ReactNode}
     </ShelfContext.Provider>
   );
-};
+});
 
 export const useShelf = () => useContext(ShelfContext);

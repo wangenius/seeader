@@ -1,18 +1,16 @@
 import { Container, Hangover } from "../component/Container";
 import { Button, IconButton, SvgIcon } from "../component/Button";
-import { useTheme } from "../context/ThemeProvider";
 import { Logo } from "../component/Icons";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { useBook } from "../context/BookProvider";
-import { THEME_CONSTANT } from "../@constant/theme";
 import { MenuButton } from "../component/Menu";
 import { useShelf } from "../context/ShelfProvider";
 import { voidFn } from "../method/general";
 import { useHotkeys } from "react-hotkeys-hook";
 import { ENV } from "a_root";
 import { usePath } from "../hook/usePath";
-import { Dialog, remote, Shell } from "../method/remote";
+import { remote } from "../method/remote";
 import { useWindowSize } from "react-use";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { settingsSlice } from "../store/slice_settings";
@@ -73,22 +71,21 @@ import {
   MdShare,
   MdVerticalSplit,
 } from "react-icons/md";
-import { CONTENTS } from "../@constant/state";
 import { RxReader } from "react-icons/rx";
 import { useMethod } from "../hook/useMethod";
+import { Dialog } from "../method/dialog";
+import { Browser } from "../method/browser";
 
 export function Header() {
-  const { theme } = useTheme();
   const nav = useNavigate();
   const dispatch = useAppDispatch();
-  const { book, jumpToPage, modalAddBookmark } = useBook();
+  const { book, modalAddBookmark } = useBook();
   const { nextPage, lastPage } = useBook();
   const { addBook, exportShelf, backUpBook, importShelf } = useShelf();
   const { isShelf, isSetting, isReading } = usePath();
   const settings = useAppSelector((state) => state.settings);
   const { saveSettings, closeApp, refreshSettings } = useSettings();
   const { width } = useWindowSize();
-  const { changeTheme } = useTheme();
   const { copyText } = useMethod();
   const list: Menu_Options = {
     type: "menu",
@@ -366,9 +363,7 @@ export function Header() {
           {
             type: "item",
             label: "黑暗模式",
-            onClick: () => {
-              changeTheme("dark");
-            },
+            onClick: () => {},
             icon: <MdInvertColors />,
           },
           {
@@ -379,15 +374,14 @@ export function Header() {
               {
                 type: "item",
                 label: "默认",
-                check: theme.name === "default",
-                onClick: () => changeTheme("default"),
+                onClick: () => {
+                },
                 icon: <MdLightMode />,
               },
               {
                 type: "item",
                 label: "黑暗",
-                check: theme.name === "dark",
-                onClick: () => changeTheme("dark"),
+                onClick: () => {},
                 icon: <MdDarkMode />,
               },
             ],
@@ -536,14 +530,14 @@ export function Header() {
           {
             type: "item",
             label: "隐私政策",
-            onClick: () => Dialog.message(CONTENTS.POLICY),
+            onClick: () => Dialog.message(""),
             icon: <MdOutlinePolicy />,
           },
           {
             type: "item",
             label: "查看许可",
             onClick: async () => {
-              await Shell.openFile("LICENSE.txt");
+              await Browser.openFile("LICENSE.txt");
             },
             icon: <MdOutlineAccessibility />,
           },
@@ -555,31 +549,9 @@ export function Header() {
   activeShortCuts(list);
 
   return (
-    <Container
-      flexLayout
-      full
-      sx={{
-        zIndex: THEME_CONSTANT.Z_INDEX.HEADER,
-        height: THEME_CONSTANT.HEIGHT_VALUE.HEADER,
-        px: 1,
-        backgroundColor: theme.default.backgroundColor?.default,
-        borderBottom: theme.divider.border?.default,
-      }}
-    >
-      <SvgIcon icon={<Logo />} size={30} />{" "}
+    <Container cls={"Header"}>
+      <SvgIcon icon={<Logo />} size={30} />
       <Button
-        sx={{
-          backgroundColor: "#2d2d2d",
-          pl: 1.5,
-          color: "#f8f8f8",
-          borderRadius: 3,
-          letterSpacing: 4,
-          ":hover": {
-            backgroundColor: "#1f1f1f",
-
-            color: "#ffffff",
-          },
-        }}
         label={isSetting ? "设置" : isShelf ? `书架` : "阅读"}
         onClick={() => (isSetting ? nav(-1) : nav(isShelf ? "./" : "./shelf"))}
       />
@@ -588,7 +560,7 @@ export function Header() {
           return <MenuButton key={key} context={item} />;
         })}
       <MenuButton open={width < 800} label={"菜单"} context={list} />
-      <Hangover className={"draggable"} sx={{ height: "100%" }} />
+      <Hangover cls={"draggable"} sx={{ height: "100%" }} />
       <Button
         open={isShelf}
         label={`正在阅读:${book.name}`}

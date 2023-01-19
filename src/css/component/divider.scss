@@ -1,0 +1,13 @@
+@import "../@variants/color";
+@import "../@variants/constant";
+.Divider {
+  background-color: $color_divider;
+  width: $full;
+  height: 1px;
+  margin: 0.5pc 0;
+  &[state="vertical"] {
+    height: $full;
+    width: 1px;
+    margin: 0 0.5pc;
+  }
+}

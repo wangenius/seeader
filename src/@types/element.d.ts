@@ -5,9 +5,11 @@ declare module "elementProperty" {
   export interface ElementProps extends BoxProps {
     children?: ReactNode;
     id?: string;
+    index?: number;
     sx?: SxProps<Theme>;
-    className?: string;
+    cls?: string;
     onClick?(...props): any;
+    onContextMenu?(...props): any;
     loading?: boolean;
     open?: boolean;
   }
@@ -27,6 +29,7 @@ declare module "elementProperty" {
     index?: number;
     value?: string;
     startIcon?: ReactNode;
+    state?: "active" | "none";
     label?: string;
     endIcon?: ReactNode;
     href?: string;
@@ -41,26 +44,10 @@ declare module "elementProperty" {
   }
 
   interface ContainerProps extends ElementProps {
-    flexLayout?: boolean;
-    overflowY?: boolean;
-    proportion?: number;
-    vertex?: boolean;
-    full?: boolean;
-    col?: boolean;
-    verticalCenter?: boolean;
-    horizonCenter?: boolean;
+    state?: string;
+    focus?: boolean;
   }
 
-  interface popProps {
-    anchor: HTMLElement;
-    configs?: PopConfigs;
-  }
-
-  interface PopConfigs {
-    duration?: number;
-    easing?: any;
-    decay?: number | boolean;
-  }
   interface MenuItemProperty extends ButtonProperty {
     children: Menu_Options;
     type?: "item" | "menu" | "divider" | "title";

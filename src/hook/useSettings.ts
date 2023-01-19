@@ -1,79 +1,83 @@
-import { Clipboard, Data, Dialog, remote } from "../method/remote";
+import { remote } from "../method/remote";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { toast } from "react-toastify";
 import { settingsSlice } from "../store/slice_settings";
 import { Language } from "../@types/i18next";
 import i18n from "i18next";
 import { Settings } from "../@types/object";
-import { CHANNELS } from "a_root";
+import { Data } from "../method/data";
+import { Dialog } from "../method/dialog";
 
 export function useSettings() {
   const settings = useAppSelector((state) => state.settings);
   const dispatch = useAppDispatch();
-  const change = (settings: Partial<Settings>) =>
+
+  /** @Description 改变redux设置状态 */
+  const changeSettings = (settings: Partial<Settings>) =>
     dispatch(settingsSlice.actions.changeSettings(settings));
 
+  /** @Description 关闭App */
   async function closeApp() {
+    await Data.update("settings", {}, settings);
+    if (settings.common.minWithTray) return await remote("window_close");
+    if (await Dialog.confirm("确认退出？")) await remote("app_close");
+  }
+
+  /** @Description 保存设置到数据库 */
+  async function saveSettings() {
     try {
-      await Data.update("settings", {}, settings);
-      if (settings.common.minWithTray) return await remote("window_close");
-      if (await Dialog.confirm("确认退出？")) await remote(CHANNELS.app_close);
-    } catch (e) {
-      toast.warning(e as string);
+      const res = await Data.select<Settings>("settings", {});
+      res.length
+        ? await Data.update("settings", { _id: settings._id }, settings)
+        : await Data.insert<Settings>("settings", settings);
+      toast.success("保存成功");
+    } catch {
+      toast.error("保存失败");
     }
   }
 
-  function saveSettings() {
-    Data.select("settings", {})
-      .then((res) => {
-        if (res.length)
-          return Data.update("settings", { _id: settings._id }, settings);
-        return Data.insert("settings", settings);
-      })
-      .then((res) => {
-        toast.success("保存成功");
-      });
+  /** @Description 刷新数据库设置 */
+  async function refreshSettings() {
+    const setting = await Data.select<Settings>("settings", {});
+    changeSettings(setting[0]);
+    toast.success("刷新成功");
   }
-  function refreshSettings() {
-    Data.select<Settings>("settings", {})
-      .then((res) => {
-        return change(res[0]);
-      })
-      .then(() => {
-        toast.success("刷新成功");
-      });
-  }
-  function changeFontSize(fontSize: number) {
-    change({ reading: { fontSize: fontSize } });
-  }
-  function changeLineHeight(lineHeight: number) {
-    change({
+
+  /** @Description 改变字体大小 */
+  const changeFontSize = (fontSize: number) =>
+    changeSettings({ reading: { fontSize: fontSize } });
+
+  /** @Description 改变行高 */
+  const changeLineHeight = (lineHeight: number) =>
+    changeSettings({
       reading: { lineHeight: lineHeight },
     });
-  }
-  function changeParagraphSpacing(spacing: number) {
-    change({
+
+  /** @Description 改变段落高度 */
+  const changeParagraphSpacing = (spacing: number) =>
+    changeSettings({
       reading: { paragraphSpacing: spacing },
     });
-  }
 
-  function changeLanguage(language: Language) {
+  /** @Description 改变语言 */
+  const changeLanguage = (language: Language) =>
     i18n.changeLanguage(language).then(() => {
       localStorage.setItem("language", language);
-      change({ preference: { language: language } });
+      changeSettings({ preference: { language: language } });
     });
-  }
 
+  /** @Description 开关目录 */
   const toggleContentBar = (to?: boolean) => {
-    change({
+    changeSettings({
       reading: {
         contentOpen: (to as boolean) || !settings.reading.contentOpen,
       },
     });
   };
 
+  /** @Description 改变查词来源 */
   function changeDictionaryOrigin(to: "online" | "local") {
-    change({
+    changeSettings({
       reading: {
         dictionary: to,
       },
@@ -81,7 +85,8 @@ export function useSettings() {
   }
 
   return {
-    change,
+    settings,
+    changeSettings,
     closeApp,
     saveSettings,
     refreshSettings,

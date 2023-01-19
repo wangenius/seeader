@@ -1,0 +1,6 @@
+@import "../@variants/constant";
+.Pop {
+  position: absolute;
+  z-index: $z_pop;
+  overflow: visible
+}

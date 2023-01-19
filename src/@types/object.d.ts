@@ -15,9 +15,9 @@ declare interface Book {
   progress: number;
 }
 
-declare interface BookBody {
+declare interface BookBodies {
   _id?: string;
-  [propsName: string]: Chapter;
+  [propsName: number]: Chapter;
 }
 
 declare interface chapterTitle {

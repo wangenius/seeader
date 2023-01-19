@@ -1,0 +1,36 @@
+@import "../@variants/constant";
+
+.Setting {
+  padding: 25px 5px;
+  @include xFlex;
+  height: $full;
+  width: $full;
+  overflow: hidden;
+  max-width: 900px;
+  margin: auto;
+
+  .NavBar {
+    padding-right: 10px;
+    height: 100%;
+    position: relative;
+    width: 250px;
+    overflow: visible;
+    .Title {
+      font-size: 5rem;
+      color: #3d3d3d;
+      overflow: visible;
+    }
+  }
+  .SetArea {
+    width: $full;
+    .SetPair {
+      @include xFlex;
+      @include FlexCenter;
+      width: $full;
+      min-height: 50px;
+      .PairName {
+        @include ellipsis;
+      }
+    }
+  }
+}

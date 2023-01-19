@@ -1,6 +1,5 @@
 import { useEffectOnce } from "react-use";
 import { useCallback, useState } from "react";
-import { THEME_CONSTANT } from "../@constant/theme";
 
 export function useWindows() {
   const [size, setSize] = useState({
@@ -19,9 +18,10 @@ export function useWindows() {
       window.removeEventListener("resize", onResize);
     };
   });
+
   return {
     win_width: size.win_width,
     win_height: size.win_height,
-    size: size.win_width > THEME_CONSTANT.breakpoints.md,
+    size: size.win_width > 900,
   };
 }

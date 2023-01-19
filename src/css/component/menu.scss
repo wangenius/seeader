@@ -1,0 +1,54 @@
+@import "../@variants/constant";
+@import "../@variants/color";
+
+.Menu {
+  background-color: $bc_menu;
+  border-radius: $br_menu;
+  box-shadow: $boxShadow;
+  padding: 3px;
+  overflow: visible;
+
+  .Divider {
+    margin: 3px;
+  }
+
+  .MenuItem {
+    position: relative;
+    overflow: visible;
+
+    .MenuButton {
+      @include xFlex;
+      @include NoBubbling;
+      @include FlexCenter;
+      white-space: nowrap;
+      box-sizing: content-box;
+      user-select: none;
+      border-radius: $br_btn;
+      min-width: 200px;
+      margin: 1px;
+      padding: 0 8px;
+      height: $height_menuButton;
+      &:hover {
+        @include bc_hover(rgba(0,0,0,0.05))
+      }
+      svg:first-of-type {
+        fill: #616161;
+        scale: 1.1;
+        margin-right: 5px;
+      }
+      svg:last-of-type {
+        fill: #616161;
+        scale: 1.1;
+        margin-left: 5px;
+      }
+      .name {
+        font-size: 0.785rem;
+        color: #696969;
+      }
+      .shortcuts {
+        font-size: 0.785rem;
+        color: #9f9f9f;
+      }
+    }
+  }
+}

@@ -1,0 +1,56 @@
+.SliderContainer {
+  width: 100%;
+  max-width: 220px;
+  min-width: 160px;
+  height: 80px;
+  padding: 20px;
+}
+.SliderContainer[state=min] .Slider .MuiSlider-track {
+  border-radius: 12px;
+}
+.SliderContainer[state=min] .Slider .MuiSlider-track::after {
+  content: "";
+  border-radius: 0 12px 12px 0;
+  width: 0;
+}
+.SliderContainer .Slider {
+  color: #0015ff;
+}
+.SliderContainer .Slider .MuiSlider-track {
+  min-width: 20px;
+  margin: 0 -8px;
+  height: 20px;
+  border-radius: 12px 0 0 12px;
+  position: relative;
+}
+.SliderContainer .Slider .MuiSlider-track::after {
+  content: "";
+  border-radius: 0 12px 12px 0;
+  position: absolute;
+  height: 20px;
+  width: 22px;
+  left: 100%;
+  top: -1px;
+  background-color: #0015ff;
+}
+.SliderContainer .Slider .MuiSlider-mark {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+}
+.SliderContainer .Slider .MuiSlider-markLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: #808080;
+}
+.SliderContainer .Slider .MuiSlider-thumb {
+  opacity: 0;
+  transition: 0.3s cubic-bezier(0.47, 1.64, 0.41, 0.8);
+}
+.SliderContainer .Slider .MuiSlider-rail {
+  height: 20px;
+  width: calc(100% + 14px);
+  background-color: #dedede;
+}
+
+/*# sourceMappingURL=slider.css.map */

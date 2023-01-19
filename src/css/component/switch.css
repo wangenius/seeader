@@ -1,0 +1,41 @@
+.Switch {
+  width: 42px;
+  height: 26px;
+  padding: 0;
+}
+.Switch .MuiSwitch-switchBase {
+  transition-duration: 300ms;
+}
+.Switch .MuiSwitch-switchBase.Mui-checked {
+  transform: translateX(16px);
+  color: #fff;
+}
+.Switch .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
+  opacity: 1;
+  background-color: #0015ff;
+  border: 0;
+}
+.Switch .MuiSwitch-switchBase.Mui-checked.Mui-disabled + .MuiSwitch-track {
+  opacity: 0.5;
+}
+.Switch .MuiSwitch-switchBase.Mui-focusVisible .MuiSwitch-thumb {
+  border: 6px solid #fff;
+}
+.Switch .MuiSwitch-switchBase.Mui-disabled .MuiSwitch-thumb {
+  color: #ffd700;
+}
+.Switch .MuiSwitch-switchBase.Mui-disabled + .MuiSwitch-track {
+  opacity: 0.7;
+}
+.Switch .MuiSwitch-thumb {
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+}
+.Switch .MuiSwitch-track {
+  border-radius: 26px/2;
+  background-color: #39393d;
+  opacity: 1;
+}
+
+/*# sourceMappingURL=switch.css.map */

@@ -1,66 +1,50 @@
-import { ForwardedRef, forwardRef } from "react";
+import {
+  ForwardedRef,
+  forwardRef,
+  memo,
+  useImperativeHandle,
+  useRef,
+} from "react";
 import { Box } from "@mui/system";
-import { useTheme } from "../context/ThemeProvider";
 import { ContainerProps } from "elementProperty";
-import { sxParser } from "../method/parser";
-import { SX } from "../@constant/theme";
+import { voidFn } from "../method/general";
+import clsx from "clsx";
 
-export const Container = forwardRef(
-  (props: ContainerProps, ref: ForwardedRef<any>) => {
-    const { theme } = useTheme();
+/*默认父组件重渲染后，子组件同时渲染*/
+export const Container = memo(
+  forwardRef((props: ContainerProps, ref: ForwardedRef<any>) => {
     const {
       sx,
       children,
-      className,
+      cls,
       open = true,
-      col,
       id,
-      flexLayout,
-      overflowY,
-      full,
-      vertex,
-      verticalCenter,
-      horizonCenter,
-      proportion,
+      index,
+      onClick = voidFn,
+      onContextMenu = voidFn,
       ...other
     } = props;
-    const newStyle: Style.SXs = [
-      {
-        backgroundColor: "transparent",
-        display: open ? (flexLayout ? "flex" : "block") : "none",
-        alignItems: "center",
-        justifyContent: "center",
-        userSelect: "none",
-        color: theme.default.color?.default,
-        fontSize: "0.875rem",
-        overflow: "hidden",
-        width: full ? "100%" : "fit-content",
-        height: vertex ? "100%" : "fit-content",
-        flexDirection: col ? "column" : "row",
-        flex: proportion,
-        boxSizing: "border-box",
-        fontFamily: theme.default.font,
-      },
-      overflowY && SX.overFlowY,
-    ];
-    return (
+    const Ref = useRef<HTMLElement>();
+
+    /** @Description 暴露组件 */
+    useImperativeHandle(ref, () => Ref.current);
+
+    return open ? (
       <Box
-        {...other}
-        ref={ref}
+        ref={Ref}
         id={id}
-        className={className}
-        sx={sxParser(newStyle, sx)}
+        className={cls}
+        sx={sx}
+        onClick={(event) => onClick(event, index)}
+        onContextMenu={(event) => onContextMenu(event, index)}
+        {...other}
       >
         {children}
       </Box>
-    );
-  }
+    ) : null;
+  })
 );
 
-export const Hangover = ({ proportion, ...other }: ContainerProps) => (
-  <Container proportion={proportion || 1} {...other} />
-);
-
-export const Docker = (props: ContainerProps) => {
-  return <Container></Container>;
-};
+export const Hangover = forwardRef(({ cls, ...other }: ContainerProps, ref) => (
+  <Container cls={clsx("Hangover", cls)} {...other} ref={ref} />
+));

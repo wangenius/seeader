@@ -2,112 +2,110 @@ import * as path from "path";
 import {
   app,
   BrowserWindow,
-  dialog,
+  BrowserWindowConstructorOptions,
   Menu,
   nativeImage,
   Notification,
   Tray,
-  BrowserWindowConstructorOptions,
 } from "electron";
-import { ipcListener } from "./ipcListener";
-import { ENV } from "a_root";
+import autoReload from "electron-reload";
+import { appExit } from "./window/Windows";
+import { Dir_asar, Dir_statics } from "./@constant/path";
+import {
+  ipc_datastore,
+  ipc_dialog,
+  ipc_file,
+  ipc_method,
+  ipc_win,
+} from "./ipc";
 
-const WIN32 = process.platform === "win32";
+const icon_path = Dir_statics.end("icon", "icon.png");
+
+/** @Description 窗口特性 */
 const BrowserConfig: BrowserWindowConstructorOptions = {
   titleBarStyle: "hidden",
   width: 1280,
   height: 760,
   minWidth: 560,
   minHeight: 660,
-  icon: path.join(__dirname, "../../public/icon.png"),
+  icon: icon_path,
   webPreferences: {
+    /*提供预加载接口*/
     preload: path.join(__dirname, "preload.js"),
     nodeIntegration: true,
     contextIsolation: true,
   },
 };
 
-async function createWindow() {
+/** @Description 创建窗口 */
+async function createWindow(): Promise<BrowserWindow> {
+  /*创建窗口对象*/
   const mainWindows = new BrowserWindow(BrowserConfig);
-  if (app.isPackaged) {
-    await mainWindows.loadURL(`file://${__dirname}/../../index.html`);
-  } else {
-    await mainWindows.loadURL("http://localhost:3000/index.html");
-    if (ENV.IS_DEV)
-      require("electron-reload")(__dirname, {
-        electron: path.join(
-          __dirname,
-          `../../node_modules/.bin/electron${WIN32 ? ".cmd" : ""}`
-        ),
-        forceHardReset: true,
-        hardResetMethod: "exit",
-      });
-  }
 
+  /*链接HTML地址*/
+  if (app.isPackaged) await mainWindows.loadURL(Dir_statics.end("index.html"));
+  else await mainWindows.loadURL("http://localhost:3000/index.html");
+
+  /*优化启动白屏问题*/
+  mainWindows.on("ready-to-show", () => {
+    mainWindows.show();
+    mainWindows.focus();
+  });
+  /*关闭最小化至托盘*/
   mainWindows.on("close", (e) => {
     e.preventDefault(); // 阻止退出程序
     new Notification({
       title: "提示",
       body: "窗口最小化至托盘",
-      icon: path.join(__dirname, "../../public/icon.png"),
+      icon: icon_path,
     }).show();
     mainWindows.hide(); // 隐藏主程序窗口
   });
 
-  traySet(mainWindows);
+  return mainWindows;
 }
 
+/*app完成*/
 app.whenReady().then(async () => {
-  await createWindow();
+  // 创建窗口
+  const mainWindows = await createWindow();
+  /*托盘设置*/
+  traySet(mainWindows);
+  /*handle监听*/
+  ipc_method();
+  ipc_file();
 
-  app.on("activate", async () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      await createWindow();
-    }
-  });
+  ipc_datastore();
+  ipc_win();
+  ipc_dialog();
 
-  app.on("window-all-closed", () => {});
-  ipcListener();
+  if (!app.isPackaged)
+    /*开发环境热加载*/
+    autoReload(__dirname, {
+      electron: require(Dir_asar.end("node_modules", "electron")),
+      hardResetMethod: "exit",
+      awaitWriteFinish: true,
+      forceHardReset: true,
+      /*忽略*/
+      ignored: ["**/data/*", "src"],
+    });
 });
 
-const traySet = (windows: BrowserWindow) => {
-  let tray;
-  const icon = nativeImage.createFromPath(
-    path.join(__dirname, "../../public/icon.png")
-  );
-  tray = new Tray(icon);
-  tray.on("double-click", () => {
-    windows.show();
-  });
+/** @Description 托盘设置 */
+function traySet(windows: BrowserWindow) {
+  const icon = nativeImage.createFromPath(icon_path);
+  const tray = new Tray(icon);
+  tray.on("double-click", () => windows.show());
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "打开主界面",
-      click: function () {
-        windows.show();
-        console.log();
-      },
+      click: () => windows.show(),
     },
     {
-      // 点击退出菜单退出程序
       label: "退出",
-      click: function () {
-        windows.focus();
-        dialog
-          .showMessageBox(windows, {
-            title: "",
-            message: "确定退出？",
-            noLink: true,
-            buttons: ["确定", "取消"],
-          })
-          .then((res) => {
-            if (res.response === 0) {
-              windows.destroy();
-              app.quit();
-            }
-          });
-      },
+      click: () => appExit(windows),
     },
   ]);
   tray.setContextMenu(contextMenu);
   tray.setToolTip("seeader");
-};
+}
