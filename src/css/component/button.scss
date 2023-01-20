@@ -28,6 +28,7 @@
       color: $color_button_hover;
     }
   }
+
 }
 
 .IconButton {
@@ -64,6 +65,9 @@
   justify-content: left;
   margin-bottom: 5px;
   padding: 8px;
+  .Button_Chars {
+    width: $full;
+  }
 
   &[state="active"] {
     @include dynamic_shadow;

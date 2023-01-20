@@ -1,4 +1,4 @@
-import { Container } from "../component/Container";
+import { Container, Menu, pop } from "../component";
 import { useBook } from "../context/BookProvider";
 import { useShelf } from "../context/ShelfProvider";
 import React, { memo, useCallback, useState } from "react";
@@ -8,12 +8,10 @@ import {
   MdModeEditOutline,
   MdOpenInNew,
 } from "react-icons/md";
-import { Menu } from "../component/Menu";
-import { useModal } from "../context/ModalProvider";
 import __ from "lodash";
 import { Book } from "../@types/object";
 import { useNavigate } from "react-router-dom";
-import { Dialog } from "../method/dialog";
+import { Dialog } from "../method";
 import { useEvent } from "../hook/useEvent";
 import { ElementProps, Menu_Options } from "elementProperty";
 import { Fn } from "../@types/context";
@@ -22,7 +20,6 @@ export const Shelf = memo(() => {
   const { openBook, deleteBook, modalEditBook } = useBook();
   const { book } = useBook();
   const { books } = useShelf();
-  const { modal } = useModal();
 
   /*选中的书index*/
   const [hoveredBookIndex, setHoveredBookIndex] = useState<number>();
@@ -60,7 +57,7 @@ export const Shelf = memo(() => {
           label: "信息",
           icon: <MdInfoOutline />,
           onClick: () => {
-            modal(<Container>{books[key].name}</Container>);
+            pop.modal(<Container>{books[key].name}</Container>);
           },
         },
         {
@@ -90,13 +87,10 @@ export const Shelf = memo(() => {
   /** 右键书籍封面 */
   const contextShow = useEvent((event, key) => {
     setHoveredBookIndex(key);
-    modal(
-      <Menu
-        sx={{ position: "absolute", top: event.clientY, left: event.clientX }}
-      >
-        {contextContent(key)}
-      </Menu>
-    );
+    pop.modal(<Menu>{contextContent(key)}</Menu>, {
+      event: event,
+      position: "absolute",
+    });
   });
 
   /** 左键书籍封面 */

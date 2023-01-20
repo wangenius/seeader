@@ -1,20 +1,22 @@
 @import "../@variants/constant";
+@import "../@variants/color";
 
 $Title_Height: 60px;
 $Contents_Height: calc(100% - $Title_Height);
 
 .BookPage {
-  @include xFlex;
   width: $full;
   height: $height_body;
   .BookContents {
-    height: $full;
     width: $width_contents;
+    height: $height_body;
     border-right: $Divider_Border;
+    position: absolute;
+    overflow: hidden;
     .Title {
       @include xFlex;
       @include FlexCenter;
-      width: $full;
+      width: $width_contents;
       height: $Title_Height;
       padding: 0 10px;
       > :first-child {
@@ -25,7 +27,7 @@ $Contents_Height: calc(100% - $Title_Height);
     }
     .Contents {
       @include ScrollY;
-      width: $full;
+      width: $width_contents;
       height: $Contents_Height;
       padding-bottom: 20px;
     }
@@ -34,10 +36,15 @@ $Contents_Height: calc(100% - $Title_Height);
     @include ScrollY;
     @include ScrollBar;
     @include Max;
+    position: absolute;
+    right: 0;
+    width:$width_body;
+    height: $height_body;
+    background-color:$bc_default;
     .BookBody {
       margin: auto;
       width: min(100%, 900px);
-      padding: 20px 20px 200px;
+      padding: 20px 20px 60px;
       .BodyTitle {
         width: 100%;
         font-size: 2rem;
@@ -51,5 +58,8 @@ $Contents_Height: calc(100% - $Title_Height);
         text-indent: 2rem;
       }
     }
+    &[state="full"] {
+    width: $full;
+  }
   }
 }

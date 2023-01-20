@@ -7,11 +7,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Container } from "./Container";
 import { TextInputProps } from "elementProperty";
-import { IconButton } from "./Button";
+import { IconButton,Container } from "./index";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
-import { voidFn } from "../method/general";
+import { voidFn } from "../method";
 import { Slider, Switch } from "@mui/material";
 import { SliderProps, ToggleProps } from "../@types/slider";
 
@@ -72,7 +71,6 @@ export const SliderInput = forwardRef((props: SliderProps, ref: LegacyRef<any>) 
         max={args?.max}
         step={args?.step}
         marks={markLabel && args?.marks}
-        valueLabelDisplay="on"
         getAriaValueText={getAriaValueText}
         value={value}
         onChange={(event, value, activeThumb) => {

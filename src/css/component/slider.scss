@@ -2,60 +2,29 @@
   width: 100%;
   max-width: 220px;
   min-width: 160px;
-  height: 80px;
-  padding: 20px;
-  &[state="min"] {
-    .Slider {
-      & .MuiSlider-track {
-        border-radius: 12px;
-        &::after {
-          content: "";
-          border-radius: 0 12px 12px 0;
-          width: 0;
-        }
-      }
-    }
-  }
+  overflow: visible;
   .Slider {
     color: #0015ff;
     & .MuiSlider-track {
-      min-width: 20px;
-      margin: 0 -8px;
-      height: 20px;
-      border-radius: 12px 0 0 12px;
+      border: none;
       position: relative;
-      &::after {
-        content: "";
-        border-radius: 0 12px 12px 0;
-        position: absolute;
-        height: 20px;
-        width: 22px;
-        left: 100%;
-        top: -1px;
-        background-color: #0015ff;
-      }
     }
     & .MuiSlider-mark {
-      width: 6px;
-      height: 6px;
-      border-radius: 3px;
+      display: none;
     }
     & .MuiSlider-markLabel {
-      display: block;
       font-size: 0.8rem;
       color: #808080;
     }
     & .MuiSlider-markLabelActive {
+      color: #0015ff;
+
     }
 
     & .MuiSlider-thumb {
-      opacity: 0;
-
       transition: 0.3s cubic-bezier(0.47, 1.64, 0.41, 0.8);
     }
     & .MuiSlider-rail {
-      height: 20px;
-      width: calc(100% + 14px);
       background-color: #dedede;
     }
   }

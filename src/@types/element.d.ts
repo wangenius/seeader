@@ -36,11 +36,12 @@ declare module "elementProperty" {
     tip?: boolean;
     small?: boolean;
   }
-  interface MenuProperty extends ButtonProperty {
+  interface MenuProps extends ButtonProperty {
     children: Menu_Options;
   }
   interface MenuButtonProperty extends ButtonProperty {
     context: Menu_Options;
+    size?:number
   }
 
   interface ContainerProps extends ElementProps {
@@ -48,7 +49,7 @@ declare module "elementProperty" {
     focus?: boolean;
   }
 
-  interface MenuItemProperty extends ButtonProperty {
+  interface MenuItemProps extends ButtonProperty {
     children: Menu_Options;
     type?: "item" | "menu" | "divider" | "title";
   }

@@ -1,26 +1,28 @@
-import { Container, Hangover } from "../component/Container";
+import {
+  Button,
+  Container,
+  FontButton,
+  Hangover,
+  MenuButton,
+  SliderInput,
+  ToggleInput,
+} from "../component";
 import React, { memo, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { Button, FontButton } from "../component/Button";
 import { initialSettings, settingsSlice } from "../store/slice_settings";
 import { MdOutlineFileUpload, MdOutlineSave, MdRefresh } from "react-icons/md";
 import { useSettings } from "../hook/useSettings";
-import { MenuButton } from "../component/Menu";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 import { Language } from "../@types/i18next";
-import __ from "lodash";
 import _ from "lodash";
-import { SliderInput, ToggleInput } from "../component/Input";
 import { toast } from "react-toastify";
-import { err } from "../method/general";
+import { Dialog, err, File } from "../method";
 import { useShelf } from "../context/ShelfProvider";
 import { useWindows } from "../hook/useWindows";
 import { SliderInstance } from "../@constant/slider";
-import { File } from "../method/file";
-import { Dialog } from "../method/dialog";
 
-export const Setting = memo(() => {
+export const Setting = () => {
   const settings = useAppSelector((state) => state.settings);
   const [tab, setTab] = useState<number>(
     parseInt(localStorage.getItem("setTab") || "0")
@@ -29,7 +31,6 @@ export const Setting = memo(() => {
   const { saveSettings, refreshSettings, changeLanguage } = useSettings();
   const { t } = useTranslation();
   const { backUpBook } = useShelf();
-  const category = [t("common"), t("preference"), t("shelf"), t("reading")];
   useEffect(() => {
     localStorage.setItem("setTab", tab.toString());
   }, [tab]);
@@ -71,8 +72,6 @@ export const Setting = memo(() => {
         />
       ),
     },
-  ];
-  const preference = [
     {
       start: t("theme"),
       end: (
@@ -84,15 +83,12 @@ export const Setting = memo(() => {
               {
                 type: "item",
                 label: t("default"),
-                onClick(): any {
-                },
+                onClick(): any {},
               },
               {
                 type: "item",
                 label: t("dark"),
-                onClick(): any {
-
-                },
+                onClick(): any {},
               },
             ],
           }}
@@ -126,8 +122,6 @@ export const Setting = memo(() => {
         />
       ),
     },
-  ];
-  const shelf = [
     {
       start: t("book cover"),
       end: (
@@ -157,8 +151,6 @@ export const Setting = memo(() => {
         </>
       ),
     },
-  ];
-  const reading = [
     {
       start: "font",
       end: (
@@ -306,24 +298,17 @@ export const Setting = memo(() => {
     <Container cls={"Setting"}>
       <Container cls={"NavBar"}>
         <Container cls={"Title"} children={t("settings")} />
-        {category.map((item, key) => (
-          <FontButton
-            onClick={() => {
-              setTab(key);
-            }}
-            key={key}
-            label={item}
-          />
-        ))}
-        {handle.map((item, key) => (
-          <FontButton key={key} label={item.label} onClick={item.onClick} />
-        ))}
+        <Container cls={"FontButton"}>
+          {handle.map((item, key) => (
+              <FontButton key={key} label={item.label} onClick={item.onClick} />
+          ))}
+        </Container>
       </Container>
       <Container cls={"SetArea"}>
-        {_.concat(common, preference, shelf, reading).map((item, key) => {
+        {common.map((item, key) => {
           return (
             <Container cls={"SetPair"} key={key}>
-              <Hangover cls={"PairName"}>{__.capitalize(item.start)}</Hangover>
+              <Hangover cls={"PairName"}>{_.capitalize(item.start)}</Hangover>
               {item.end}
             </Container>
           );
@@ -331,4 +316,4 @@ export const Setting = memo(() => {
       </Container>
     </Container>
   );
-});
+};

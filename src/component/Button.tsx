@@ -12,30 +12,19 @@ import {
 
 export const Button = memo(
   forwardRef((props: ButtonProperty, ref) => {
-    const {
-      children,
-      startIcon = undefined,
-      endIcon = undefined,
-      label = "",
-      cls,
-      ...other
-    } = props;
+    const { children, startIcon, endIcon, label = "", cls, ...other } = props;
     return (
       <Container ref={ref} cls={clsx("Button", cls)} {...other}>
         <Hangover
           cls={"Button_startIcon"}
-          open={startIcon !== undefined}
+          open={!startIcon}
           children={startIcon}
         />
         <Container
           cls={"Button_Chars"}
           children={_.capitalize(label) || children}
         />
-        <Hangover
-          cls={"Button_endIcon"}
-          open={endIcon !== undefined}
-          children={endIcon}
-        />
+        <Hangover cls={"Button_endIcon"} open={!endIcon} children={endIcon} />
       </Container>
     );
   })
@@ -74,10 +63,8 @@ export const ListButton = memo(
   forwardRef((props: ListButtonValue, ref) => {
     const { isActive, sx, label, onClick, ...other } = props;
     const Ref = useRef<HTMLElement>();
-
     /** @Description 暴露组件 */
     useImperativeHandle(ref, () => Ref.current);
-
     return (
       <Button
         ref={Ref}

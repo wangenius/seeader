@@ -2,32 +2,37 @@
 
 .Setting {
   padding: 25px 5px;
-  @include xFlex;
-  height: $full;
+  height: $height_body;
   width: $full;
-  overflow: hidden;
   max-width: 900px;
   margin: auto;
-
+  overflow: visible;
   .NavBar {
     padding-right: 10px;
-    height: 100%;
     position: relative;
-    width: 250px;
     overflow: visible;
+    height: 120px;
     .Title {
+      @include title_font;
       font-size: 5rem;
       color: #3d3d3d;
       overflow: visible;
     }
+    .FontButton {
+      display: inline-block;
+    }
   }
   .SetArea {
+    padding: 30px;
     width: $full;
+    height: calc($height_body - 120px);
+    overflow:scroll;
     .SetPair {
       @include xFlex;
       @include FlexCenter;
       width: $full;
       min-height: 50px;
+      overflow: visible;
       .PairName {
         @include ellipsis;
       }

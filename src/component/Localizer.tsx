@@ -4,6 +4,7 @@ import {Container} from "./Container";
 import {useWindows} from "../hook/useWindows";
 import {LocalizerProps} from "../@types/localizer";
 
+
 /** @Description 位置定位器 对于视窗而言 */
 export const Localizer = memo(
   ({
@@ -18,11 +19,21 @@ export const Localizer = memo(
     const ref = useRef<HTMLElement>();
     const { win_height, win_width } = useWindows();
     useLayoutEffect(() => {
+        if (!event && !anchor) return defaultPosition();
+
       /* 利用点击事件设置位置*/
       eventPosition(event as React.MouseEvent);
       /* 利用锚点元素设置位置*/
       anchorPosition(anchor as HTMLElement);
     }, [anchor, event]);
+
+    const defaultPosition = useCallback(()=>{
+        console.log(55)
+        const width = ref.current?.clientWidth as number;
+        const height = ref.current?.clientHeight as number;
+       setTop((win_height  - height )/ 2)
+       setLeft((win_width  - width )/ 2)
+    },[])
 
     /** @Description 事件定位方法 */
     const eventPosition = useCallback(
@@ -45,25 +56,29 @@ export const Localizer = memo(
     const anchorPosition = useCallback(
       (anchor: HTMLElement) => {
         if (!anchor) return;
+        /** @Description 目标元素尺寸 */
         const width = ref.current?.clientWidth as number;
         const height = ref.current?.clientHeight as number;
-        /*锚元素宽度*/
-        const anchorWidth = anchor.clientWidth;
-        const x =
-          position === "absolute"
-            ? anchor.getBoundingClientRect().x
-            : anchor.clientWidth;
 
-        const y =
-          position === "absolute" && base === "bottom"
-            ? anchor.getBoundingClientRect().y + anchor.clientHeight
-            : 0;
+        /** @Description 锚元素坐标 */
+        let ox = position === "absolute" ? anchor.getBoundingClientRect().x : 0;
+        let oy = position === "absolute" ? anchor.getBoundingClientRect().y : 0;
+
+        /** 锚元素宽度*/
+        const aw = anchor.clientWidth;
+        const ah = anchor.clientHeight;
+
+        /** @Description 坐标 */
+        let x = base === "bottom" ? ox : ox + aw;
+        let y = base === "bottom" ? oy + ah : oy;
+
+        /** @Description 判断位置 */
+        if (anchor.getBoundingClientRect().x + aw + width > win_width)
+          x = position === "absolute"? anchor.getBoundingClientRect().x + aw - width:-width;
+        if (y > win_height) y = win_height - height;
+
         setLeft(x);
         setTop(y);
-        if (anchor.getBoundingClientRect().x + anchorWidth + width > win_width)
-          setLeft(-width);
-        if (anchor.getBoundingClientRect().y + height > win_height)
-          setTop(win_height - height);
       },
       [anchor]
     );
@@ -71,7 +86,7 @@ export const Localizer = memo(
     return (
       <Container
         ref={ref}
-        sx={{ overflow: "visible", position: "absolute", top: top, left: left }}
+        sx={{ overflow: "visible", position: 'absolute', top: top, left: left }}
         children={children}
       />
     );

@@ -1,8 +1,16 @@
 import React, { memo, useCallback, useLayoutEffect, useRef } from "react";
-import { Container, Hangover } from "../component/Container";
-import { IconButton, ListButton } from "../component/Button";
+import {
+  Container,
+  Divider,
+  Hangover,
+  IconButton,
+  ListButton,
+  LoadingRing,
+  Menu,
+  pop,
+  SliderInput,
+} from "../component";
 import { useBook } from "../context/BookProvider";
-import { Divider } from "../component/Accessory";
 import { Menu_Options } from "elementProperty";
 import {
   MdEdit,
@@ -15,20 +23,15 @@ import {
   MdSearch,
   MdTranslate,
 } from "react-icons/md";
-import { usePop } from "../context/PopContainer";
-import { Menu } from "../component/Menu";
 import { useSettings } from "../hook/useSettings";
 import { BiBookmarkPlus, BiCog, BiFontSize } from "react-icons/bi";
 import { AiOutlineColumnHeight } from "react-icons/ai";
-import { SliderInput } from "../component/Input";
 import { useNavigate } from "react-router-dom";
 import { useMethod } from "../hook/useMethod";
 import { SliderInstance } from "../@constant/slider";
 import { useEvent } from "../hook/useEvent";
-import { useWindows } from "../hook/useWindows";
-import { Localizer } from "../component/Localizer";
 import { Fn } from "../@types/context";
-import { LoadingRing } from "../component/Icons";
+import { useSpring } from "@react-spring/web";
 
 /** @Description 主体 */
 export const Book = memo(() => (
@@ -44,8 +47,6 @@ const BookContents = memo(() => {
   const ListRef = useRef<any>();
   const { settings } = useSettings();
   const { book, jumpToPage, modalEditBook } = useBook();
-  const { win_height } = useWindows();
-
   /** 滚动到顶部*/
   const scrollToCurrentChapterTitle = useCallback<Fn>(() => {
     {
@@ -61,10 +62,7 @@ const BookContents = memo(() => {
   useLayoutEffect(scrollToCurrentChapterTitle);
 
   return (
-    <Container
-      cls={"BookContents"}
-      state={settings.reading.contentOpen ? undefined : "closed"}
-    >
+    <Container cls={"BookContents"}>
       <Container cls={"Title"}>
         <Container children={book.name} />
         <Hangover />
@@ -93,7 +91,6 @@ const BookContents = memo(() => {
 const BookBody = memo(() => {
   /** @Description body ref */
   const ContentRef = useRef<HTMLElement>();
-  const { pop, openPop } = usePop();
   const { book, modalAddBookmark, currentBody, nextPage, lastPage } = useBook();
   const { changeFontSize, toggleContentBar, changeLineHeight } = useSettings();
   const { copyText, searchWeb, translate } = useMethod();
@@ -228,19 +225,23 @@ const BookBody = memo(() => {
 
   const onContextMenu = useEvent((event: React.MouseEvent) => {
     pop(
-      <Localizer event={event}>
-        <Menu
-          children={
-            window.getSelection()?.isCollapsed ? NoSelection() : TextSelected()
-          }
-        />
-      </Localizer>
+      <Menu
+        children={
+          window.getSelection()?.isCollapsed ? NoSelection() : TextSelected()
+        }
+      />,
+      { event: event }
     );
-    openPop();
+    pop.open();
   });
 
   return (
-    <Hangover cls={"BookArea"} ref={ContentRef} onContextMenu={onContextMenu}>
+    <Container
+      cls={"BookArea"}
+      ref={ContentRef}
+      state={settings.reading.contentOpen ? undefined : "full"}
+      onContextMenu={onContextMenu}
+    >
       <Container cls={"BookBody"}>
         <Container
           cls={"BodyTitle"}
@@ -250,12 +251,20 @@ const BookBody = memo(() => {
         />
         <Divider />
         {currentBody.map((item, keys) => (
-          <Container cls={"BodyPara"} key={keys}>
+          <Container
+            cls={"BodyPara"}
+            style={{
+              fontSize:settings.reading.fontSize + 'rem',
+              lineHeight: settings.reading.lineHeight,
+              marginBottom: settings.reading.paragraphSpacing + "pc",
+            }}
+            key={keys}
+          >
             {item}
           </Container>
         ))}
         <LoadingRing open={!currentBody.length} />
       </Container>
-    </Hangover>
+    </Container>
   );
 });

@@ -1,7 +1,7 @@
 import { Container } from "./Container";
 import { memo } from "react";
 import { ElementProps } from "elementProperty";
-
+import { Ring} from '@uiball/loaders'
 export const Logo = memo(() => (
   <img
     src={"icon/icon.png"}
@@ -11,5 +11,7 @@ export const Logo = memo(() => (
 ));
 
 export const LoadingRing = memo((props: ElementProps) => (
-  <Container open={props.open} cls={"loader"} />
+  <Container open={props.open} cls={"loader"}>
+    <Ring size={35} color={`${"#3e4859"}`} />
+  </Container>
 ));

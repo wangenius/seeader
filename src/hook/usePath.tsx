@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 export function usePath() {
@@ -7,7 +7,7 @@ export function usePath() {
   const [isSetting, setIsSetting] = useState(false);
   const param = useLocation();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (param.pathname === "/shelf") {
       setIsReading(false);
       setIsSetting(false);

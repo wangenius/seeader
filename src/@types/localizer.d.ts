@@ -3,7 +3,7 @@ import * as React from "react";
 
 declare interface LocalizerProps {
     /** @Description 子元素 */
-    children: ReactNode;
+    children?: ReactNode;
     /** @Description 锚元素 鼠标事件和锚元素必须设置一个 */
     anchor?: HTMLElement;
     /** @Description 鼠标事件 */

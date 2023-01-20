@@ -1,4 +1,5 @@
 import React, { useCallback, useLayoutEffect, useRef } from "react";
+
 export function useEvent<
   Fn extends (event: React.MouseEvent, key: number) => any
 >(handler: Fn): Fn {

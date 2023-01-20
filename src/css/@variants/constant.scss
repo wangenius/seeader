@@ -22,7 +22,7 @@ $height_body: calc(100vh - $height_header);
 
 /*width*/
 $width_contents: 250px;
-
+$width_body:calc($full - $width_contents);
 /*cursor*/
 $pointer:url("/public/icon/hand.png"), pointer;
 $arrow:url('/public/icon/default.png'), auto;

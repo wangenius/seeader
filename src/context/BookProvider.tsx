@@ -6,14 +6,12 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { usePath } from "../hook/usePath";
 import { ElementProps } from "elementProperty";
 import { bookSlice } from "../store/slice_book";
-import { Container } from "../component/Container";
+import {Container, TextInput, pop, Card} from "../component";
 import _ from "lodash";
-import { TextInput } from "../component/Input";
-import { useModal } from "./ModalProvider";
 import { Book, BookBodies } from "../@types/object";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { Data } from "../method/data";
+import { Data } from "../method";
 import { BookContextProps } from "../@types/context";
 
 // @ts-ignore
@@ -25,7 +23,6 @@ export const BookProvider = memo(({ children }: ElementProps) => {
   const nav = useNavigate();
   const { loadShelf } = useShelf();
   const { isReading } = usePath();
-  const { modal, closeModal } = useModal();
   const [currentBody, setCurrentBody] = useState<string[]>([]);
   const { t } = useTranslation();
 
@@ -54,6 +51,7 @@ export const BookProvider = memo(({ children }: ElementProps) => {
     setCurrentBody([]);
     dispatch(bookSlice.actions.nextProgress());
   }
+
   function lastPage() {
     setCurrentBody([]);
     dispatch(bookSlice.actions.lastProgress());
@@ -117,25 +115,25 @@ export const BookProvider = memo(({ children }: ElementProps) => {
 
   /** @Description 编辑书籍信息，当前仅支持修改标题 */
   async function modalEditBook(target?: Book) {
-    modal(
-      <Container sx={{ width: 500, height: 300 }}>
+    pop.modal(
+      <Card style={{ width: 500, height: 300 }}>
         <TextInput
           button
           onClick={async (value) => {
             await editBook({ name: value }, target);
-            closeModal();
+            pop.close()
           }}
           placeholder={"重命名"}
           defaultValue={target?.name || book.name}
         ></TextInput>
-      </Container>
+      </Card>
     );
   }
 
   /** @Description 添加书签 */
   function modalAddBookmark(content?: string) {
-    modal(
-      <>
+    pop.modal(
+      <Card>
         <Container
           sx={{
             backgroundColor: "rgba(40,40,40,0.68)",
@@ -179,7 +177,7 @@ export const BookProvider = memo(({ children }: ElementProps) => {
             console.log(value);
           }}
         />
-      </>
+      </Card>
     );
   }
 

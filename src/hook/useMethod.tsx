@@ -1,11 +1,10 @@
 import { Clipboard } from "../method/remote";
 import { toast } from "react-toastify";
-import { useModal } from "../context/ModalProvider";
 import { useAppSelector } from "../store/store";
 import { Browser } from "../method/browser";
+import {Container, modal, pop} from "../component";
 
 export function useMethod() {
-  const { modal } = useModal();
   const settings = useAppSelector((state) => state.settings);
 
   /** @Description 复制文字 默认复制选中字*/
@@ -38,11 +37,11 @@ export function useMethod() {
     const content = await Browser.dict(
       strings || window.getSelection()?.toString() || ""
     );
-    modal(
-      <div
+    pop.modal(
+      <Container
         className={"Dict"}
         dangerouslySetInnerHTML={{ __html: content.definition }}
-      ></div>
+      />
     );
   }
 

@@ -24,21 +24,21 @@ export class SliderClass {
 
 /** @Description 一些slider实例 */
 export namespace SliderInstance {
-  export const FontSize = new SliderClass(9.6, 0.4, [
+  export const FontSize = new SliderClass(0.96, 0.04, [
     "tiny",
     "small",
     "medium",
     "big",
     "large",
   ]);
-  export const LineHeight = new SliderClass(13.2, 0.8, [
+  export const LineHeight = new SliderClass(1.32, 0.08, [
     "tiny",
     "small",
     "medium",
     "big",
     "large",
   ]);
-  export const ParagraphSpacing = new SliderClass(0.2, 0.6, [
+  export const ParagraphSpacing = new SliderClass(0.2, 0.1, [
     "small",
     "medium",
     "big",

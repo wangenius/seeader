@@ -1,15 +1,11 @@
-import React, { memo, ReactNode, useContext, useState } from "react";
-import { useEffectOnce } from "react-use";
-import { err } from "../method/general";
-import { chaptersParser, is, jsonParse, pathParser } from "../method/parser";
-import { ElementProps } from "elementProperty";
-import { toast } from "react-toastify";
-import { Book, BookBodies } from "../@types/object";
-import { useTranslation } from "react-i18next";
-import { Data } from "../method/data";
-import { File } from "../method/file";
-import { Dialog } from "../method/dialog";
-import { ShelfContextProps } from "../@types/context";
+import React, {memo, ReactNode, useContext, useState} from "react";
+import {useEffectOnce} from "react-use";
+import {chaptersParser, Data, Dialog, err, File, is, jsonParse, pathParser} from "../method";
+import {ElementProps} from "elementProperty";
+import {toast} from "react-toastify";
+import {Book, BookBodies} from "../@types/object";
+import {useTranslation} from "react-i18next";
+import {ShelfContextProps} from "../@types/context";
 
 // @ts-ignore
 const ShelfContext = React.createContext<ShelfContextProps>({});

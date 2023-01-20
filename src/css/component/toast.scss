@@ -1,11 +1,9 @@
-
-
-
 :root {
   --toastify-toast-min-height: 34px;
   --toastify-toast-width: auto;
 }
 .Toastify__toast-container {
+  overflow: visible;
 }
 
 .Toastify__toast {

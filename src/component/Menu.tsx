@@ -1,55 +1,58 @@
 import * as React from "react";
-import {forwardRef, memo, useCallback, useRef} from "react";
+import {memo, useCallback, useRef} from "react";
 import {Container, Hangover} from "./Container";
 import {Button} from "./Button";
-import {MenuButtonProperty, MenuItemProperty, MenuProperty,} from "elementProperty";
-import {usePop} from "../context/PopContainer";
+import {MenuButtonProperty, MenuItemProps, MenuProps,} from "elementProperty";
+import {pop} from "./Pop";
 import {Divider} from "./Accessory";
-import {voidFn} from "../method/general";
 import {MdCheck, MdKeyboardArrowRight} from "react-icons/md";
-import {useModal} from "../context/ModalProvider";
 import _ from "lodash";
-import {Localizer} from "./Localizer";
 import {Fn} from "../@types/context";
+import {useCascade} from "./Cascade";
+import {styled} from "@mui/material";
 
 /** @Description 菜单 */
-export const Menu = memo(
-  forwardRef((props: MenuProperty, ref) => {
-    const { children, open } = props;
-    return (
-      <Container open={open} cls={"Menu"}>
-        {children.sub?.map((item, key) => (
-          <MenuItem key={key}>{item}</MenuItem>
-        ))}
-      </Container>
-    );
-  })
-);
+export const Menu = memo((props: MenuProps) => {
+  const { children, open } = props;
+  return (
+    <Container open={open} cls={"Menu"}>
+      {children.sub?.map((item, key) => (
+        <MenuItem key={key}>{item}</MenuItem>
+      ))}
+    </Container>
+  );
+});
+
+
 
 /** @Description 菜单按钮 */
 export const MenuButton = memo((props: MenuButtonProperty) => {
-  const { context, ...other } = props;
+  const { context,...other } = props;
   const anchorELRef = useRef<HTMLElement>();
-  const { pop, openPop } = usePop();
-
   /** @Description 鼠标进入事件 */
   const onMouseEnter = useCallback<Fn>(
     () =>
-      pop(
-        <Localizer
-          base={"bottom"}
-          position={"absolute"}
-          anchor={anchorELRef.current}
-        >
-          <Menu>{context}</Menu>
-        </Localizer>
-      ),
+      pop(<Menu>{context}</Menu>, {
+        anchor: anchorELRef.current,
+        base: "bottom",
+        position: "absolute",
+      }),
     [context]
   );
+
+  const onClick = ()=>{
+    pop(<Menu>{context}</Menu>, {
+      anchor: anchorELRef.current,
+      base: "bottom",
+      position: "absolute",
+    })
+    pop.open()
+  }
+
   return (
     <Button
       onMouseEnter={onMouseEnter}
-      onClick={openPop}
+      onClick={onClick}
       ref={anchorELRef}
       cls={"MenuButton"}
       label={context.label as string}
@@ -58,36 +61,33 @@ export const MenuButton = memo((props: MenuButtonProperty) => {
   );
 });
 
-/** @Description 菜单item */
-export const MenuItem = memo((props: MenuItemProperty): JSX.Element => {
-  const { children, startIcon, open, ...other } = props;
-  const { onClick = voidFn } = children;
-  const Ref = useRef<HTMLElement>();
-  const { closeModal } = useModal();
-  const { closePop, cascade, Cascade, openCascade, closeCascade } = usePop();
 
+/** @Description 菜单item */
+export const MenuItem = memo((props: MenuItemProps) => {
+  const { children, startIcon, open, ...other } = props;
+  const { onClick } = children;
+  /** @Description anchor标记 */
+  const Ref = useRef<HTMLElement>();
+  const { container, cascade, closeCascade } = useCascade();
   /** @Description hover事件 */
   const onMouseEnter = useCallback<Fn>(() => {
     if (children.type === "item") return;
-    cascade(
-      <Localizer anchor={Ref.current as HTMLElement}>
-        <Menu>{children}</Menu>
-      </Localizer>
-    );
-    openCascade();
+    cascade(<Menu>{children}</Menu>, {
+      anchor: Ref.current,
+      position: "relative",
+    });
   }, [children]);
 
   /** @Description mouseLeave */
   const onMouseLeave = useCallback<Fn>(() => {
-    if (children.type === "menu") closeCascade();
+    closeCascade();
   }, [children]);
 
   /** @Description 点击按钮 */
   const clickItem = useCallback<Fn>(() => {
     if (children.allowed === false || children.type === "menu") return;
-    closeModal();
-    closePop();
-    onClick();
+    pop.close();
+    onClick!();
   }, [onClick]);
 
   return ["item", "menu"].includes(children.type) ? (
@@ -97,12 +97,12 @@ export const MenuItem = memo((props: MenuItemProperty): JSX.Element => {
       cls={"MenuItem"}
       onMouseLeave={onMouseLeave}
     >
-      {Cascade}
+      {container}
       <Container
         onMouseEnter={onMouseEnter}
         onClick={clickItem}
         cls={"MenuButton"}
-        state={children.allowed ? "notAllowed" : undefined}
+        state={children.allowed === false ? "notAllowed" : undefined}
         {...other}
       >
         {children.icon || null}
@@ -123,9 +123,6 @@ export const MenuItem = memo((props: MenuItemProperty): JSX.Element => {
   ) : children.type === "divider" ? (
     <Divider />
   ) : (
-    <Container
-    >
-      {children.label}
-    </Container>
+    <Container cls={"MenuItem"}>{children.label}</Container>
   );
 });
