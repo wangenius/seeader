@@ -3,29 +3,33 @@
   max-width: 220px;
   min-width: 160px;
   overflow: visible;
+  height:26px;
   .Slider {
     color: #0015ff;
     & .MuiSlider-track {
       border: none;
       position: relative;
+      height: 22px;
     }
     & .MuiSlider-mark {
       display: none;
     }
     & .MuiSlider-markLabel {
       font-size: 0.8rem;
+      display: none;
       color: #808080;
     }
     & .MuiSlider-markLabelActive {
       color: #0015ff;
-
     }
 
     & .MuiSlider-thumb {
+      display: none;
       transition: 0.3s cubic-bezier(0.47, 1.64, 0.41, 0.8);
     }
     & .MuiSlider-rail {
       background-color: #dedede;
+      height: 22px;
     }
   }
 }

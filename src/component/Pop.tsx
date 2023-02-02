@@ -1,9 +1,8 @@
-import React, { memo, ReactNode, useState } from "react";
-import { Container, Localizer, modal } from "./index";
-import { ClickAwayListener } from "@mui/material";
-import { useEffectOnce } from "react-use";
-import { EventManager, PopEventEmit } from "../@constant/event";
-import { LocalizerProps } from "../@types/localizer";
+import React, {memo, ReactNode, useState} from "react";
+import {Container, Localizer, modal} from "./index";
+import {ClickAwayListener} from "@mui/material";
+import {useEffectOnce} from "react-use";
+import {EventManager, PopEventEmit} from "../@constant/event";
 
 /** @Description Pop Container */
 const PopContainer = memo(() => {
@@ -29,7 +28,7 @@ const PopContainer = memo(() => {
 
   return (
     open && (
-      <ClickAwayListener disableReactTree onClickAway={pop.close}>
+      <ClickAwayListener disableReactTree onClickAway={Pop.close}>
         <Container cls={"Pop"}>{content}</Container>
       </ClickAwayListener>
     )
@@ -38,21 +37,29 @@ const PopContainer = memo(() => {
 
 /** @Description 事件管理器 */
 const PopEvent = new EventManager<PopEventEmit>();
-const pop = (content: ReactNode, configs?: LocalizerProps) => {
-  PopEvent.emit(
-    PopEventEmit.Content,
-    <Localizer {...configs}>{content}</Localizer>
-  );
-};
 
-pop.modal = (content: ReactNode, configs?: LocalizerProps) => {
-  modal();
-  pop(content, configs);
-  pop.open();
-};
-pop.open = () =>  PopEvent.emit(PopEventEmit.Open);
-pop.close = () => {
-  PopEvent.emit(PopEventEmit.Close);
-  modal.close()
-};
-export { PopContainer, pop };
+abstract class Pop {
+  static set(content: ReactNode, configs?: Props.Localizer) {
+    PopEvent.emit(
+      PopEventEmit.Content,
+      <Localizer {...configs}>{content}</Localizer>
+    );
+    return this;
+  }
+  static modal = (content: ReactNode, configs?: Props.Localizer) => {
+    modal();
+    this.set(content, configs).open();
+    return this
+  };
+
+  static open() {
+    PopEvent.emit(PopEventEmit.Open);
+  }
+
+  static close() {
+    PopEvent.emit(PopEventEmit.Close);
+    modal.close();
+  }
+}
+
+export { PopContainer, Pop };

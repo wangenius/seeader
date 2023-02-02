@@ -1,16 +1,13 @@
 import React, {memo, ReactNode, useContext, useState} from "react";
 import {useEffectOnce} from "react-use";
 import {chaptersParser, Data, Dialog, err, File, is, jsonParse, pathParser} from "../method";
-import {ElementProps} from "elementProperty";
 import {toast} from "react-toastify";
-import {Book, BookBodies} from "../@types/object";
 import {useTranslation} from "react-i18next";
-import {ShelfContextProps} from "../@types/context";
 
 // @ts-ignore
 const ShelfContext = React.createContext<ShelfContextProps>({});
 
-export const ShelfProvider = memo(({ children }: ElementProps) => {
+export const ShelfProvider = memo(({ children }: Props.Base) => {
   const [books, setBooks] = useState<Book[]>([]);
   const { t } = useTranslation();
   useEffectOnce(loadShelf);

@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from "react";
+import React, {memo, useState} from "react";
 import {Spring} from "./index";
 import {EventManager, ModalEmit} from "../@constant/event";
 import {useSpring} from "@react-spring/web";

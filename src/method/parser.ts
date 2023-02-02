@@ -1,6 +1,4 @@
-import { BookBodies, Chapter, chapterTitle } from "../@types/object";
 import { File } from "./file";
-import _ from "lodash";
 
 /** @Description 判断是否属于接口 */
 export function is<T extends object>(obj: any, key: string): obj is T {
@@ -16,10 +14,6 @@ export const pathParser = (path: string) => {
   const array = path.split(/\\/g);
   return { name: array[array.length - 1] };
 };
-
-/** @Description sx合并器 */
-export const sxParser = (base: Style.SXs, neo: Style.SX): Style.SXs =>
-  _.concat(base, neo);
 
 /** @Description txt文件解析 */
 export async function chaptersParser(filePath: string) {

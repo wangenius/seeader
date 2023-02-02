@@ -2,8 +2,6 @@
 @import "../@variants/color";
 
 .Button {
-  @include xFlex;
-  @include FlexCenter;
   @include NoBubbling;
   cursor: $pointer;
   height: $height_button;
@@ -16,19 +14,79 @@
   margin: 0 1px;
   background-color: $transparent;
   transition: $trans_default;
-
+  box-sizing: border-box;
+  &::after{
+    content:"";
+    width: 0;
+    height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+  }
   .Button_Chars {
+    display: inline-block;
+    vertical-align: middle;
     font-family: $button_font;
     font-size: $fs_button;
     color: $color_button;
+    margin: 0 3px;
   }
+  .Button_startIcon {
+    display: inline-block;
+    vertical-align: middle;
+    height: $size_icon;
+    width: $size_icon;
+    svg {
+      @include Max;
+      fill: $fill_icon;
+    }
+  }
+
   &:hover {
-    @include bc_hover($bc_btn_hover_before);
     .Button_Chars {
       color: $color_button_hover;
     }
   }
+}
 
+.btn_styled {
+  background-color: #bba292;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+  height: 40px;
+  line-height: 40px;
+  outline: 0;
+  overflow: hidden;
+  padding: 0 20px;
+  pointer-events: auto;
+  position: relative;
+  text-align: center;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: top;
+  white-space: nowrap;
+  z-index: 9;
+  border: 0;
+  transition: box-shadow 0.2s;
+
+  .Button_Chars {
+    color: #ffffff;
+  }
+
+  &:hover {
+    box-shadow: rgba(157, 149, 141, 0.5) 0 3px 8px;
+    .Button_Chars {
+      color: #ffffff;
+    }
+  }
+}
+
+.btn_check {
+  background-color: $bc_button_check;
 }
 
 .IconButton {
@@ -37,20 +95,23 @@
   border-radius: $br_iconButton;
   transition: $trans_default;
   position: relative;
-  margin: 3px;
+  margin: 3px 2px;
   background-color: $bc_ico;
 
   .SvgIcon {
     height: $size_icon;
     width: $size_icon;
     margin: $size_icon / 4;
+
     svg {
       @include Max;
       fill: $fill_icon;
     }
   }
+
   &:hover {
     background-color: $bc_ico_hover;
+
     svg {
       fill: $fill_icon_hover;
     }
@@ -65,6 +126,7 @@
   justify-content: left;
   margin-bottom: 5px;
   padding: 8px;
+
   .Button_Chars {
     width: $full;
   }
@@ -72,9 +134,9 @@
   &[state="active"] {
     @include dynamic_shadow;
     background-color: $bc_button_focus;
+
     .Button_Chars {
       color: $color_button_focus;
     }
   }
-
 }

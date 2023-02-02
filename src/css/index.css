@@ -1,6 +1,7 @@
 @charset "UTF-8";
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -18,6 +19,7 @@ Flex
 scroll*/
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -49,6 +51,7 @@ scroll*/
 }
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -66,6 +69,7 @@ Flex
 scroll*/
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -102,6 +106,7 @@ div {
 
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -119,6 +124,7 @@ Flex
 scroll*/
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -139,12 +145,8 @@ scroll*/
 /*char*/
 /*background*/
 .Button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
   cursor: url("/public/icon/hand.png"), pointer;
-  height: 24px;
+  height: 30px;
   border-radius: 8px;
   position: relative;
   max-width: 300px;
@@ -154,26 +156,77 @@ scroll*/
   margin: 0 1px;
   background-color: transparent;
   transition: all 200ms ease;
+  box-sizing: border-box;
 }
 .Button * {
   pointer-events: none;
 }
+.Button::after {
+  content: "";
+  width: 0;
+  height: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
 .Button .Button_Chars {
+  display: inline-block;
+  vertical-align: middle;
   font-family: "Noto_Medium", "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
   font-size: 0.815rem;
   color: #71717a;
+  margin: 0 3px;
 }
-.Button:hover::before {
+.Button .Button_startIcon {
+  display: inline-block;
+  vertical-align: middle;
+  height: 16px;
+  width: 16px;
+}
+.Button .Button_startIcon svg {
   height: 100%;
   width: 100%;
-  position: absolute;
-  left: 0;
-  background-color: rgba(156, 164, 199, 0.08);
-  content: "";
-  border-radius: 8px;
+  fill: rgba(121, 128, 134, 0.87);
 }
 .Button:hover .Button_Chars {
   color: #0f172a;
+}
+
+.btn_styled {
+  background-color: #bba292;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  height: 40px;
+  line-height: 40px;
+  outline: 0;
+  overflow: hidden;
+  padding: 0 20px;
+  pointer-events: auto;
+  position: relative;
+  text-align: center;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: top;
+  white-space: nowrap;
+  z-index: 9;
+  border: 0;
+  transition: box-shadow 0.2s;
+}
+.btn_styled .Button_Chars {
+  color: #ffffff;
+}
+.btn_styled:hover {
+  box-shadow: rgba(157, 149, 141, 0.5) 0 3px 8px;
+}
+.btn_styled:hover .Button_Chars {
+  color: #ffffff;
+}
+
+.btn_check {
+  background-color: #f3ece3;
 }
 
 .IconButton {
@@ -181,16 +234,16 @@ scroll*/
   border-radius: 50%;
   transition: all 200ms ease;
   position: relative;
-  margin: 3px;
+  margin: 3px 2px;
   background-color: rgba(255, 227, 210, 0);
 }
 .IconButton * {
   pointer-events: none;
 }
 .IconButton .SvgIcon {
-  height: 20px;
-  width: 20px;
-  margin: 5px;
+  height: 16px;
+  width: 16px;
+  margin: 4px;
 }
 .IconButton .SvgIcon svg {
   height: 100%;
@@ -217,7 +270,7 @@ scroll*/
   width: 100%;
 }
 .ListButton[state=active] {
-  background-color: #0f172a;
+  background-color: #2d5fe5;
 }
 .ListButton[state=active]::after {
   content: "";
@@ -231,7 +284,7 @@ scroll*/
   filter: blur(15px) brightness(100%) opacity(0.4);
 }
 .ListButton[state=active] .Button_Chars {
-  color: #fde047;
+  color: #ffffff;
 }
 
 .DC {
@@ -305,6 +358,7 @@ hr {
 
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -322,6 +376,7 @@ Flex
 scroll*/
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -357,6 +412,7 @@ scroll*/
   position: relative;
   overflow: visible;
   margin-bottom: 3px;
+  width: 100%;
 }
 .Menu .MenuItem:hover > .MenuButton::before {
   height: 100%;
@@ -373,10 +429,11 @@ scroll*/
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  box-sizing: content-box;
+  box-sizing: border-box;
   user-select: none;
   border-radius: 8px;
-  min-width: 200px;
+  min-width: 80px;
+  width: 100%;
   padding: 0 8px;
   height: 32px;
 }
@@ -434,6 +491,18 @@ scroll*/
 .Menu .MenuItem .MenuButton[state=notAllowed] .shortcuts {
   color: #d5d5d5;
 }
+.Menu .MenuItem .Button_red {
+  background-color: rgba(234, 188, 188, 0.9);
+}
+.Menu .MenuItem .Button_red .name {
+  color: #c50101;
+}
+.Menu .MenuItem .Button_red svg:first-of-type {
+  fill: #c50101;
+}
+.Menu .MenuItem .Button_red:hover {
+  background-color: rgba(234, 188, 188, 0.9);
+}
 
 :root {
   --toastify-toast-min-height: 34px;
@@ -458,6 +527,7 @@ scroll*/
 
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -479,6 +549,7 @@ scroll*/
 /*background*/
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -508,6 +579,7 @@ scroll*/
 
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -545,6 +617,7 @@ scroll*/
   max-width: 220px;
   min-width: 160px;
   overflow: visible;
+  height: 26px;
 }
 .SliderContainer .Slider {
   color: #0015ff;
@@ -552,22 +625,26 @@ scroll*/
 .SliderContainer .Slider .MuiSlider-track {
   border: none;
   position: relative;
+  height: 22px;
 }
 .SliderContainer .Slider .MuiSlider-mark {
   display: none;
 }
 .SliderContainer .Slider .MuiSlider-markLabel {
   font-size: 0.8rem;
+  display: none;
   color: #808080;
 }
 .SliderContainer .Slider .MuiSlider-markLabelActive {
   color: #0015ff;
 }
 .SliderContainer .Slider .MuiSlider-thumb {
+  display: none;
   transition: 0.3s cubic-bezier(0.47, 1.64, 0.41, 0.8);
 }
 .SliderContainer .Slider .MuiSlider-rail {
   background-color: #dedede;
+  height: 22px;
 }
 
 .Switch {
@@ -612,6 +689,7 @@ scroll*/
 
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -629,6 +707,7 @@ Flex
 scroll*/
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -703,6 +782,7 @@ scroll*/
 
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -736,6 +816,7 @@ scroll*/
 
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -753,6 +834,7 @@ Flex
 scroll*/
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -778,58 +860,43 @@ scroll*/
 }
 .BookPage .BookContents {
   width: 250px;
-  height: calc(100vh - 30px);
-  border-right: 1px solid #dedede;
-  position: absolute;
-  overflow: hidden;
-}
-.BookPage .BookContents .Title {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 250px;
-  height: 60px;
-  padding: 0 10px;
-}
-.BookPage .BookContents .Title > :first-child {
-  font-size: 1.2em;
-  font-weight: 500;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  max-width: 60%;
-  padding-left: 10px;
-}
-.BookPage .BookContents .Contents {
+  box-shadow: rgba(0, 0, 0, 0.1) 0 5px 20px 0, rgba(9, 30, 66, 0.08) 0 0 0 1px;
+  height: calc(100vh - 30px - 40px);
+  top: 50px;
+  left: -270px;
+  border-radius: 0.8pc;
   overflow-y: scroll;
   scroll-behavior: smooth;
   transition: all 300ms ease;
   scrollbar-width: 8px;
   padding-left: 8px;
   padding-right: 2px;
-  width: 250px;
-  height: calc(100% - 60px);
-  padding-bottom: 20px;
+  overflow-x: hidden;
+  position: absolute;
+  padding: 10px 5px;
+  z-index: 1;
 }
-.BookPage .BookContents .Contents::-webkit-scrollbar {
+.BookPage .BookContents::-webkit-scrollbar {
   display: block;
   width: 14px;
   background-color: transparent;
   background-clip: content-box;
 }
-.BookPage .BookContents .Contents::-webkit-scrollbar-thumb {
+.BookPage .BookContents::-webkit-scrollbar-thumb {
   background-color: rgba(140, 140, 140, 0.3);
   height: 60px;
   border-radius: 20px;
   border: 3px solid #fff;
 }
-.BookPage .BookContents .Contents::-webkit-scrollbar-thumb:hover {
+.BookPage .BookContents::-webkit-scrollbar-thumb:hover {
   background-color: rgba(140, 140, 140, 0.5);
 }
-.BookPage .BookContents .Contents::-webkit-scrollbar-track {
+.BookPage .BookContents::-webkit-scrollbar-track {
   margin: 20px 0;
   background-color: transparent;
+}
+.BookPage .BookContents[state=open] {
+  left: 20px;
 }
 .BookPage .BookArea {
   overflow-y: scroll;
@@ -886,14 +953,20 @@ scroll*/
 }
 .BookPage .BookArea .BookBody {
   margin: auto;
-  width: min(100%, 900px);
+  width: min(100%, 860px);
   padding: 20px 20px 60px;
 }
 .BookPage .BookArea .BookBody .BodyTitle {
-  width: 100%;
+  width: fit-content;
   font-size: 2rem;
-  height: 3pc;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: url("/public/icon/hand.png"), pointer;
   color: #3b423b;
+  transition: all 200ms ease;
+}
+.BookPage .BookArea .BookBody .BodyTitle:hover {
+  background-color: #f6f6f6;
 }
 .BookPage .BookArea .BookBody .BodyPara {
   width: 100%;
@@ -907,6 +980,7 @@ scroll*/
 
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -922,6 +996,28 @@ Flex
 /*
 
 scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
 .Header {
   display: flex;
   flex-direction: row;
@@ -934,56 +1030,134 @@ scroll*/
   z-index: 200;
   border-bottom: 1px solid #dedede;
   padding: 0 4pt;
+  transition: all 200ms ease;
+}
+.Header .Button {
+  background-color: #ffffff;
+  height: 24px;
+  border-radius: 12px;
+  padding: 0;
+}
+.Header .Button .Button_Chars {
+  transition: all 200ms ease;
+  color: #676767;
+  margin: 0 3px;
+  padding: 0 8px 0 0;
+}
+.Header .Button .Button_startIcon {
+  margin: 2px;
+  width: 20px;
+  height: 20px;
+}
+.Header .Button .Button_startIcon svg {
+  fill: #546dec;
+}
+.Header .Button:hover {
+  background-color: #f6f6f6;
+}
+.Header .Button:hover .Button_startIcon {
+  animation: rotate;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1200ms;
+  animation-iteration-count: infinite;
+}
+.Header .logo {
+  margin-top: 4px;
 }
 
+@keyframes rotate {
+  0% {
+    rotate: 0;
+  }
+  100% {
+    rotate: 720deg;
+  }
+}
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
 .ShelfArea {
   display: grid;
   width: 100%;
+  height: 100%;
   grid-gap: 20px 20px;
   padding-top: 2pc;
   grid-template-columns: repeat(auto-fill, 160px);
   overflow: visible;
   margin: auto;
   justify-content: center;
-  align-content: center;
+  background-image: radial-gradient(rgba(68, 76, 247, 0.24) 0.9px, #ffffff 0.9px);
+  background-size: 18px 18px;
 }
-.ShelfArea .BookGrid {
+.ShelfArea .book {
   display: inline-flex;
   overflow: visible;
-}
-.ShelfArea .BookGrid .BookCover {
+  z-index: 1;
+  transform-style: preserve-3d;
   position: relative;
-  border-radius: 12px;
-  width: 160px;
+  cursor: pointer;
+  backface-visibility: visible;
   height: 200px;
-  transition: all 180ms ease-in-out;
-  background: linear-gradient(45deg, hsl(269deg, 34%, 58%) 0%, hsl(230deg, 72%, 68%) 100%);
+  transition: all 0.3s ease-in-out;
+}
+.ShelfArea .book .front {
+  position: relative;
+  cursor: url("/public/icon/hand.png"), pointer;
   overflow: visible;
-  background-size: 300% 300%;
-  scale: 1;
-  cursor: url("/public/icon/hand.png") auto;
-}
-.ShelfArea .BookGrid .BookCover ::after {
-  content: "";
-  position: absolute;
-  top: 10%;
-  width: 80%;
-  left: 10%;
-  background-size: 100% 100%;
   height: 100%;
-  background: inherit;
-  z-index: -1;
-  filter: blur(20px) brightness(100%) opacity(0.6);
+  border-radius: 12px;
+  top: 0;
+  left: 0;
+  width: 160px;
+  background-color: #546dec;
+  transition: all 0.3s ease-in-out;
 }
-.ShelfArea .BookGrid .BookCover .BookTitle {
+.ShelfArea .book .front .BookTitle {
   padding: 12px;
   margin: 20px auto;
-  color: #ffffff;
   text-align: justify;
   user-select: none;
+  color: #ffffff;
 }
-.ShelfArea .BookGrid .BookCover .Tip {
-  background-color: #3f3d3d;
+.ShelfArea .book .front .Tip {
+  background-color: #7da953;
   height: 16px;
   border-radius: 12px;
   padding: 0 6px;
@@ -993,17 +1167,23 @@ scroll*/
   bottom: 4px;
   right: 4px;
 }
-.ShelfArea .BookGrid [state=focus] {
-  z-index: 700;
+.ShelfArea .book .front .progress {
+  color: #ffffff;
+  font-size: 0.72rem;
+  position: absolute;
+  bottom: 5px;
+  left: 8px;
 }
-.ShelfArea .BookGrid > :hover {
-  z-index: 700;
-  scale: 1.04;
-  background-position: 100% 0;
+.ShelfArea .book:hover .front {
+  box-shadow: rgb(229, 198, 198) 0 0 0 5px;
+}
+.ShelfArea .book[state=current] .front {
+  box-shadow: rgb(229, 198, 198) 0 0 0 5px;
 }
 
 /*font size*/
 /*border radius*/
+/*border*/
 /*padding*/
 /*height and size*/
 /*width*/
@@ -1020,50 +1200,114 @@ Flex
 
 scroll*/
 .Setting {
-  padding: 25px 5px;
-  height: calc(100vh - 30px);
-  width: 100%;
-  max-width: 900px;
-  margin: auto;
-  overflow: visible;
-}
-.Setting .NavBar {
-  padding-right: 10px;
-  position: relative;
-  overflow: visible;
-  height: 120px;
-}
-.Setting .NavBar .Title {
-  font-size: 1.2em;
-  font-weight: 500;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  font-size: 5rem;
-  color: #3d3d3d;
-  overflow: visible;
-}
-.Setting .NavBar .FontButton {
-  display: inline-block;
-}
-.Setting .SetArea {
-  padding: 30px;
-  width: 100%;
-  height: calc(100vh - 30px - 120px);
-  overflow: scroll;
-}
-.Setting .SetArea .SetPair {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  margin: auto;
+  overflow: scroll;
   justify-content: center;
+  height: calc(100vh - 30px);
   width: 100%;
-  min-height: 50px;
+  padding: 30px;
+}
+.Setting .SettingBar {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  min-width: 180px;
+  height: calc(100vh - 30px - 60px);
+  padding: 0 5px;
+  border: 1px solid rgba(206, 204, 204, 0.6);
+  border-radius: 8px;
+}
+.Setting .SettingBar .Divider {
+  margin: 0.1pc 0;
+}
+.Setting .SettingBar .Button {
+  height: 40px;
+  padding: 0 20px;
+  margin: 5px 0;
+  width: 100%;
+}
+.Setting .SettingPairs {
+  padding: 20px;
+  width: 360px;
   overflow: visible;
 }
-.Setting .SetArea .SetPair .PairName {
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.Setting .SettingPairs .SettingBox {
+  margin: 10px auto;
+  width: 100%;
+  overflow: visible;
+}
+.Setting .SettingPairs .SettingBox .SettingLabel {
+  color: #5f6065;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.Setting .SettingPairs .SettingBox .Option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px;
+  width: 100%;
+  height: 60px;
+  border-radius: 8px;
+  border: 2px solid rgba(206, 204, 204, 0.6);
+  position: relative;
+  overflow: visible;
+}
+.Setting .SettingPairs .SettingBox .Option::before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #b5bfd9;
+  background-color: #fff;
+  border-radius: 50%;
+  top: calc(50% - 0.725rem);
+  left: 0.75rem;
+  opacity: 0;
+  transform: scale(0);
+  transition: 0.25s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' fill='%23FFFFFF' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'%3E%3C/rect%3E%3Cpolyline points='216 72.005 104 184 48 128.005' fill='none' stroke='%23FFFFFF' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'%3E%3C/polyline%3E%3C/svg%3E");
+  background-size: 12px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+.Setting .SettingPairs .SettingBox .Option::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #b5bfd9;
+  border-radius: 8px;
+  z-index: -1;
+  opacity: 0;
+  transform: scale(0);
+}
+.Setting .SettingPairs .SettingBox .Option:hover {
+  border-color: #6a8dea;
+}
+.Setting .SettingPairs .SettingBox .Option:hover::before {
+  transform: scale(1);
+  opacity: 1;
+}
+.Setting .SettingPairs .SettingBox .Option[state=actived] {
+  color: #2260ff;
+  border-color: #2260ff;
+}
+.Setting .SettingPairs .SettingBox .Option[state=actived]::before {
+  transform: scale(1);
+  opacity: 1;
+  background-color: #2260ff;
+  border-color: #2260ff;
+}
+.Setting .SettingPairs .SettingBox .Option[state=actived]::after {
+  transform: scale(1);
+  opacity: 1;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 0 0 4px #b5c9fc;
 }
 
 html {

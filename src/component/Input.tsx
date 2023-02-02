@@ -7,15 +7,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { TextInputProps } from "elementProperty";
 import { IconButton,Container } from "./index";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import { voidFn } from "../method";
 import { Slider, Switch } from "@mui/material";
-import { SliderProps, ToggleProps } from "../@types/slider";
 
 export const TextInput = memo(
-  forwardRef((props: TextInputProps, ref: LegacyRef<any>) => {
+  forwardRef((props: Props.Input.Text, ref: LegacyRef<any>) => {
     const {
       onChange,
       placeholder,
@@ -52,7 +50,30 @@ export const TextInput = memo(
   })
 );
 
-export const SliderInput = forwardRef((props: SliderProps, ref: LegacyRef<any>) => {
+/** @Description 选择器 */
+export const Selector = memo((props: Props.Input.Selector) => {
+    const { onClick = voidFn } = props;
+    return (
+        <Container cls={"SettingBox"}>
+            {props.children.map((item, key) => {
+                return (
+                    <Container
+                        cls={"Option"}
+                        state={props.value === item.value ? "actived" : undefined}
+                        onClick={() => {
+                            onClick(item.value);
+                        }}
+                        key={key}
+                    >
+                        {item.item}
+                    </Container>
+                );
+            })}
+        </Container>
+    );
+});
+
+export const SliderInput = forwardRef((props: Props.Input.Slider, ref: LegacyRef<any>) => {
   const { onChange, defaultValue, args, markLabel, getAriaValueText } = props;
   const [value, setValue] = useState(defaultValue);
 
@@ -81,7 +102,7 @@ export const SliderInput = forwardRef((props: SliderProps, ref: LegacyRef<any>) 
     </Container>
   );
 });
-export const ToggleInput = forwardRef((props: ToggleProps, ref) => {
+export const ToggleInput = forwardRef((props: Props.Input.Toggle, ref) => {
   const { defaultChecked, onChange } = props;
   const [value, setValue] = useState(defaultChecked);
   useEffect(() => {

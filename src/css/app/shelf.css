@@ -1,9 +1,11 @@
-/* Error: expected "{".
+/* Error: This file is already being loaded.
  *   ,
- * 1 | .ShelfArea 
- *   |            ^
+ * 4 | @import "shelf";
+ *   |         ^^^^^^^
  *   '
- *   shelf.scss 1:12  root stylesheet */
+ *   index.scss 4:9     @import
+ *   ..\index.scss 3:9  @import
+ *   shelf.scss 1:9     root stylesheet */
 
 body::before {
   font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
@@ -13,5 +15,5 @@ body::before {
   padding: 1em;
   margin-bottom: 1em;
   border-bottom: 2px solid black;
-  content: 'Error: expected "{".\a   \2577 \a 1 \2502  .ShelfArea \a   \2502             ^\a   \2575 \a   shelf.scss 1:12  root stylesheet';
+  content: 'Error: This file is already being loaded.\a   \2577 \a 4 \2502  @import "shelf";\a   \2502          ^^^^^^^\a   \2575 \a   index.scss 4:9     @import\a   ..\\index.scss 3:9  @import\a   shelf.scss 1:9     root stylesheet';
 }

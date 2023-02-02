@@ -7,50 +7,54 @@ $Contents_Height: calc(100% - $Title_Height);
 .BookPage {
   width: $full;
   height: $height_body;
+
   .BookContents {
     width: $width_contents;
-    height: $height_body;
-    border-right: $Divider_Border;
+    //border: $Divider_Border;box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 5px 20px 0, rgba(9, 30, 66, 0.08) 0 0 0 1px;
+    height: calc($height_body - 40px);
+    top: calc($height_header + 20px);
+    left: calc(-20px - $width_contents);
+    border-radius: 0.8pc;
+    @include ScrollY;
+    overflow-x: hidden;
     position: absolute;
-    overflow: hidden;
-    .Title {
-      @include xFlex;
-      @include FlexCenter;
-      width: $width_contents;
-      height: $Title_Height;
-      padding: 0 10px;
-      > :first-child {
-        @include title_font;
-        max-width: 60%;
-        padding-left: 10px;
-      }
-    }
-    .Contents {
-      @include ScrollY;
-      width: $width_contents;
-      height: $Contents_Height;
-      padding-bottom: 20px;
+    padding:10px 5px;
+    z-index: 1;
+    &[state="open"] {
+      left: 20px;
     }
   }
+
   .BookArea {
     @include ScrollY;
     @include ScrollBar;
     @include Max;
     position: absolute;
     right: 0;
-    width:$width_body;
+    width: $width_body;
     height: $height_body;
-    background-color:$bc_default;
+    background-color: $bc_default;
+
     .BookBody {
       margin: auto;
-      width: min(100%, 900px);
+      width: min(100%, 860px);
       padding: 20px 20px 60px;
+
       .BodyTitle {
-        width: 100%;
+        width: fit-content;
         font-size: 2rem;
-        height: 3pc;
+        padding: 6px;
+        border-radius: 8px;
+        cursor: $pointer;
         color: #3b423b;
+        transition: $trans_default;
+
+        &:hover {
+          background-color: #f6f6f6;
+        }
       }
+
       .BodyPara {
         width: 100%;
         font-size: 1rem;
@@ -58,8 +62,9 @@ $Contents_Height: calc(100% - $Title_Height);
         text-indent: 2rem;
       }
     }
+
     &[state="full"] {
-    width: $full;
-  }
+      width: $full;
+    }
   }
 }

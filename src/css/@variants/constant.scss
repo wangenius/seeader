@@ -1,6 +1,7 @@
 /*font size*/
 $fs_default:0.875rem;
 $fs_button:0.815rem;
+$fs_mark:0.72rem;
 
 /*border radius*/
 $br_default:8px;
@@ -8,14 +9,18 @@ $br_iconButton:50%;
 $br_menu:8px;
 $br_btn:8px;
 
+/*border*/
+$b_input:4px solid rgba(206, 204, 204, 0.6);
+$b_settingBar:1px solid rgba(206, 204, 204, 0.6);
+$b_input_active:3px solid #7da953;
 /*padding*/
 $p_input:15px;
 
 /*height and size*/
 $full: 100%;
-$height_button: 24px;
+$height_button: 30px;
 $height_listButton:40px;
-$size_icon:20px;
+$size_icon:16px;
 $height_header: 30px;
 $height_menuButton: 32px;
 $height_body: calc(100vh - $height_header);
@@ -57,7 +62,7 @@ $boxShadow: rgba(0, 0, 0, 0.16) 0 10px 36px 0, rgba(0, 0, 0, 0.06) 0 0 0 1px;
 
 
 @mixin title_font {
-  font-size: 1.2em;
+  font-size: 1.35em;
   font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -1,37 +1,20 @@
-import React, { memo, useCallback, useLayoutEffect, useRef } from "react";
+import React, {memo, useCallback, useLayoutEffect, useRef} from "react";
+import {Container, Divider, ListButton, LoadingRing, Menu, Pop,} from "../component";
+import {useBook} from "../context/BookProvider";
 import {
-  Container,
-  Divider,
-  Hangover,
-  IconButton,
-  ListButton,
-  LoadingRing,
-  Menu,
-  pop,
-  SliderInput,
-} from "../component";
-import { useBook } from "../context/BookProvider";
-import { Menu_Options } from "elementProperty";
-import {
-  MdEdit,
-  MdFormatListBulleted,
-  MdModeStandby,
-  MdOutlineBookmarks,
   MdOutlineContentCopy,
   MdOutlineKeyboardArrowLeft,
   MdOutlineKeyboardArrowRight,
   MdSearch,
   MdTranslate,
 } from "react-icons/md";
-import { useSettings } from "../hook/useSettings";
-import { BiBookmarkPlus, BiCog, BiFontSize } from "react-icons/bi";
-import { AiOutlineColumnHeight } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
-import { useMethod } from "../hook/useMethod";
-import { SliderInstance } from "../@constant/slider";
-import { useEvent } from "../hook/useEvent";
-import { Fn } from "../@types/context";
-import { useSpring } from "@react-spring/web";
+import {useSettings} from "../hook/useSettings";
+import {BiFontSize} from "react-icons/bi";
+import {AiOutlineColumnHeight} from "react-icons/ai";
+import {useMethod} from "../hook/useMethod";
+import {FontSize, LineHeight} from "../@constant/settings";
+import {useEvent} from "../hook/useEvent";
+import {useTranslation} from "react-i18next";
 
 /** @Description 主体 */
 export const Book = memo(() => (
@@ -45,8 +28,8 @@ export const Book = memo(() => (
 const BookContents = memo(() => {
   /** @Description list of contents ref */
   const ListRef = useRef<any>();
+  const { book, jumpToPage } = useBook();
   const { settings } = useSettings();
-  const { book, jumpToPage, modalEditBook } = useBook();
   /** 滚动到顶部*/
   const scrollToCurrentChapterTitle = useCallback<Fn>(() => {
     {
@@ -62,27 +45,20 @@ const BookContents = memo(() => {
   useLayoutEffect(scrollToCurrentChapterTitle);
 
   return (
-    <Container cls={"BookContents"}>
-      <Container cls={"Title"}>
-        <Container children={book.name} />
-        <Hangover />
-        <IconButton
-          icon={<MdModeStandby />}
-          onClick={scrollToCurrentChapterTitle}
+    <Container
+      cls={"BookContents"}
+      ref={ListRef}
+      state={settings.reading.contentOpen ? "open" : undefined}
+    >
+      {book.titles.map((item: { title: string | undefined }, key: number) => (
+        <ListButton
+          key={key}
+          value={key}
+          isActive={key === book.progress}
+          label={item.title}
+          onClick={jumpToPage}
         />
-        <IconButton icon={<MdEdit />} onClick={modalEditBook} />
-      </Container>
-      <Container /** @Description 目录 */ cls={"Contents"} ref={ListRef}>
-        {book.titles.map((item, key) => (
-          <ListButton
-            key={key}
-            index={key}
-            isActive={key === book.progress}
-            label={item.title}
-            onClick={() => jumpToPage(key)}
-          />
-        ))}
-      </Container>
+      ))}
     </Container>
   );
 });
@@ -91,132 +67,124 @@ const BookContents = memo(() => {
 const BookBody = memo(() => {
   /** @Description body ref */
   const ContentRef = useRef<HTMLElement>();
-  const { book, modalAddBookmark, currentBody, nextPage, lastPage } = useBook();
-  const { changeFontSize, toggleContentBar, changeLineHeight } = useSettings();
+  const { book, currentBody, nextPage, lastPage } = useBook();
+  const { settings, changeFontSize, toggleContentBar, changeLineHeight } =
+    useSettings();
   const { copyText, searchWeb, translate } = useMethod();
-  const { settings } = useSettings();
-  const nav = useNavigate();
+  const { t } = useTranslation();
 
+  /** @Description 更新滚动 */
   useLayoutEffect(() => {
     ContentRef.current?.scrollTo(0, 0);
   }, [currentBody]);
 
-  const NoSelection: () => Menu_Options = useCallback(
+  const NoSelection: () => Props.Menu.Option = useCallback(
     () => ({
       type: "menu",
       sub: [
         {
           type: "item",
-          label: "下一章",
-          shortcuts: "Right",
+          label: t("next"),
           icon: <MdOutlineKeyboardArrowRight />,
           open: book.progress < book.total - 1,
           onClick: nextPage,
         },
         {
           type: "item",
-          label: "上一章",
+          label: t("last"),
           open: book.progress > 0,
-          shortcuts: "Left",
           icon: <MdOutlineKeyboardArrowLeft />,
           onClick: lastPage,
         },
-        {
-          type: "item",
-          label: "显示目录",
-          shortcuts: "Ctrl+B",
-          icon: <MdFormatListBulleted />,
-          check: settings.reading.contentOpen,
-          onClick: toggleContentBar,
-        },
-
-        {
-          type: "item",
-          label: "添加书签",
-          shortcuts: "Ctrl+M",
-          icon: <MdOutlineBookmarks />,
-          onClick: () => modalAddBookmark(book.titles[book.progress]?.title),
-        },
         { type: "divider" },
         {
           type: "menu",
-          label: "文字大小",
+          label: t("font size"),
           icon: <BiFontSize />,
+          value: settings.reading.fontSize,
+          onClick: changeFontSize,
           sub: [
             {
-              type: "title",
-              label: (
-                <SliderInput
-                  args={SliderInstance.FontSize}
-                  defaultValue={settings.reading.fontSize}
-                  getAriaValueText={(value) => value.toString()}
-                  onChange={changeFontSize}
-                />
-              ),
+              type: "item",
+              label: t("tiny"),
+              value: FontSize.tiny,
+            },
+            {
+              type: "item",
+              label: t("small"),
+              value: FontSize.small,
+            },
+            {
+              type: "item",
+              label: t("medium"),
+              value: FontSize.medium,
+            },
+            {
+              type: "item",
+              label: t("big"),
+              value: FontSize.big,
+            },
+            {
+              type: "item",
+              label: t("large"),
+              value: FontSize.large,
             },
           ],
         },
         {
           type: "menu",
-          label: "行间距",
+          label: t("line height"),
           icon: <AiOutlineColumnHeight />,
+          onClick: changeLineHeight,
+          value: settings.reading.lineHeight,
           sub: [
             {
-              type: "title",
-              label: (
-                <SliderInput
-                  args={SliderInstance.LineHeight}
-                  defaultValue={settings.reading.lineHeight}
-                  onChange={changeLineHeight}
-                />
-              ),
+              type: "item",
+              label: t("small"),
+              value: LineHeight.small,
+            },
+            {
+              type: "item",
+              label: t("medium"),
+              value: LineHeight.medium,
+            },
+            {
+              type: "item",
+              label: t("big"),
+              value: LineHeight.big,
             },
           ],
-        },
-
-        { type: "divider" },
-        {
-          type: "item",
-          label: "设置",
-          icon: <BiCog />,
-          onClick: () => nav("./setting"),
         },
       ],
     }),
     [settings, book.progress]
   );
-  const TextSelected: () => Menu_Options = useCallback(
+
+  const TextSelected: () => Props.Menu.Option = useCallback(
     () => ({
       type: "menu",
       sub: [
         {
           type: "item",
-          label: "复制",
+          label: t("copy"),
           icon: <MdOutlineContentCopy />,
           shortcuts: "Ctrl+C",
           onClick: copyText,
         },
+
         {
           type: "item",
-          label: "搜索",
-          icon: <MdSearch />,
-          shortcuts: "Ctrl+F",
-          onClick: searchWeb,
-        },
-        {
-          type: "item",
-          label: "翻译",
+          label: t("translate"),
           shortcuts: "Ctrl+T",
           icon: <MdTranslate />,
           onClick: translate,
         },
-        { type: "divider" },
         {
           type: "item",
-          label: "添加书签",
-          shortcuts: "Ctrl+M",
-          icon: <BiBookmarkPlus />,
-          onClick: modalAddBookmark,
+          label: t("search"),
+          icon: <MdSearch />,
+          shortcuts: "Ctrl+F",
+          onClick: searchWeb,
         },
       ],
     }),
@@ -224,15 +192,14 @@ const BookBody = memo(() => {
   );
 
   const onContextMenu = useEvent((event: React.MouseEvent) => {
-    pop(
+    Pop.set(
       <Menu
         children={
           window.getSelection()?.isCollapsed ? NoSelection() : TextSelected()
         }
       />,
       { event: event }
-    );
-    pop.open();
+    ).open();
   });
 
   return (
@@ -245,16 +212,17 @@ const BookBody = memo(() => {
       <Container cls={"BookBody"}>
         <Container
           cls={"BodyTitle"}
+          onClick={() => toggleContentBar()}
           children={`第${book.progress + 1}章  ${
             book.titles[book.progress]?.title
           }`}
         />
         <Divider />
-        {currentBody.map((item, keys) => (
+        {currentBody.map((item: any, keys: React.Key) => (
           <Container
             cls={"BodyPara"}
             style={{
-              fontSize:settings.reading.fontSize + 'rem',
+              fontSize: settings.reading.fontSize + "rem",
               lineHeight: settings.reading.lineHeight,
               marginBottom: settings.reading.paragraphSpacing + "pc",
             }}

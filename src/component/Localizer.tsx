@@ -2,7 +2,6 @@ import * as React from "react";
 import {memo, useCallback, useLayoutEffect, useRef, useState} from "react";
 import {Container} from "./Container";
 import {useWindows} from "../hook/useWindows";
-import {LocalizerProps} from "../@types/localizer";
 
 
 /** @Description 位置定位器 对于视窗而言 */
@@ -13,7 +12,7 @@ export const Localizer = memo(
     event,
     base,
     position = "relative",
-  }: LocalizerProps) => {
+  }: Props.Localizer) => {
     const [left, setLeft] = useState<number>();
     const [top, setTop] = useState<number>();
     const ref = useRef<HTMLElement>();
@@ -28,7 +27,6 @@ export const Localizer = memo(
     }, [anchor, event]);
 
     const defaultPosition = useCallback(()=>{
-        console.log(55)
         const width = ref.current?.clientWidth as number;
         const height = ref.current?.clientHeight as number;
        setTop((win_height  - height )/ 2)
@@ -75,7 +73,7 @@ export const Localizer = memo(
         /** @Description 判断位置 */
         if (anchor.getBoundingClientRect().x + aw + width > win_width)
           x = position === "absolute"? anchor.getBoundingClientRect().x + aw - width:-width;
-        if (y > win_height) y = win_height - height;
+        if (anchor.getBoundingClientRect().y + ah + height  > win_height) y = win_height - height;
 
         setLeft(x);
         setTop(y);

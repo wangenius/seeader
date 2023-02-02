@@ -1,9 +1,7 @@
 import { ReactNode, useMemo, useState } from "react";
 import { useEvent } from "../hook/useEvent";
-import { Fn } from "../@types/context";
 import { ClickAwayListener } from "@mui/material";
 import { Localizer } from "./Localizer";
-import { LocalizerProps } from "../@types/localizer";
 
 /** @Description cascade */
 const useCascade = () => {
@@ -12,7 +10,7 @@ const useCascade = () => {
   /** @Description state */
   const [cascadeOpen, setCascadeOpen] = useState<boolean>(false);
   /** @Description change content */
-  const cascade = (content: ReactNode, configs?: LocalizerProps) => {
+  const cascade = (content: ReactNode, configs?: Props.Localizer) => {
     setContent(<Localizer {...configs}>{content}</Localizer>);
     openCascade();
   };

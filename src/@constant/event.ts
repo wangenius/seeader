@@ -1,28 +1,29 @@
-import {EventManagerInterface} from "../@types/event";
-import {Fn} from "../@types/context";
-
+/** @Description modal事件发射器通道 */
 const enum ModalEmit {
     Open,
     Close,
     Fade,
 }
+/** @Description  pop事件发射器通道*/
 const enum PopEventEmit {
     Content,
     Close,
     Open
 }
 
-class EventManager<Event> implements EventManagerInterface<Event> {
+/** @Description 事件管理器  list emitQueue 监听是on  发射是emit*/
+class EventManager<Event> {
     /** @Description 事件列表 */
-    list: Map<any, any>
+    list: Map<Event, Fn[]>
     /** @Description 队列 */
-    emitQueue: Map<any, any>
+    emitQueue: Map<Event, any>
     /** @Description 监听事件 */
     constructor() {
         this.list = new Map()
         this.emitQueue = new Map()
     }
 
+    /** @Description 监听 */
     on(event: Event, callback: Fn) {
         this.list.has(event) || this.list.set(event, []);
         this.list.get(event)?.push(callback);

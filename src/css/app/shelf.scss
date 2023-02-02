@@ -1,73 +1,85 @@
+@import "../@variants/constant";
+@import "../@variants/color";
+
 .ShelfArea {
   display: grid;
   width: 100%;
+  height: 100%;
   grid-gap: 20px 20px;
   padding-top: 2pc;
   grid-template-columns: repeat(auto-fill, 160px);
   overflow: visible;
   margin: auto;
   justify-content: center;
-  align-content: center;
+  background-image: radial-gradient(
+    rgba(68, 76, 247, 0.24) 0.9px,
+    #ffffff 0.9px
+  );
+  background-size: 18px 18px;
 
-  .BookGrid {
+  .book {
     display: inline-flex;
     overflow: visible;
+    z-index: 1;
+    transform-style: preserve-3d;
+    position: relative;
+    cursor: pointer;
+    backface-visibility: visible;
+    height: 200px;
+    transition: all 0.3s ease-in-out;
 
-    .BookCover {
+
+    .front {
       position: relative;
-      border-radius: 12px;
-      width: 160px;
-      height: 200px;
-      transition: all 180ms ease-in-out;
-
-      background: linear-gradient(
-        45deg,
-        hsl(269, 34%, 58%) 0%,
-        hsl(230, 72%, 68%) 100%
-      );
+      cursor: $pointer;
       overflow: visible;
-      background-size: 300% 300%;
-      scale: 1;
-      cursor: url("/public/icon/hand.png") auto;
-      ::after {
-        content: "";
-        position: absolute;
-        top: 10%;
-        width: 80%;
-        left: 10%;
-        background-size: 100% 100%;
-        height: 100%;
-        background: inherit;
-        z-index: -1;
-        filter: blur(20px) brightness(100%) opacity(0.6);
-      }
-
+      height: 100%;
+      border-radius: 12px;
+      top: 0;
+      left: 0;
+      width: 160px;
+      background-color: $color_primary;
+      transition: all 0.3s ease-in-out;
       .BookTitle {
         padding: 12px;
         margin: 20px auto;
-        color: #ffffff;
         text-align: justify;
         user-select: none;
+        color: #ffffff;
       }
+
       .Tip {
-        background-color: #3f3d3d;
+        background-color: #7da953;
         height: 16px;
         border-radius: 12px;
         padding: 0 6px;
-        font-size: 0.72rem;
+        font-size: $fs_mark;
         color: #ffffff;
         position: absolute;
         bottom: 4px;
         right: 4px;
       }
+
+      .progress {
+        color: #ffffff;
+        font-size: $fs_mark;
+        position: absolute;
+        bottom: 5px;
+        left: 8px;
+      }
     }
-    [state="focus"] {
-      z-index: $z_focusItem;
+
+    &:hover {
+      .front {
+        box-shadow: rgb(229, 198, 198) 0 0 0 5px;
+      }
     }
-    > :hover {
-      z-index: $z_focusItem;
-      scale: 1.04;
-      background-position: 100% 0;
+
+
+    &[state='current'] {
+      .front{
+        box-shadow: rgb(229, 198, 198) 0 0 0 5px;
+      }
     }
   }
 }

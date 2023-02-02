@@ -1,5 +1,5 @@
 import { Header } from "./Header";
-import { Container, PopContainer, ModalContainer } from "../component";
+import { Container, ModalContainer, PopContainer } from "../component";
 import { Outlet } from "react-router-dom";
 import { BookProvider } from "../context/BookProvider";
 import { ShelfProvider } from "../context/ShelfProvider";
@@ -20,8 +20,8 @@ export const App = () => (
       draggable
       pauseOnHover
     />
-    <ModalContainer /** @Description 模态 */ />
-    <PopContainer /** @Description context */ />
+    <ModalContainer />
+    <PopContainer />
     <ShelfProvider>
       <BookProvider>
         <Header />

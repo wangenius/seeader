@@ -4,20 +4,18 @@ import { useShelf } from "./ShelfProvider";
 import { useNavigate } from "react-router-dom";
 import { useHotkeys } from "react-hotkeys-hook";
 import { usePath } from "../hook/usePath";
-import { ElementProps } from "elementProperty";
 import { bookSlice } from "../store/slice_book";
-import {Container, TextInput, pop, Card} from "../component";
+import {Container, TextInput, Pop, Card} from "../component";
 import _ from "lodash";
-import { Book, BookBodies } from "../@types/object";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { Data } from "../method";
-import { BookContextProps } from "../@types/context";
+
 
 // @ts-ignore
 const BookContext = React.createContext<BookContextProps>({});
 
-export const BookProvider = memo(({ children }: ElementProps) => {
+export const BookProvider = memo(({ children }: Props.Base) => {
   const book = useAppSelector((state) => state.book);
   const dispatch = useAppDispatch();
   const nav = useNavigate();
@@ -115,71 +113,21 @@ export const BookProvider = memo(({ children }: ElementProps) => {
 
   /** @Description 编辑书籍信息，当前仅支持修改标题 */
   async function modalEditBook(target?: Book) {
-    pop.modal(
+    Pop.modal(
       <Card style={{ width: 500, height: 300 }}>
         <TextInput
           button
           onClick={async (value) => {
             await editBook({ name: value }, target);
-            pop.close()
+            Pop.close()
           }}
           placeholder={"重命名"}
-          defaultValue={target?.name || book.name}
+          init={target?.name || book.name}
         ></TextInput>
       </Card>
     );
   }
 
-  /** @Description 添加书签 */
-  function modalAddBookmark(content?: string) {
-    pop.modal(
-      <Card>
-        <Container
-          sx={{
-            backgroundColor: "rgba(40,40,40,0.68)",
-            p: 1,
-            mb: 3,
-            mt: 3,
-            overflow: "visible",
-            boxSizing: "border-box",
-            width: 400,
-            height: 110,
-            borderRadius: 2,
-            zIndex: 0,
-            color: "rgb(250,250,250)",
-            backdropFilter: "blur(10px)",
-            ":after": {
-              content: "''",
-              position: "absolute",
-              top: "100%",
-              left: "10%",
-              marginLeft: 0,
-              borderWidth: 12,
-              borderStyle: "solid",
-              borderColor:
-                "rgba(40,40,40,0.68) transparent transparent transparent",
-              zIndex: -1,
-            },
-          }}
-        >
-          {_.truncate(content || window.getSelection()?.toString(), {
-            length: 120,
-          })}
-        </Container>
-        <TextInput
-          sx={{
-            width: 500,
-            borderRadius: 2,
-          }}
-          placeholder={"书签内容"}
-          button
-          onClick={(value) => {
-            console.log(value);
-          }}
-        />
-      </Card>
-    );
-  }
 
   /** @Description 删除书籍 */
   async function deleteBook(targetBook?: Book) {
@@ -197,7 +145,6 @@ export const BookProvider = memo(({ children }: ElementProps) => {
     <BookContext.Provider
       value={{
         book,
-        modalAddBookmark,
         changeBook,
         updateBook,
         deleteBook,

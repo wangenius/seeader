@@ -1,38 +1,39 @@
 import * as React from "react";
-import {memo, useCallback, useRef} from "react";
-import {Container, Hangover} from "./Container";
-import {Button} from "./Button";
-import {MenuButtonProperty, MenuItemProps, MenuProps,} from "elementProperty";
-import {pop} from "./Pop";
-import {Divider} from "./Accessory";
-import {MdCheck, MdKeyboardArrowRight} from "react-icons/md";
+import { memo, useCallback, useRef } from "react";
+import { Container, Hangover } from "./Container";
+import { Button } from "./Button";
+import { Pop } from "./Pop";
+import { Divider } from "./Accessory";
+import { MdCheck, MdKeyboardArrowRight } from "react-icons/md";
 import _ from "lodash";
-import {Fn} from "../@types/context";
-import {useCascade} from "./Cascade";
-import {styled} from "@mui/material";
+import { useCascade } from "./Cascade";
+import clsx from "clsx";
+import { voidFn } from "../method";
 
 /** @Description 菜单 */
-export const Menu = memo((props: MenuProps) => {
+export const Menu = memo((props: Props.Menu.Main) => {
   const { children, open } = props;
   return (
     <Container open={open} cls={"Menu"}>
-      {children.sub?.map((item, key) => (
-        <MenuItem key={key}>{item}</MenuItem>
-      ))}
+      {children.sub?.map((item, key) => {
+        return (
+          <MenuItem key={key} onClick={children.onClick} base={children.value}>
+            {item}
+          </MenuItem>
+        );
+      })}
     </Container>
   );
 });
 
-
-
 /** @Description 菜单按钮 */
-export const MenuButton = memo((props: MenuButtonProperty) => {
-  const { context,...other } = props;
+export const MenuButton = memo((props: Props.Button.MenuButton) => {
+  const { context, cls, ...other } = props;
   const anchorELRef = useRef<HTMLElement>();
   /** @Description 鼠标进入事件 */
   const onMouseEnter = useCallback<Fn>(
     () =>
-      pop(<Menu>{context}</Menu>, {
+      Pop.set(<Menu>{context}</Menu>, {
         anchor: anchorELRef.current,
         base: "bottom",
         position: "absolute",
@@ -40,31 +41,35 @@ export const MenuButton = memo((props: MenuButtonProperty) => {
     [context]
   );
 
-  const onClick = ()=>{
-    pop(<Menu>{context}</Menu>, {
+  const onClick = () => {
+    Pop.set(<Menu>{context}</Menu>, {
       anchor: anchorELRef.current,
       base: "bottom",
       position: "absolute",
-    })
-    pop.open()
-  }
+    }).open();
+  };
 
   return (
     <Button
       onMouseEnter={onMouseEnter}
       onClick={onClick}
       ref={anchorELRef}
-      cls={"MenuButton"}
+      cls={clsx("MenuButton", cls)}
       label={context.label as string}
       {...other}
     />
   );
 });
 
-
 /** @Description 菜单item */
-export const MenuItem = memo((props: MenuItemProps) => {
-  const { children, startIcon, open, ...other } = props;
+export const MenuItem = memo((props: Props.Menu.Item) => {
+  const {
+    children,
+    startIcon,
+    open,
+    onClick: click = voidFn,
+    ...other
+  } = props;
   const { onClick } = children;
   /** @Description anchor标记 */
   const Ref = useRef<HTMLElement>();
@@ -86,7 +91,8 @@ export const MenuItem = memo((props: MenuItemProps) => {
   /** @Description 点击按钮 */
   const clickItem = useCallback<Fn>(() => {
     if (children.allowed === false || children.type === "menu") return;
-    pop.close();
+    Pop.close();
+    click(children.value);
     onClick!();
   }, [onClick]);
 
@@ -101,7 +107,7 @@ export const MenuItem = memo((props: MenuItemProps) => {
       <Container
         onMouseEnter={onMouseEnter}
         onClick={clickItem}
-        cls={"MenuButton"}
+        cls={clsx("MenuButton", children.cls)}
         state={children.allowed === false ? "notAllowed" : undefined}
         {...other}
       >
@@ -113,7 +119,9 @@ export const MenuItem = memo((props: MenuItemProps) => {
         <Container cls={"shortcuts"} children={children.shortcuts} />
         {children.type === "menu" ? (
           <MdKeyboardArrowRight />
-        ) : children.check ? (
+        ) : children.value === true ||
+          (children.value === props.base &&
+            props.children.value !== undefined) ? (
           <MdCheck />
         ) : (
           <MdCheck opacity={0} />

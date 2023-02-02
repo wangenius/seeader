@@ -20,7 +20,7 @@ $color_menu_btn_notAllowed : #d5d5d5;
     cursor: $pointer;
     position: relative;
     overflow: visible;
-    margin-bottom: 3px;
+    margin-bottom: 3px; width: 100%;
     &:hover {
       > .MenuButton {
         @include bc_hover(rgba(135, 151, 187, 0.14))
@@ -31,11 +31,11 @@ $color_menu_btn_notAllowed : #d5d5d5;
       @include NoBubbling;
       @include FlexCenter;
       white-space: nowrap;
-      box-sizing: content-box;
+      box-sizing: border-box;
       user-select: none;
       border-radius: $br_btn;
-      min-width: 200px;
-
+      min-width: 80px;
+      width: 100%;
       padding: 0 8px;
       height: $height_menuButton;
       &:hover {
@@ -77,8 +77,20 @@ $color_menu_btn_notAllowed : #d5d5d5;
         .shortcuts {
           color: $color_menu_btn_notAllowed;
         }
-
+      }
+    }
+    .Button_red {
+      background-color: $bc_button_warning;
+      .name {
+        color: $color_button_warning;
+      }
+      svg:first-of-type {
+        fill: $color_button_warning;
+      }
+      &:hover{
+        background-color: $bc_button_warning_hover;
       }
     }
   }
+
 }

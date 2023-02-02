@@ -1,16 +1,14 @@
-import { remote } from "../method/remote";
+import { Data, Dialog, err, File, remote } from "../method";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { toast } from "react-toastify";
-import { settingsSlice } from "../store/slice_settings";
-import { Language } from "../@types/i18next";
+import { initialSettings, settingsSlice } from "../store/slice_settings";
 import i18n from "i18next";
-import { Settings } from "../@types/object";
-import { Data } from "../method/data";
-import { Dialog } from "../method/dialog";
+import { useTranslation } from "react-i18next";
 
 export function useSettings() {
   const settings = useAppSelector((state) => state.settings);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   /** @Description 改变redux设置状态 */
   const changeSettings = (settings: Partial<Settings>) =>
@@ -34,6 +32,15 @@ export function useSettings() {
     } catch {
       toast.error("保存失败");
     }
+  }
+
+  /** @Description 改变close mode */
+  function changeCloseMode(value: boolean) {
+    changeSettings({
+      common: {
+        minWithTray: value,
+      },
+    });
   }
 
   /** @Description 刷新数据库设置 */
@@ -84,6 +91,26 @@ export function useSettings() {
     });
   }
 
+  /** @Description export */
+  async function exportSettings() {
+    try {
+      const res = await Dialog.save("settings.config", "保存配置文件到");
+      if (res.canceled) err("取消导出");
+      const path = res.filePath as string;
+      await File.save(path, JSON.stringify(settings));
+      toast.success("导出成功");
+    } catch (e) {
+      toast.error(e as string);
+    }
+  }
+
+  function resetSettings() {
+    changeLanguage(initialSettings.preference.language!).then(() =>
+      changeSettings(initialSettings)
+    );
+    toast.success(t("reset successfully"));
+  }
+
   return {
     settings,
     changeSettings,
@@ -93,8 +120,11 @@ export function useSettings() {
     changeFontSize,
     changeLineHeight,
     changeLanguage,
+    exportSettings,
     toggleContentBar,
     changeParagraphSpacing,
     changeDictionaryOrigin,
+    changeCloseMode,
+    resetSettings,
   };
 }

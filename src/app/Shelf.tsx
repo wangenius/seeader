@@ -1,82 +1,122 @@
-import { Container, Menu, pop } from "../component";
-import { useBook } from "../context/BookProvider";
-import { useShelf } from "../context/ShelfProvider";
-import React, { memo, useCallback, useState } from "react";
+import {Container, Menu, Pop} from "../component";
+import {useBook} from "../context/BookProvider";
+import {useShelf} from "../context/ShelfProvider";
+import React, {memo, useCallback, useMemo, useState} from "react";
 import {
   MdDeleteOutline,
   MdInfoOutline,
   MdModeEditOutline,
-  MdOpenInNew,
+  MdOutlineAddBox,
+  MdOutlineAddCircleOutline,
+  MdOutlineFileUpload,
 } from "react-icons/md";
-import __ from "lodash";
-import { Book } from "../@types/object";
-import { useNavigate } from "react-router-dom";
-import { Dialog } from "../method";
-import { useEvent } from "../hook/useEvent";
-import { ElementProps, Menu_Options } from "elementProperty";
-import { Fn } from "../@types/context";
+import _ from "lodash";
+import {Dialog} from "../method";
+import {useEvent} from "../hook/useEvent";
+import {useTranslation} from "react-i18next";
+import {usePath} from "../hook/usePath";
 
+/** @Description 书架 */
 export const Shelf = memo(() => {
-  const { openBook, deleteBook, modalEditBook } = useBook();
-  const { book } = useBook();
-  const { books } = useShelf();
+  /** @Description 书架方法 */
+  const { books, addBook, importShelf, exportShelf, backUpBook } = useShelf();
 
-  /*选中的书index*/
-  const [hoveredBookIndex, setHoveredBookIndex] = useState<number>();
-  const nav = useNavigate();
+  const { t } = useTranslation();
+
+  /** @Description 书架菜单 */
+  const contextMenu: Props.Menu.Option = {
+    type: "menu",
+    label: t("file"),
+    sub: [
+      {
+        type: "item",
+        label: t("add book"),
+        icon: <MdOutlineAddCircleOutline />,
+        onClick: addBook,
+      },
+      {
+        type: "item",
+        label: t("open shelf"),
+        icon: <MdOutlineAddBox />,
+        onClick: importShelf,
+      },
+      {
+        type: "divider",
+      },
+      {
+        type: "item",
+        label: t("export shelf"),
+        icon: <MdOutlineFileUpload />,
+        onClick: exportShelf,
+      },
+      {
+        type: "item",
+        label: t("export book"),
+        icon: <MdOutlineFileUpload />,
+        onClick: backUpBook,
+      },
+    ],
+  };
+
+  const onContextMenu = useEvent<Fn>((event) => {
+    Pop.set(<Menu>{contextMenu}</Menu>, { event, position: "absolute" }).open();
+  });
+
+  return (
+    <Container cls={"ShelfArea"} onContextMenu={onContextMenu}>
+      {books.map((item: Book, key: number) => (
+        <BookCover item={item} key={key} />
+      ))}
+    </Container>
+  );
+});
+
+const BookCover = memo((props: { item: Book }) => {
+  const { item } = props;
+  const { t } = useTranslation();
+  const { toReading } = usePath();
+  const { book, openBook, modalEditBook, deleteBook } = useBook();
+
+  /** @Description 当前进度百分比 */
+  const progress = useMemo(
+    () =>
+      `进度：${_.round(
+        item._id === book._id
+          ? ((book.progress + 1) / item.total) * 100
+          : ((item.progress + 1) / item.total) * 100,
+        2
+      )}% `,
+    [item, book]
+  );
 
   /** 右键上下文内容 */
-  const contextContent: (key: number) => Menu_Options = useCallback(
-    (key: number) => ({
+  const contextContent: (key: number) => Props.Menu.Option = useCallback(
+    () => ({
       type: "menu",
       sub: [
         {
           type: "item",
-          icon: <MdOpenInNew />,
-          label: "打开",
-          onClick: () => openBook(books[key]),
-        },
-        {
-          type: "item",
           label: "编辑",
           icon: <MdModeEditOutline />,
-          onClick: () => modalEditBook(books[key]),
+          onClick: () => modalEditBook(item),
         },
         {
           type: "item",
-          label: "打开文件本地位置",
+          label: t("path"),
           icon: <MdInfoOutline />,
           onClick(): any {
             window.shell.openExternal(
-              books[key].path.slice(0, books[key].path.lastIndexOf("\\"))
+              item.path.slice(0, item.path.lastIndexOf("\\"))
             );
           },
         },
         {
           type: "item",
-          label: "信息",
-          icon: <MdInfoOutline />,
-          onClick: () => {
-            pop.modal(<Container>{books[key].name}</Container>);
-          },
-        },
-        {
-          type: "item",
           label: "删除",
-          style: {
-            backgroundColor: "#ff0000",
-            color: "#f1f1f1",
-            svg: {
-              fill: "#f1f1f1",
-            },
-            ":hover": {
-              backgroundColor: "#e80005",
-              color: "#f1f1f1",
-            },
-          },
+          cls: "Button_red",
           icon: <MdDeleteOutline />,
           onClick(): any {
-            Dialog.confirm("确定删除？").then(() => deleteBook(books[key]));
+            Dialog.confirm("确定删除？").then(() => deleteBook(item));
           },
         },
       ],
@@ -86,73 +126,27 @@ export const Shelf = memo(() => {
 
   /** 右键书籍封面 */
   const contextShow = useEvent((event, key) => {
-    setHoveredBookIndex(key);
-    pop.modal(<Menu>{contextContent(key)}</Menu>, {
+    event.stopPropagation();
+    Pop.set(<Menu>{contextContent(key)}</Menu>, {
       event: event,
       position: "absolute",
-    });
+    }).open();
   });
-
   /** 左键书籍封面 */
-  const bookClick = useEvent<Fn>((event, key) => {
-    books[key]._id === book._id ? nav("/") : openBook(books[key]);
+  const bookClick = useEvent<Fn>(() => {
+    item._id === book._id ? toReading() : openBook(item);
   });
 
   return (
-    <Container cls={"ShelfArea"}>
-      {books.map((item, key) => {
-        return (
-          <BookCover
-            item={item}
-            index={key}
-            key={key}
-            onClick={bookClick}
-            modalHover={hoveredBookIndex === key}
-            onContextMenu={contextShow}
-          />
-        );
-      })}
-    </Container>
-  );
-});
-
-interface CoverIFC extends ElementProps {
-  url?: string;
-  modalHover?: boolean;
-  item: Book;
-}
-
-const BookCover = memo((props: CoverIFC) => {
-  const { index, url, modalHover, onClick, onContextMenu, item } = props;
-  const { book } = useBook();
-
-  return (
-    <Container cls={"BookGrid"}>
-      <Container
-        index={index}
-        cls={"BookCover"}
-        state={modalHover ? "focus" : undefined}
-        onClick={onClick}
-        onContextMenu={onContextMenu}
-      >
-        <Container cls={"BookTitle"}>{item.name}</Container>
-        <Container
-          open={item._id === book._id}
-          cls={"Tip"}
-        >{`正在阅读`}</Container>
-        <Container
-          sx={{
-            fontSize: "0.76rem",
-            position: "absolute",
-            bottom: 4,
-            left: 4,
-          }}
-        >{`进度：${__.round(
-          item._id === book._id
-            ? ((book.progress + 1) / item.total) * 100
-            : ((item.progress + 1) / item.total) * 100,
-          2
-        )}% `}</Container>
+    <Container
+      cls={"book"}
+      onClick={bookClick}
+      state={item._id === book._id ? "current" : undefined}
+      onContextMenu={contextShow}
+    >
+      <Container cls={"front"}>
+        <Container cls={"BookTitle"} children={item.name} />
+        <Container cls={"progress"} children={progress} />
       </Container>
     </Container>
   );
