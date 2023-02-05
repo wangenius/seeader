@@ -1137,6 +1137,28 @@ scroll*/
   backdrop-filter: blur(5px);
   padding: 0;
 }
+.Header .expandable .item {
+  position: absolute;
+  border-radius: 20px;
+  cursor: url("/public/icon/hand.png"), pointer;
+  width: 100px;
+  height: 100px;
+}
+.Header .expandable .item:hover {
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px;
+}
+.Header .expandable .item svg {
+  scale: 0.8;
+}
+.Header .expandable .item:nth-of-type(2) {
+  left: 30px;
+}
+.Header .expandable .item:nth-of-type(3) {
+  left: 150px;
+}
+.Header .expandable .item:nth-of-type(4) {
+  left: 270px;
+}
 .Header .expandable .drag {
   display: flex;
   flex-direction: row;
@@ -1151,6 +1173,7 @@ scroll*/
   transition: all 200ms ease;
   position: relative;
   margin-bottom: 20px;
+  touch-action: none;
 }
 .Header .expandable .drag * {
   pointer-events: none;
@@ -1222,6 +1245,11 @@ scroll*/
     rotate: 720deg;
   }
 }
+svg {
+  width: inherit;
+  height: inherit;
+}
+
 /*font size*/
 /*border radius*/
 /*border*/

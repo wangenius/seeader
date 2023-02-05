@@ -1,78 +1,62 @@
-import {
-  Container,
-  Hangover,
-  IconButton,
-  Menu,
-  Pop,
-  Spring,
-} from "../component";
-import React, { useEffect, useRef, useState } from "react";
-import { remote } from "../method";
-import { useNav } from "../hook/useNav";
-import { useSettings } from "../hook/useSettings";
-import { MdClose, MdCropSquare, MdMoreHoriz, MdRemove } from "react-icons/md";
-import { useEvent } from "../hook/useEvent";
-import { useTranslation } from "react-i18next";
-import { CHANNELS } from "a_root";
-import { useSpring } from "@react-spring/web";
-import { ClickAwayListener } from "@mui/material";
-import { config } from "react-spring";
-import { STYLES } from "../@constant";
-import  BookPerson from "../@static/book-person.svg";
-import { useGesture } from "@use-gesture/react";
+import {Container, Hangover, IconButton, Spring} from "../component";
+import React, {useEffect, useRef, useState} from "react";
+import {remote} from "../method";
+import {useNav} from "../hook/useNav";
+import {useSettings} from "../hook/useSettings";
+import {MdClose, MdCropSquare, MdMoreHoriz, MdRemove} from "react-icons/md";
+import {CHANNELS} from "a_root";
+import {useSpring} from "@react-spring/web";
+import {ClickAwayListener} from "@mui/material";
+import {config} from "react-spring";
+import {STYLES} from "../@constant";
+import {useGesture} from "@use-gesture/react";
+import BookIcon from "../@static/book.svg";
+import ShelfIcon from "../@static/shelf.svg";
+import SettingIcon from "../@static/setting.svg";
 
+/** @Description 标题栏 */
 export function Header() {
-  const { toReading, toShelf, toSetting } = useNav();
   const { closeApp } = useSettings();
-  const ref = useRef<HTMLElement>();
-  const { t } = useTranslation();
-  /** @Description 右键菜单 */
-  const menu: Props.Menu.Option = {
-    type: "menu",
-    sub: [
-      {
-        type: "item",
-        label: "reading",
-        onClick: toReading,
-      },
-      {
-        type: "item",
-        label: "shelf",
-        onClick: toShelf,
-      },
-      {
-        type: "item",
-        label: "settings",
-        onClick: toSetting,
-      },
-    ],
-  };
-  /** @Description 右键菜单方法 */
-  const onContextMenu = useEvent(() => {
-    Pop.set(<Menu>{menu}</Menu>, {
-      position: "absolute",
-      anchor: ref.current,
-      base: "bottom",
-    }).open();
-  });
+  return (
+    <Container cls={"Header"}>
+      <ExpandDocker />
+      <Hangover cls={"draggable"} />
+      <IconButton
+        icon={<MdRemove />}
+        value={CHANNELS.window_min}
+        onClick={remote}
+      />
+      <IconButton
+        icon={<MdCropSquare />}
+        value={CHANNELS.window_max}
+        onClick={remote}
+      />
+      <IconButton icon={<MdClose />} onClick={closeApp} />
+    </Container>
+  );
+}
 
+/** @Description expandDocker */
+export const ExpandDocker = () => {
+  const { toReading, toShelf, toSetting, switchShelfAndReading } = useNav();
+  const ref = useRef<HTMLElement>();
   const [expand, setExpand] = useState(false);
+  /** @Description init state */
   const before = {
-    width:60,
+    width: 50,
     height: 24,
     left: 0,
     top: 3,
     x: 0,
     y: 0,
-    backgroundColor: "#494949",
+    backgroundColor: "#03033a",
     color: "#f1f1f1",
-    borderRadius:12,
+    borderRadius: 12,
     boxShadow: STYLES.shadow.docker_hide,
     config: config.gentle,
     scale: 1,
   };
-  const [spring, api] = useSpring(() => before);
-
+  /** @Description expanded state */
   const after: Partial<typeof before> = {
     height: 200,
     width: 400,
@@ -82,30 +66,32 @@ export function Header() {
     boxShadow: STYLES.shadow.docker,
     backgroundColor: "#ffffff",
   };
+  /** @Description generate spring */
+  const [spring, api] = useSpring(() => before);
 
-  const toggle = () => {
-    expand ? api.start(after) : api.start(before);
-  };
+  /** @Description change expand trigger api */
+  useEffect(() => {
+    api.start(expand ? after : before);
+  }, [expand]);
 
-  useEffect(toggle, [expand]);
-
+  /** @Description gesture bind */
   const bind = useGesture({
     onHover: () => {
-      !expand
+      expand
         ? api.start({
-            backgroundColor: "#363636",
+            scale: 0.96,
           })
         : api.start({
-            scale: 0.96,
+            backgroundColor: "#2b7eea",
           });
     },
     onMouseLeave: () => {
-      !expand
+      expand
         ? api.start({
-            backgroundColor: expand ? "#fff" : before.backgroundColor,
+            scale: 1,
           })
         : api.start({
-            scale: 1,
+            backgroundColor: before.backgroundColor,
           });
     },
     onDrag: (state) => {
@@ -119,42 +105,50 @@ export function Header() {
     },
   });
 
+  /** @Description content item */
+  const items = [
+    { icon: <BookIcon />, onClick: toReading },
+    { icon: <ShelfIcon />, onClick: toShelf },
+    { icon: <SettingIcon />, onClick: toSetting },
+  ];
+
   return (
-    <Container cls={"Header"}>
-      <ClickAwayListener
-        onClickAway={() => {
-          setExpand(false);
+    <ClickAwayListener
+      onClickAway={() => {
+        setExpand(false);
+      }}
+    >
+      <Spring
+        ref={ref}
+        spring={spring}
+        cls={"expandable"}
+        onClick={() => {
+          setExpand(true);
         }}
+        onContextMenu={switchShelfAndReading}
       >
-        <Spring
-          ref={ref}
-          spring={spring}
-          cls={"expandable"}
-          onClick={() => {
-            setExpand(true);
-          }}
-          onContextMenu={onContextMenu}
+        <Container
+          {...bind()}
+          state={expand ? "expand" : undefined}
+          cls={"drag"}
         >
-          <Container {...bind()} state={expand?"expand":undefined} cls={"drag"}>
-            <MdMoreHoriz />
-          </Container>
-          <Container>
-            <BookPerson />
-          </Container>
-        </Spring>
-      </ClickAwayListener>
-      <Hangover cls={"draggable"} />
-      <IconButton
-        icon={<MdRemove />}
-        value={CHANNELS.window_min}
-        onClick={remote}
-      />
-      <IconButton
-        icon={<MdCropSquare />}
-        value={CHANNELS.window_min}
-        onClick={remote}
-      />
-      <IconButton icon={<MdClose />} onClick={closeApp} />
-    </Container>
+          <MdMoreHoriz />
+        </Container>
+        {items.map((item, key) => {
+          return (
+            <Container
+              key={key}
+              cls={"item"}
+              onClick={(e) => {
+                e.stopPropagation();
+                setExpand(false);
+                item.onClick();
+              }}
+              children={item.icon}
+            />
+          );
+        })}
+      </Spring>
+    </ClickAwayListener>
   );
-}
+};

@@ -21,6 +21,30 @@
     backdrop-filter: blur(5px);
     padding: 0;
 
+      .item {
+        position: absolute;
+        border-radius: 20px;
+        cursor: $pointer;
+        width: 100px;
+        height: 100px;
+        &:hover{
+          box-shadow: $boxShadow;
+        }
+        svg{
+          scale: 0.8;
+        }
+        &:nth-of-type(2) {
+          left:30px;
+        }
+        &:nth-of-type(3) {
+          left:150px
+        }
+        &:nth-of-type(4) {
+          left:270px
+        }
+    }
+
+
     .drag {
       @include xFlex;
       @include FlexCenter;
@@ -34,6 +58,7 @@
       transition: $trans_default;
       position: relative;
       margin-bottom: 20px;
+      touch-action: none;
         svg {
           @include Max;
           fill:#f6f6f6;
@@ -109,4 +134,9 @@
   100% {
     rotate: 720deg;
   }
+}
+
+svg {
+  width: inherit;
+  height: inherit;
 }
