@@ -168,21 +168,21 @@ scroll*/
   display: inline-block;
   vertical-align: middle;
 }
-.Button .Button_Chars {
+.Button .text {
   display: inline-block;
   vertical-align: middle;
   font-family: "Noto_Medium", "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
   font-size: 0.815rem;
   color: #71717a;
-  margin: 0 3px;
+  margin: 0 6px;
 }
-.Button .Button_startIcon {
+.Button .start {
   display: inline-block;
   vertical-align: middle;
   height: 16px;
   width: 16px;
 }
-.Button .Button_startIcon svg {
+.Button .start svg {
   height: 100%;
   width: 100%;
   fill: rgba(121, 128, 134, 0.87);
@@ -190,42 +190,8 @@ scroll*/
 .Button:hover {
   background-color: rgba(210, 219, 255, 0.26);
 }
-.Button:hover .Button_Chars {
+.Button:hover .text {
   color: #0f172a;
-}
-
-.btn_styled {
-  background-color: #bba292;
-  border-radius: 6px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0 2px 4px;
-  cursor: pointer;
-  display: inline-block;
-  font-family: Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
-  height: 40px;
-  line-height: 40px;
-  outline: 0;
-  overflow: hidden;
-  padding: 0 20px;
-  pointer-events: auto;
-  position: relative;
-  text-align: center;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
-  vertical-align: top;
-  white-space: nowrap;
-  z-index: 9;
-  border: 0;
-  transition: box-shadow 0.2s;
-}
-.btn_styled .Button_Chars {
-  color: #ffffff;
-}
-.btn_styled:hover {
-  box-shadow: rgba(157, 149, 141, 0.5) 0 3px 8px;
-}
-.btn_styled:hover .Button_Chars {
-  color: #ffffff;
 }
 
 .btn_check {
@@ -266,10 +232,9 @@ scroll*/
   position: relative;
   overflow: visible;
   justify-content: left;
-  margin-bottom: 5px;
   padding: 8px;
 }
-.ListButton .Button_Chars {
+.ListButton .text {
   width: 100%;
 }
 .ListButton[state=active] {
@@ -286,7 +251,7 @@ scroll*/
   z-index: -1;
   filter: blur(15px) brightness(100%) opacity(0.4);
 }
-.ListButton[state=active] .Button_Chars {
+.ListButton[state=active] .text {
   color: #ffffff;
 }
 
@@ -891,14 +856,20 @@ scroll*/
   box-shadow: rgba(0, 0, 0, 0.1) 0 5px 20px 0, rgba(9, 30, 66, 0.08) 0 0 0 1px;
   height: calc(100vh - 30px - 40px);
   border-radius: 0.8pc;
-  overflow-x: hidden;
   position: absolute;
   z-index: 20;
 }
+.Docker .body {
+  width: 100%;
+}
 .Docker .Button {
-  margin: 0;
+  margin-bottom: 5px;
   height: 40px;
   width: 100%;
+}
+.Docker .Button .text {
+  display: inline;
+  text-align: center;
 }
 
 .Body {
@@ -1129,6 +1100,7 @@ scroll*/
   transition: all 200ms ease;
   position: relative;
   overflow: visible;
+  background-color: #ffffff;
 }
 .Header .expandable {
   border-radius: 20px;
@@ -1298,13 +1270,30 @@ scroll*/
   background-size: 18px 18px;
 }
 .ShelfArea .Docker {
-  width: 200px;
   height: fit-content;
   padding: 0 5px 5px 5px;
+}
+.ShelfArea .Docker .body .svgButton {
+  width: 50px;
+  height: 50px;
+  margin-top: 5px;
+  border-radius: 14px;
+  justify-content: center;
+  align-content: center;
+  transition: all 200ms ease;
+  cursor: url("/public/icon/hand.png"), pointer;
+  overflow: visible;
+}
+.ShelfArea .Docker .body .svgButton:hover {
+  background-color: #dedede;
+}
+.ShelfArea .Docker .body .svgButton:active {
+  scale: 0.96;
 }
 .ShelfArea .Body {
   display: grid;
   width: calc(100% - 200px);
+  overflow: visible;
   grid-gap: 20px 20px;
   grid-template-columns: repeat(auto-fill, 160px);
   grid-template-rows: repeat(auto-fill, 200px);

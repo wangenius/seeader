@@ -27,15 +27,15 @@ export const Button = memo(
         {...other}
       >
         <Container
-          cls={"Button_startIcon"}
+          cls={"start"}
           open={!!startIcon}
           children={startIcon}
         />
         <Container
-          cls={"Button_Chars"}
+          cls={"text"}
           children={_.capitalize(t(label)) || children}
         />
-        <Container cls={"Button_endIcon"} open={!!endIcon} children={endIcon} />
+        <Container cls={"end"} open={!!endIcon} children={endIcon} />
       </Container>
     );
   })

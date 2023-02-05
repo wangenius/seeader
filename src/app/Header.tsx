@@ -40,6 +40,7 @@ export function Header() {
 export const ExpandDocker = () => {
   const { toReading, toShelf, toSetting, switchShelfAndReading } = useNav();
   const ref = useRef<HTMLElement>();
+  /** @Description state toggle */
   const [expand, setExpand] = useState(false);
   /** @Description init state */
   const before = {

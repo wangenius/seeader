@@ -1,4 +1,4 @@
-import {Button, Container, Menu, Pop, Spring} from "../component";
+import {Container, Menu, Pop, Spring} from "../component";
 import {useBook} from "../context/BookProvider";
 import {useShelf} from "../context/ShelfProvider";
 import React, {memo, useCallback, useMemo} from "react";
@@ -12,15 +12,20 @@ import {useDrag} from "@use-gesture/react";
 import {config} from "react-spring";
 import {useWindows} from "../hook/useWindows";
 import {Docker, Mainer} from "./Docker";
+import Add from "../@static/add.svg";
+import LoadDir from "../@static/loadDir.svg";
+import Export from "../@static/export.svg";
+import Copy from "../@static/copy.svg";
+import {useMeasure} from "react-use";
+import {Tooltip} from "@mui/material";
 
 /** @Description 书架 */
 export const Shelf = memo(() => {
   /** @Description 书架方法 */
   const { books, addBook, importShelf, exportShelf, backUpBook } = useShelf();
-  const { t } = useTranslation();
   const { w_height, w_width } = useWindows();
 
-  const width = 180;
+  const [Ref, { width }] = useMeasure();
 
   /** @Description drag zone 触发位置 */
   const dragZonePosition: Props.DragZone = {
@@ -59,11 +64,19 @@ export const Shelf = memo(() => {
 
   return (
     <Container cls={"ShelfArea"}>
-      <Docker state={true} width={width}>
-        <Button label={t("add book")} onClick={addBook} />
-        <Button label={t("open shelf")} onClick={importShelf} />
-        <Button label={t("export shelf")} onClick={exportShelf} />
-        <Button label={t("export book")} onClick={backUpBook} />
+      <Docker ref={Ref} state={true} width={width}>
+        <DockerButton onClick={addBook}>
+          <Add />
+        </DockerButton>
+        <DockerButton onClick={importShelf}>
+          <LoadDir />
+        </DockerButton>
+        <DockerButton onClick={exportShelf}>
+          <Export />
+        </DockerButton>
+        <DockerButton onClick={backUpBook}>
+          <Copy />
+        </DockerButton>
       </Docker>
       <Mainer width={width}>
         {books.map((item, key) => (
@@ -81,6 +94,14 @@ export const Shelf = memo(() => {
     </Container>
   );
 });
+
+const DockerButton = (props: Props.Base) => {
+  return (
+    <Tooltip title={props.title} placement={'top'} className={"svgButton"}>
+      <Container onClick={props.onClick}>{props.children}</Container>
+    </Tooltip>
+  );
+};
 
 /** @Description 封面单体 */
 const BookCover = memo(
@@ -175,14 +196,17 @@ const BookCover = memo(
     }));
 
     /** @Description check if the drag item is in the dest zone, return boolean */
-    const inDest = useCallback((current: { x: number; y: number }) => {
-      return (
-        DestAnchor!.left <= current.x &&
-        current.x <= DestAnchor!.width + DestAnchor!.left &&
-        current.y <= DestAnchor!.height + DestAnchor!.top &&
-        current.y >= DestAnchor!.top
-      );
-    },[DestAnchor]);
+    const inDest = useCallback(
+      (current: { x: number; y: number }) => {
+        return (
+          DestAnchor!.left <= current.x &&
+          current.x <= DestAnchor!.width + DestAnchor!.left &&
+          current.y <= DestAnchor!.height + DestAnchor!.top &&
+          current.y >= DestAnchor!.top
+        );
+      },
+      [DestAnchor]
+    );
 
     /** @Description bind drag hook */
     const bind = useDrag(

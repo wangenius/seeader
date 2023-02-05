@@ -13,6 +13,7 @@
   transition: $trans_default;
   position: relative;
   overflow: visible;
+  background-color: $bc_default;
 
   .expandable {
     border-radius: 20px;
