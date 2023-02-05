@@ -13,10 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.db_count = exports.db_update = exports.db_find = exports.db_delete = exports.db_insert = void 0;
+const a_root_1 = require("a_root");
 const nedb_promises_1 = __importDefault(require("nedb-promises"));
 const path_1 = require("../@constant/path");
 /** @Description 连接数据库 */
-const dataStoreConnector = (datastore) => nedb_promises_1.default.create(path_1.Dir_dataStores.end(datastore + ".db"));
+const dataStoreConnector = (datastore) => nedb_promises_1.default.create(path_1.Dir_dataStores.end(datastore + a_root_1.Extension.database));
 /** @Description 插入数据 */
 const db_insert = (event, datastore, query) => dataStoreConnector(datastore).insert(query);
 exports.db_insert = db_insert;

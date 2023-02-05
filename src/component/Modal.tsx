@@ -1,6 +1,6 @@
 import React, {memo, useState} from "react";
 import {Spring} from "./index";
-import {EventManager, ModalEmit} from "../@constant/event";
+import {EventManager, ModalEmit} from "./event";
 import {useSpring} from "@react-spring/web";
 import {useEffectOnce} from "react-use";
 

@@ -4,6 +4,8 @@ declare namespace Props {
   import { CSSProperties, ReactNode } from "react";
   import { SpringValues } from "react-spring";
   import { PickAnimated } from "@react-spring/web";
+  import { TFuncKey } from "i18next";
+  import {ReactDOMAttributes} from "@use-gesture/react/dist/declarations/src/types";
 
   type Original = import("@mui/system").BoxProps;
   type TextareaHTMLAttributes = import("react").TextareaHTMLAttributes;
@@ -37,10 +39,10 @@ declare namespace Props {
     /** @Description Btn基本属性 */
     export interface Main extends Base {
       index?: number;
-      value?: string;
+      value?: string | number | boolean;
       startIcon?: ReactNode;
       state?: "active" | "none";
-      label?: string;
+      label?: TFuncKey | string;
       endIcon?: ReactNode;
       href?: string;
       tip?: boolean;
@@ -84,12 +86,6 @@ declare namespace Props {
    *
    * */
   declare namespace Input {
-    /** @Description 开关props */
-    export interface Toggle {
-      defaultChecked?: boolean;
-      onChange: (checked: boolean) => void;
-    }
-
     /** @Description text基本属性 */
     export interface Text extends TextareaHTMLAttributes<HTMLTextAreaElement> {
       init?: string;
@@ -104,39 +100,22 @@ declare namespace Props {
 
       onChange?(value: string): void;
 
-      placeholder: string;
+      placeholder?: string;
     }
 
-    export interface Selector{
+    export interface Selector {
+      /** @Description 是否显示 */
+      open?:boolean;
+      /** @Description 标题 */
+      title?: TFuncKey | string;
       /** @Description 初始值 */
       value?: string | boolean | number;
       /** @Description 对象 */
       children: {
-        /** @Description 对象结点 */
-        item: ReactNode;
-        /** @Description 对象属性值 */
-        value?: string | boolean | number;
-      }[];
+        [propsName:string]:string | number | boolean
+      };
 
       onClick?(value?: string | boolean | number): void;
-    }
-
-    /** @Description 滑块 */
-    export interface Slider {
-      args?: SliderArgs;
-      value?: number;
-      defaultValue?: number;
-      markLabel?: boolean;
-      onChange: (value: number) => void;
-
-      getAriaValueText?(value: number, index: number): string;
-    }
-
-    interface SliderArgs {
-      max?: number;
-      min?: number;
-      step?: number | null;
-      marks?: { value: number; label: string }[];
     }
   }
 
@@ -162,15 +141,16 @@ declare namespace Props {
     export interface Option {
       type: "menu" | "item" | "divider" | "title";
       open?: boolean;
-      label?: ReactNode;
+      label?: JSX.Element | TFuncKey;
       icon?: ReactNode;
       shortcuts?: string;
       cls?: string;
       sub?: Option[];
       check?: boolean;
       allowed?: boolean;
-      value?:string | number | boolean;
-      onClick?(...props:any): any;
+      value?: string | number | boolean;
+
+      onClick?(...props: any): any;
     }
   }
 
@@ -188,8 +168,22 @@ declare namespace Props {
     position?: "relative" | "absolute";
   }
 
-  export interface Spring extends Base {
+  export interface Spring {
+    open?:boolean,
+    children?:ReactNode,
+    cls?:string,
+    onClick?:Fn,
+    onContextMenu?:Fn,
     spring?: SpringValues<PickAnimated<{}>>;
     style?: CSSProperties;
+    bind?:(...args: any[]) => ReactDOMAttributes
+  }
+
+
+  export interface DragZone {
+    width: number;
+    height: number;
+    left: number;
+    top: number;
   }
 }

@@ -15,13 +15,15 @@
   background-color: $transparent;
   transition: $trans_default;
   box-sizing: border-box;
-  &::after{
-    content:"";
+
+  &::after {
+    content: "";
     width: 0;
     height: 100%;
     display: inline-block;
     vertical-align: middle;
   }
+
   .Button_Chars {
     display: inline-block;
     vertical-align: middle;
@@ -30,11 +32,13 @@
     color: $color_button;
     margin: 0 3px;
   }
+
   .Button_startIcon {
     display: inline-block;
     vertical-align: middle;
     height: $size_icon;
     width: $size_icon;
+
     svg {
       @include Max;
       fill: $fill_icon;
@@ -42,6 +46,8 @@
   }
 
   &:hover {
+    background-color: $bc_ico_hover;
+
     .Button_Chars {
       color: $color_button_hover;
     }
@@ -79,6 +85,7 @@
 
   &:hover {
     box-shadow: rgba(157, 149, 141, 0.5) 0 3px 8px;
+
     .Button_Chars {
       color: #ffffff;
     }

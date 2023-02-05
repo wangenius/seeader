@@ -1,16 +1,11 @@
-import React, {
-  forwardRef,
-  LegacyRef,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { IconButton,Container } from "./index";
+import React, { forwardRef, LegacyRef, memo, useRef } from "react";
+import { Container, IconButton } from "./index";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
 import { voidFn } from "../method";
-import { Slider, Switch } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { TFuncKey } from "i18next";
+import _ from "lodash";
+import { useEvent } from "../hook/useEvent";
 
 export const TextInput = memo(
   forwardRef((props: Props.Input.Text, ref: LegacyRef<any>) => {
@@ -24,10 +19,7 @@ export const TextInput = memo(
       ...other
     } = props;
     const Ref = useRef<HTMLInputElement>();
-    const next = useCallback(() => {
-      onClick(Ref.current?.value);
-    }, []);
-
+    const next = useEvent(() => onClick(Ref.current?.value));
     return (
       <Container cls={"TextInput"}>
         <IconButton
@@ -52,71 +44,25 @@ export const TextInput = memo(
 
 /** @Description 选择器 */
 export const Selector = memo((props: Props.Input.Selector) => {
-    const { onClick = voidFn } = props;
-    return (
-        <Container cls={"SettingBox"}>
-            {props.children.map((item, key) => {
-                return (
-                    <Container
-                        cls={"Option"}
-                        state={props.value === item.value ? "actived" : undefined}
-                        onClick={() => {
-                            onClick(item.value);
-                        }}
-                        key={key}
-                    >
-                        {item.item}
-                    </Container>
-                );
-            })}
-        </Container>
-    );
-});
-
-export const SliderInput = forwardRef((props: Props.Input.Slider, ref: LegacyRef<any>) => {
-  const { onChange, defaultValue, args, markLabel, getAriaValueText } = props;
-  const [value, setValue] = useState(defaultValue);
-
-  useEffect(() => {
-    setValue(defaultValue);
-  }, [defaultValue]);
-
+  const { onClick = voidFn, children, open = true } = props;
+  const { t } = useTranslation();
   return (
-    <Container
-      state={value === args?.min ? "min" : undefined}
-      cls={"SliderContainer"}
-    >
-      <Slider
-        className={"Slider"}
-        min={args?.min}
-        max={args?.max}
-        step={args?.step}
-        marks={markLabel && args?.marks}
-        getAriaValueText={getAriaValueText}
-        value={value}
-        onChange={(event, value, activeThumb) => {
-          setValue(value as number);
-        }}
-        onChangeCommitted={(event, value) => onChange(value as number)}
-      />
+    <Container sx={{ display: open ? "block" : "none" }} cls={"SettingBox"}>
+      <Container cls={"title"}>{t(props.title as TFuncKey)}</Container>
+      <Container cls={"Options"}>
+        {_.toPairsIn(children).map((item, key) => {
+          return (
+            <Container
+              cls={"Option"}
+              state={props.value === item[1] ? "actived" : undefined}
+              onClick={() => onClick(item[1])}
+              key={key}
+            >
+              {t(item[0] as TFuncKey) || item}
+            </Container>
+          );
+        })}
+      </Container>
     </Container>
-  );
-});
-export const ToggleInput = forwardRef((props: Props.Input.Toggle, ref) => {
-  const { defaultChecked, onChange } = props;
-  const [value, setValue] = useState(defaultChecked);
-  useEffect(() => {
-    setValue(defaultChecked);
-  }, [defaultChecked]);
-
-  return (
-    <Switch
-      checked={value}
-      onChange={(event, checked) => {
-        setValue(checked);
-        onChange(checked);
-      }}
-      className={"Switch"}
-    />
   );
 });

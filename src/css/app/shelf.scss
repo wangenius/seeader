@@ -2,84 +2,115 @@
 @import "../@variants/color";
 
 .ShelfArea {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-gap: 20px 20px;
-  padding-top: 2pc;
-  grid-template-columns: repeat(auto-fill, 160px);
-  overflow: visible;
-  margin: auto;
-  justify-content: center;
+  width: $full;
+  height: $height_body;
+  z-index: 1;
   background-image: radial-gradient(
     rgba(68, 76, 247, 0.24) 0.9px,
     #ffffff 0.9px
   );
   background-size: 18px 18px;
 
-  .book {
-    display: inline-flex;
-    overflow: visible;
-    z-index: 1;
+  .Docker {
+    width: 200px;
+    height: fit-content;
+    padding: 0 5px 5px 5px;
+  }
+
+  .Body {
+    display: grid;
+    width: calc($full - 200px);
+    grid-gap: 20px 20px;
+    grid-template-columns: repeat(auto-fill, 160px);
+    grid-template-rows: repeat(auto-fill, 200px);
     transform-style: preserve-3d;
-    position: relative;
-    cursor: pointer;
-    backface-visibility: visible;
-    height: 200px;
     transition: all 0.3s ease-in-out;
 
-
-    .front {
-      position: relative;
-      cursor: $pointer;
+    .book {
+      display: inline-flex;
       overflow: visible;
-      height: 100%;
-      border-radius: 12px;
-      top: 0;
-      left: 0;
-      width: 160px;
-      background-color: $color_primary;
+      position: relative;
+      cursor: pointer;
+      height: 200px;
       transition: all 0.3s ease-in-out;
-      .BookTitle {
-        padding: 12px;
-        margin: 20px auto;
-        text-align: justify;
-        user-select: none;
-        color: #ffffff;
-      }
 
-      .Tip {
-        background-color: #7da953;
-        height: 16px;
-        border-radius: 12px;
-        padding: 0 6px;
-        font-size: $fs_mark;
-        color: #ffffff;
-        position: absolute;
-        bottom: 4px;
-        right: 4px;
-      }
-
-      .progress {
-        color: #ffffff;
-        font-size: $fs_mark;
-        position: absolute;
-        bottom: 5px;
-        left: 8px;
-      }
-    }
-
-    &:hover {
       .front {
-        box-shadow: rgb(229, 198, 198) 0 0 0 5px;
+        position: relative;
+        cursor: $pointer;
+        overflow: visible;
+        height: 100%;
+        border-radius: 12px;
+        top: 0;
+        left: 0;
+        width: 160px;
+        background-color: $color_primary;
+        transition: all 0.3s ease-in-out;
+
+        .BookTitle {
+          padding: 12px;
+          margin: 20px auto;
+          text-align: justify;
+          user-select: none;
+          color: #ffffff;
+        }
+
+        .Tip {
+          background-color: #7da953;
+          height: 16px;
+          border-radius: 12px;
+          padding: 0 6px;
+          font-size: $fs_mark;
+          color: #ffffff;
+          position: absolute;
+          bottom: 4px;
+          right: 4px;
+        }
+
+        .progress {
+          color: #ffffff;
+          font-size: $fs_mark;
+          position: absolute;
+          bottom: 5px;
+          left: 8px;
+        }
+      }
+
+      &:hover {
+        scale: 1.05;
+
+        .front {
+          box-shadow: rgb(229, 198, 198) 0 0 0 5px;
+        }
+      }
+
+      &:active {
+        scale: 0.95;
+      }
+
+      &[state="current"] {
+        .front {
+          box-shadow: rgb(229, 198, 198) 0 0 0 5px;
+        }
       }
     }
+  }
 
-
-    &[state='current'] {
-      .front{
-        box-shadow: rgb(229, 198, 198) 0 0 0 5px;
-      }
-    }
+  .deleteArea {
+    @include xFlex;
+    @include FlexCenter;
+    border-radius: 20px;
+    border: $b_settingBar;
+    box-shadow: $boxShadow;
+    background-color: rgba(15, 68, 203, 0.04);
+    overflow: visible;
+    backdrop-filter: blur(2px);
+    z-index: 0;
+    height: 90px;
+    width: 100%;
+    color: $color_button;
+    letter-spacing: 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
   }
 }

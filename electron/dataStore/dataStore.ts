@@ -1,10 +1,10 @@
-import { DataStore, Projection, Query, RemoveOptions } from "a_root";
+import {DataStore, Extension, Projection, Query, RemoveOptions,} from "a_root";
 import Datastore from "nedb-promises";
-import { Dir_dataStores } from "../@constant/path";
+import { Dir_dataStores} from "../@constant/path";
 
 /** @Description 连接数据库 */
 const dataStoreConnector = (datastore: DataStore) =>
-  Datastore.create(Dir_dataStores.end(datastore + ".db"));
+  Datastore.create(Dir_dataStores.end(datastore + Extension.database));
 
 /** @Description 插入数据 */
 export const db_insert: ListenerFunc = (

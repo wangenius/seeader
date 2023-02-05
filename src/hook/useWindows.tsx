@@ -1,17 +1,21 @@
 import { useEffectOnce } from "react-use";
-import { useCallback, useState } from "react";
+import { useState } from "react";
+import { useEvent } from "./useEvent";
 
 export function useWindows() {
+  const docs = document.documentElement;
   const [size, setSize] = useState({
-    win_width: document.documentElement.clientWidth,
-    win_height: document.documentElement.clientHeight,
+    w_width: docs.clientWidth,
+    w_height: docs.clientHeight,
   });
-  const onResize = useCallback(() => {
+
+  const onResize = useEvent(() => {
     setSize({
-      win_width: document.documentElement.clientWidth,
-      win_height: document.documentElement.clientHeight,
+      w_width: docs.clientWidth,
+      w_height: docs.clientHeight,
     });
-  }, []);
+  });
+
   useEffectOnce(() => {
     window.addEventListener("resize", onResize);
     return () => {
@@ -20,8 +24,11 @@ export function useWindows() {
   });
 
   return {
-    win_width: size.win_width,
-    win_height: size.win_height,
-    size: size.win_width > 900,
+    /** @Description client width*/
+    w_width: size.w_width,
+    /** @Description client height */
+    w_height: size.w_height,
+    /** @Description client size is or isn't > 900 */
+    size: size.w_width > 900,
   };
 }

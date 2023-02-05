@@ -1,0 +1,7 @@
+{
+  "shadow": {
+    "docker": "rgba(0, 0, 0, 0.1) 0 5px 20px 0, rgba(9, 30, 66, 0.08) 0 0 0 1px",
+    "docker_hide": "rgba(0, 0, 0, 0) 0 5px 20px 0, rgba(9, 30, 66, 0) 0 0 0 1px"
+  },
+  "none": "none"
+}

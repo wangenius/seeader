@@ -16,7 +16,7 @@ export const Localizer = memo(
     const [left, setLeft] = useState<number>();
     const [top, setTop] = useState<number>();
     const ref = useRef<HTMLElement>();
-    const { win_height, win_width } = useWindows();
+    const { w_height, w_width } = useWindows();
     useLayoutEffect(() => {
         if (!event && !anchor) return defaultPosition();
 
@@ -29,8 +29,8 @@ export const Localizer = memo(
     const defaultPosition = useCallback(()=>{
         const width = ref.current?.clientWidth as number;
         const height = ref.current?.clientHeight as number;
-       setTop((win_height  - height )/ 2)
-       setLeft((win_width  - width )/ 2)
+       setTop((w_height  - height )/ 2)
+       setLeft((w_width  - width )/ 2)
     },[])
 
     /** @Description 事件定位方法 */
@@ -44,8 +44,8 @@ export const Localizer = memo(
         const height = ref.current?.clientHeight as number;
         setTop(y);
         setLeft(x);
-        if (x + width > win_width) setLeft(x - width);
-        if (y + height > win_height) setTop(y - height);
+        if (x + width > w_width) setLeft(x - width);
+        if (y + height > w_height) setTop(y - height);
       },
       [event]
     );
@@ -71,9 +71,9 @@ export const Localizer = memo(
         let y = base === "bottom" ? oy + ah : oy;
 
         /** @Description 判断位置 */
-        if (anchor.getBoundingClientRect().x + aw + width > win_width)
+        if (anchor.getBoundingClientRect().x + aw + width > w_width)
           x = position === "absolute"? anchor.getBoundingClientRect().x + aw - width:-width;
-        if (anchor.getBoundingClientRect().y + ah + height  > win_height) y = win_height - height;
+        if (anchor.getBoundingClientRect().y + ah + height  > w_height) y = w_height - height;
 
         setLeft(x);
         setTop(y);

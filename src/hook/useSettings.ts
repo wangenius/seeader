@@ -1,9 +1,10 @@
 import { Data, Dialog, err, File, remote } from "../method";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { toast } from "react-toastify";
-import { initialSettings, settingsSlice } from "../store/slice_settings";
+import { initialSettings, settingsStore } from "../store/bookSettings";
 import i18n from "i18next";
 import { useTranslation } from "react-i18next";
+import { DataStore } from "a_root";
 
 export function useSettings() {
   const settings = useAppSelector((state) => state.settings);
@@ -12,11 +13,11 @@ export function useSettings() {
 
   /** @Description 改变redux设置状态 */
   const changeSettings = (settings: Partial<Settings>) =>
-    dispatch(settingsSlice.actions.changeSettings(settings));
+    dispatch(settingsStore.actions.changeSettings(settings));
 
   /** @Description 关闭App */
   async function closeApp() {
-    await Data.update("settings", {}, settings);
+    await Data.update(DataStore.settings, {}, settings);
     if (settings.common.minWithTray) return await remote("window_close");
     if (await Dialog.confirm("确认退出？")) await remote("app_close");
   }
@@ -24,10 +25,10 @@ export function useSettings() {
   /** @Description 保存设置到数据库 */
   async function saveSettings() {
     try {
-      const res = await Data.select<Settings>("settings", {});
+      const res = await Data.select<Settings>(DataStore.settings, {});
       res.length
-        ? await Data.update("settings", { _id: settings._id }, settings)
-        : await Data.insert<Settings>("settings", settings);
+        ? await Data.update(DataStore.settings, { _id: settings._id }, settings)
+        : await Data.insert<Settings>(DataStore.settings, settings);
       toast.success("保存成功");
     } catch {
       toast.error("保存失败");
@@ -45,7 +46,7 @@ export function useSettings() {
 
   /** @Description 刷新数据库设置 */
   async function refreshSettings() {
-    const setting = await Data.select<Settings>("settings", {});
+    const setting = await Data.select<Settings>(DataStore.settings, {});
     changeSettings(setting[0]);
     toast.success("刷新成功");
   }
@@ -74,13 +75,12 @@ export function useSettings() {
     });
 
   /** @Description 开关目录 */
-  const toggleContentBar = (to?: boolean) => {
+  const toggleContentBar = () =>
     changeSettings({
       reading: {
-        contentOpen: (to as boolean) || !settings.reading.contentOpen,
+        chapterDocker: !settings.reading.chapterDocker,
       },
     });
-  };
 
   /** @Description 改变查词来源 */
   function changeDictionaryOrigin(to: "online" | "local") {

@@ -1,20 +1,34 @@
 import * as React from "react";
-import { memo, useCallback, useRef } from "react";
-import { Container, Hangover } from "./Container";
-import { Button } from "./Button";
-import { Pop } from "./Pop";
-import { Divider } from "./Accessory";
-import { MdCheck, MdKeyboardArrowRight } from "react-icons/md";
+import {memo, useCallback, useRef} from "react";
+import {Container} from "./Container";
+import {Button} from "./Button";
+import {Pop} from "./Pop";
+import {Divider} from "./Accessory";
 import _ from "lodash";
-import { useCascade } from "./Cascade";
+import {useCascade} from "./Cascade";
 import clsx from "clsx";
-import { voidFn } from "../method";
+import {voidFn} from "../method";
+import {Spring} from "./Spring";
+import {config,} from "react-spring";
+import {useSpring} from "@react-spring/web";
+import {TFuncKey} from "i18next";
+import {useTranslation} from "react-i18next";
 
 /** @Description 菜单 */
 export const Menu = memo((props: Props.Menu.Main) => {
-  const { children, open } = props;
+  const { children } = props;
+  const spring = useSpring({
+    from: {
+      scale: 0,
+    },
+    to: {
+      scale: 1,
+    },
+    config: config.stiff,
+  });
+
   return (
-    <Container open={open} cls={"Menu"}>
+    <Spring spring={spring} cls={"Menu"}>
       {children.sub?.map((item, key) => {
         return (
           <MenuItem key={key} onClick={children.onClick} base={children.value}>
@@ -22,7 +36,7 @@ export const Menu = memo((props: Props.Menu.Main) => {
           </MenuItem>
         );
       })}
-    </Container>
+    </Spring>
   );
 });
 
@@ -74,6 +88,7 @@ export const MenuItem = memo((props: Props.Menu.Item) => {
   /** @Description anchor标记 */
   const Ref = useRef<HTMLElement>();
   const { container, cascade, closeCascade } = useCascade();
+
   /** @Description hover事件 */
   const onMouseEnter = useCallback<Fn>(() => {
     if (children.type === "item") return;
@@ -96,6 +111,8 @@ export const MenuItem = memo((props: Props.Menu.Item) => {
     onClick!();
   }, [onClick]);
 
+  const {t} = useTranslation()
+
   return ["item", "menu"].includes(children.type) ? (
     <Container
       ref={Ref}
@@ -111,21 +128,7 @@ export const MenuItem = memo((props: Props.Menu.Item) => {
         state={children.allowed === false ? "notAllowed" : undefined}
         {...other}
       >
-        {children.icon || null}
-        <Hangover
-          cls={"name"}
-          children={_.capitalize(children.label as string)}
-        />
-        <Container cls={"shortcuts"} children={children.shortcuts} />
-        {children.type === "menu" ? (
-          <MdKeyboardArrowRight />
-        ) : children.value === true ||
-          (children.value === props.base &&
-            props.children.value !== undefined) ? (
-          <MdCheck />
-        ) : (
-          <MdCheck opacity={0} />
-        )}
+        {_.capitalize(t(children.label as TFuncKey) as string)}
       </Container>
     </Container>
   ) : children.type === "divider" ? (

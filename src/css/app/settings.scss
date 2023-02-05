@@ -1,22 +1,14 @@
 @import "../@variants/constant";
 
 .Setting {
-  @include xFlex;
-  margin: auto;
-  overflow: scroll;
-  justify-content: center;
   height: $height_body;
   width: $full;
-  padding: 30px;
 
-  .SettingBar {
+  .Docker {
     @include yFlex;
     width: 180px;
     min-width: 180px;
-    height: calc($height_body - 60px);
     padding: 0 5px;
-    border: $b_settingBar;
-    border-radius: $br_default;
 
     .Divider {
       margin: 0.1pc 0;
@@ -30,15 +22,11 @@
     }
   }
 
-  .SettingPairs {
-    padding: 20px;
-    width: 360px;
-    overflow: visible;
-
+  .Body {
     .SettingBox {
-      margin: 10px auto;
-      width: 100%;
-      overflow: visible;
+      .title {
+        margin: 25px 10px 10px 10px;
+      }
 
       .SettingLabel {
         color: #5f6065;
@@ -47,74 +35,37 @@
         margin-bottom: 20px;
       }
 
-      .Option {
-        display: inline-flex;
-        @include FlexCenter;
-        margin: 5px;
-        width: 100%;
-        height: 60px;
-        border-radius: $br_default;
-        border: 2px solid rgba(206, 204, 204, 0.6);
-        position: relative;
-        overflow: visible;
+      .Options {
+        width: max-content;
+        border: $b_settingBar;
+        border-radius: 8px;
+        white-space: nowrap;
+        padding: 1px;
 
-        &::before {
-          content: "";
-          position: absolute;
-          display: block;
-          width: 1.25rem;
-          height: 1.25rem;
-          border: 2px solid #b5bfd9;
-          background-color: #fff;
-          border-radius: 50%;
-          top: calc(50% - 0.725rem);
-          left: 0.75rem;
-          opacity: 0;
-          transform: scale(0);
-          transition: 0.25s ease;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='192' height='192' fill='%23FFFFFF' viewBox='0 0 256 256'%3E%3Crect width='256' height='256' fill='none'%3E%3C/rect%3E%3Cpolyline points='216 72.005 104 184 48 128.005' fill='none' stroke='%23FFFFFF' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'%3E%3C/polyline%3E%3C/svg%3E");
-          background-size: 12px;
-          background-repeat: no-repeat;
-          background-position: 50% 50%;
-        }
 
-        &::after {
-          content: "";
-          position: absolute;
-          display: block;
-          width: 100%;
-          height: 100%;
-          border: 2px solid #b5bfd9;
-          border-radius: $br_default;
-          z-index: -1;
-          opacity: 0;
-          transform: scale(0);
-        }
+        .Option {
+          cursor: $pointer;
+          display: inline-flex;
+          @include FlexCenter;
+          margin: 2px;
+          height: 30px;
+          padding: 10px;
+          width: max-content;
+          border-radius: 5px;
+          position: relative;
 
-        &:hover {
-          border-color: #6a8dea;
+          &:hover {
+            background-color: #f1f1f1;
 
-          &::before {
-            transform: scale(1);
-            opacity: 1;
+            &::before {
+              transform: scale(1);
+              opacity: 1;
+            }
           }
-        }
 
-        &[state="actived"] {
-          color: #2260ff;
-          border-color: #2260ff;
-
-          &::before {
-            transform: scale(1);
-            opacity: 1;
+          &[state="actived"] {
             background-color: #2260ff;
-            border-color: #2260ff;
-          }
-
-          &::after {
-            transform: scale(1);
-            opacity: 1;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 0 0 4px #b5c9fc;
+            color: #ffffff;
           }
         }
       }

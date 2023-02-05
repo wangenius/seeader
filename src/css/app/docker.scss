@@ -1,0 +1,48 @@
+@import "../@variants/color";
+@import "../@variants/constant";
+
+.Docker {
+  background-color: $bc_default;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 5px 20px 0, rgba(9, 30, 66, 0.08) 0 0 0 1px;
+  height: calc($height_body - 40px);
+  border-radius: 0.8pc;
+  overflow-x: hidden;
+  position: absolute;
+  z-index: 20;
+
+
+  .Button {
+    margin: 0;
+    height: 40px;
+    width: 100%;
+
+  }
+}
+.Body {
+  @include ScrollY;
+  @include ScrollBar;
+  @include Max;
+  position: absolute;
+  transition: all 300ms ease-in-out;
+  height: $height_body;
+  z-index: 19;
+  padding: 20px;
+}
+
+.drag {
+  @include xFlex;
+  @include FlexCenter;
+  background-color: white;
+  width: 100%;
+  height: 30px;
+  .IconButton {
+    border-radius: 10px;
+    padding: 0 10px;
+    height: 20px;
+    @include xFlex;
+    @include FlexCenter;
+    :hover {
+      background-color: #f6f6f6;
+    }
+  }
+}

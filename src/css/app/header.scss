@@ -3,7 +3,6 @@
 
 .Header {
   @include xFlex;
-  @include FlexCenter;
   width: $full;
   height: $height_header;
   min-height: $height_header;
@@ -12,6 +11,56 @@
   border-bottom: $Divider_Border;
   padding: 0 4pt;
   transition: $trans_default;
+  position: relative;
+  overflow: visible;
+
+  .expandable {
+    border-radius: 20px;
+    z-index: 2;
+    position: relative;
+    backdrop-filter: blur(5px);
+    padding: 0;
+
+    .drag {
+      @include xFlex;
+      @include FlexCenter;
+      @include NoBubbling;
+      box-sizing: content-box;
+      width: 100%;
+      background-color: transparent;
+      height: 24px;
+      cursor: $pointer;
+      border-radius: $br_iconButton;
+      transition: $trans_default;
+      position: relative;
+      margin-bottom: 20px;
+        svg {
+          @include Max;
+          fill:#f6f6f6;
+        }
+      &[state='expand'] {
+        svg {
+          fill: #818080;
+        }
+      }
+    }
+  }
+
+  .Hangover {
+    height: $full;
+    @include xFlex;
+    @include FlexCenter;
+    background-color: white;
+
+    .draggable {
+      @include xFlex;
+      @include FlexCenter;
+      border-radius: 10px;
+      padding: 0 10px;
+      height: 20px;
+      background-color: #f6f6f6;
+    }
+  }
 
   .Button {
     background-color: #ffffff;
@@ -32,12 +81,13 @@
       height: 20px;
 
       svg {
-        fill:$color_primary;
+        fill: $color_primary;
       }
     }
 
     &:hover {
       background-color: #f6f6f6;
+
       .Button_startIcon {
         animation: rotate;
         animation-timing-function: ease-in-out;
@@ -45,7 +95,6 @@
         animation-iteration-count: infinite;
       }
     }
-
   }
 
   .logo {

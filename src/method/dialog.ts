@@ -14,7 +14,7 @@ export abstract class Dialog {
     });
 
   /** @Description 确认弹窗 取消则抛出异常 返回promise true*/
-  static confirm = (message: string) =>
+  static confirm = (message: string = "确认？") =>
     remote("dialog_message", {
       title: "提示",
       message: message,

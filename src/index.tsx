@@ -1,20 +1,21 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import { Router } from "./app/Router";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { persistor, store } from "./store/store";
-import { i18nInit } from "./locales";
+import {Router} from "./app/Router";
+import {Provider} from "react-redux";
+import {PersistGate} from "redux-persist/integration/react";
+import {persistor, store} from "./store/store";
+import {i18nInit} from "./locales";
+import {createRoot} from "react-dom/client";
 import "react-toastify/ReactToastify.min.css";
 import "./css/index.css";
+import {APP} from "./@constant";
+
 
 /** @Description 初始化 */
 const renderInit = () => {
-  const root = ReactDOM.createRoot(
-    document.getElementById("root") as HTMLElement
-  );
-  document.title = "GENIUS READER";
-  root.render(
+    /** @Description app name */
+  document.title = APP.name;
+  /** @Description render root */
+  createRoot(document.getElementById(APP.HTML.root)!).render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Router />
@@ -22,6 +23,7 @@ const renderInit = () => {
     </Provider>
   );
 };
-
+/** @Description 渲染初始化 */
 renderInit();
+/** @Description 本地化初始化 */
 i18nInit();

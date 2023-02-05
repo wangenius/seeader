@@ -3,6 +3,7 @@ import {useEffectOnce} from "react-use";
 import {chaptersParser, Data, Dialog, err, File, is, jsonParse, pathParser} from "../method";
 import {toast} from "react-toastify";
 import {useTranslation} from "react-i18next";
+import { DataStore } from "a_root";
 
 // @ts-ignore
 const ShelfContext = React.createContext<ShelfContextProps>({});
@@ -14,7 +15,7 @@ export const ShelfProvider = memo(({ children }: Props.Base) => {
 
   /** 加载书架 */
   function loadShelf() {
-    Data.select<Book>("bookshelf", {}).then((res) => {
+    Data.select<Book>(DataStore.bookshelf, {}).then((res) => {
       setBooks(res);
     });
   }
@@ -39,12 +40,12 @@ export const ShelfProvider = memo(({ children }: Props.Base) => {
   /** @Description 添加path路径的图书 */
   async function parserBook(path: string) {
     /*判断是否shelf中含有该书*/
-    const data = await Data.select("bookshelf", { path: path });
+    const data = await Data.select(DataStore.bookshelf, { path: path });
     data.length && err("已经添加过该书籍。");
     /*解析书籍*/
     const { Chapters, total, titles } = await chaptersParser(path);
     /*保存body数据库*/
-    const { _id } = await Data.insert<BookBodies>("bookBody", Chapters);
+    const { _id } = await Data.insert<BookBodies>(DataStore.bookBody, Chapters);
     const book: Book = {
       _id: _id,
       name: pathParser(path).name,
@@ -54,7 +55,7 @@ export const ShelfProvider = memo(({ children }: Props.Base) => {
       titles: titles,
     };
     /*保存shelf数据库*/
-    await Data.insert<Book>("bookshelf", book);
+    await Data.insert<Book>(DataStore.bookshelf, book);
     loadShelf();
   }
 

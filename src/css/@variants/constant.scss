@@ -8,10 +8,9 @@ $br_default:8px;
 $br_iconButton:50%;
 $br_menu:8px;
 $br_btn:8px;
-
 /*border*/
 $b_input:4px solid rgba(206, 204, 204, 0.6);
-$b_settingBar:1px solid rgba(206, 204, 204, 0.6);
+$b_settingBar:1px solid rgba(9, 30, 66, 0.1);
 $b_input_active:3px solid #7da953;
 /*padding*/
 $p_input:15px;
@@ -55,8 +54,7 @@ $default_font: "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
 $button_font: "Noto_Medium", "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
 
 /*shadow*/
-$boxShadow: rgba(0, 0, 0, 0.16) 0 10px 36px 0, rgba(0, 0, 0, 0.06) 0 0 0 1px;
-
+$boxShadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px;
 
 
 

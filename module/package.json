@@ -2,10 +2,11 @@
   "name": "a_root",
   "version": "1.0.0",
   "description": "this project",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc -p tsconfig.json"
   },
   "author": {
     "name": "wangenius",

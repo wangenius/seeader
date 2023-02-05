@@ -6,11 +6,12 @@ $color_menu_btn_notAllowed : #d5d5d5;
 
 .Menu {
   background-color: $bc_menu;
+  border: $b_settingBar;
   border-radius: $br_menu;
   box-shadow: $boxShadow;
   padding: 6px 6px 3px;
   overflow: visible;
-
+  transform-origin: top left;
   .Divider {
     margin: 6px;
     width: auto;
@@ -38,6 +39,8 @@ $color_menu_btn_notAllowed : #d5d5d5;
       width: 100%;
       padding: 0 8px;
       height: $height_menuButton;
+      font-size: 0.81rem;
+      color: $color_menu_btn;
       &:hover {
         @include bc_hover(rgba(135, 151, 187, 0.14))
       }
@@ -51,39 +54,11 @@ $color_menu_btn_notAllowed : #d5d5d5;
         scale: 1.1;
         margin-left: 5px;
       }
-      .name {
-        font-size: 0.81rem;
-        color: $color_menu_btn;
-      }
-      .shortcuts {
-        font-size: 0.785rem;
-        color: $color_menu_btn;
-      }
-
-      &[state='notAllowed'] {
-        &:hover {
-          @include bc_hover(rgba(135, 151, 187, 0))
-        }
-        cursor: not-allowed;
-        svg:first-of-type {
-          fill: $color_menu_btn_notAllowed;
-        }
-        svg:last-of-type {
-          fill: $color_menu_btn_notAllowed;
-        }
-        .name {
-          color: $color_menu_btn_notAllowed;
-        }
-        .shortcuts {
-          color: $color_menu_btn_notAllowed;
-        }
-      }
     }
     .Button_red {
       background-color: $bc_button_warning;
-      .name {
-        color: $color_button_warning;
-      }
+      color: $color_button_warning;
+
       svg:first-of-type {
         fill: $color_button_warning;
       }

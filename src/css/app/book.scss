@@ -8,63 +8,44 @@ $Contents_Height: calc(100% - $Title_Height);
   width: $full;
   height: $height_body;
 
-  .BookContents {
-    width: $width_contents;
-    //border: $Divider_Border;box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
-    box-shadow: rgba(0, 0, 0, 0.1) 0 5px 20px 0, rgba(9, 30, 66, 0.08) 0 0 0 1px;
-    height: calc($height_body - 40px);
-    top: calc($height_header + 20px);
-    left: calc(-20px - $width_contents);
-    border-radius: 0.8pc;
-    @include ScrollY;
-    overflow-x: hidden;
-    position: absolute;
-    padding:10px 5px;
-    z-index: 1;
-    &[state="open"] {
-      left: 20px;
+  .Docker {
+    .list {
+      @include ScrollY;
+      height: calc($height_body - 60px);
+      padding: 0 5px 10px 5px;
+      width: 100%;
+
+      .ListButton {
+        &[state="active"] {
+          position: sticky;
+          top: 0;
+          bottom: 5px;
+          z-index: 1;
+        }
+      }
     }
   }
 
-  .BookArea {
-    @include ScrollY;
-    @include ScrollBar;
-    @include Max;
-    position: absolute;
-    right: 0;
-    width: $width_body;
-    height: $height_body;
-    background-color: $bc_default;
+  .Body {
+    .BodyTitle {
+      width: fit-content;
+      font-size: 2rem;
+      padding: 6px;
+      border-radius: 8px;
+      cursor: $pointer;
+      color: #3b423b;
+      transition: $trans_default;
 
-    .BookBody {
-      margin: auto;
-      width: min(100%, 860px);
-      padding: 20px 20px 60px;
-
-      .BodyTitle {
-        width: fit-content;
-        font-size: 2rem;
-        padding: 6px;
-        border-radius: 8px;
-        cursor: $pointer;
-        color: #3b423b;
-        transition: $trans_default;
-
-        &:hover {
-          background-color: #f6f6f6;
-        }
-      }
-
-      .BodyPara {
-        width: 100%;
-        font-size: 1rem;
-        user-select: text;
-        text-indent: 2rem;
+      &:hover {
+        background-color: #f6f6f6;
       }
     }
 
-    &[state="full"] {
-      width: $full;
+    .BodyPara {
+      width: 100%;
+      font-size: 1rem;
+      user-select: text;
+      text-indent: 2rem;
     }
   }
 }

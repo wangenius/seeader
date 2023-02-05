@@ -6,6 +6,7 @@ $text: #567189;
 */
 @mixin bc_hover($color) {
   &::before {
+    z-index: 1;
     @include Max;
     position: absolute;
     left: 0;
@@ -30,7 +31,7 @@ $text: #567189;
 }
 
 /*char*/
-$color_primary: #546dec;
+$color_primary: #2d5fe5;
 $color_default: #000000;
 $color_divider: #e2e8f0;
 $color_button: #71717a;
