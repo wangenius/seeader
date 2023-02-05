@@ -125,7 +125,7 @@ export const ExpandDocker = () => {
         onClick={() => {
           setExpand(true);
         }}
-        onContextMenu={switchShelfAndReading}
+        onContextMenu={()=>!expand && switchShelfAndReading() }
       >
         <Container
           {...bind()}
