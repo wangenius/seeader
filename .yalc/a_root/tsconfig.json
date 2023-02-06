@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es5",    // 指定ECMAScript目标版本
+    "module": "CommonJS", // 指定模块代码类型
+    "lib": ["es2015", "es2017", "dom"], // 指定要包含在编译中的库文件
+    "outDir": "",  // 编译后生成的文件目录
+    "strict": true,    // 启用所有严格的类型检查选项
+    "rootDir": "./",
+    "esModuleInterop": true,
+    "isolatedModules": false
+  }
+}
