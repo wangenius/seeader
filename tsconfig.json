@@ -22,6 +22,9 @@
     "typeRoots": [
       "src/@types",
       "node_modules/@types"
+    ],
+    "types": [
+      "webpack-env"
     ]
   },
   "include": [

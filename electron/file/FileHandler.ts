@@ -38,6 +38,7 @@ export const file_read: ListenerFunc = async (event, path) => {
     throw e;
   }
 };
+
 export const file_copy: ListenerFunc = async (event, src, dest) => {
   try {
     return (

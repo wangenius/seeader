@@ -1,9 +1,9 @@
-import {Container, Menu, Pop, Spring} from "../component";
+import {Button, Container, Icons, Pop, Spring} from "../component";
 import {useBook} from "../context/BookProvider";
 import {useShelf} from "../context/ShelfProvider";
-import React, {memo, useCallback, useMemo} from "react";
+import React, {memo, useCallback, useMemo, useState} from "react";
 import _ from "lodash";
-import {Dialog, voidFn} from "../method";
+import {voidFn} from "../method";
 import {useEvent} from "../hook/useEvent";
 import {useTranslation} from "react-i18next";
 import {useNav} from "../hook/useNav";
@@ -11,20 +11,14 @@ import {useSpring} from "@react-spring/web";
 import {useDrag} from "@use-gesture/react";
 import {config} from "react-spring";
 import {useWindows} from "../hook/useWindows";
-import {Docker, Mainer} from "./Docker";
-import Add from "../@static/add.svg";
-import LoadDir from "../@static/loadDir.svg";
-import Export from "../@static/export.svg";
-import Copy from "../@static/copy.svg";
+import {Docker, DockerButton, Mainer} from "./Docker";
 import {useMeasure} from "react-use";
-import {Tooltip} from "@mui/material";
 
 /** @Description 书架 */
 export const Shelf = memo(() => {
   /** @Description 书架方法 */
   const { books, addBook, importShelf, exportShelf, backUpBook } = useShelf();
   const { w_height, w_width } = useWindows();
-
   const [Ref, { width }] = useMeasure();
 
   /** @Description drag zone 触发位置 */
@@ -65,18 +59,26 @@ export const Shelf = memo(() => {
   return (
     <Container cls={"ShelfArea"}>
       <Docker ref={Ref} state={true} width={width}>
-        <DockerButton onClick={addBook}>
-          <Add />
-        </DockerButton>
-        <DockerButton onClick={importShelf}>
-          <LoadDir />
-        </DockerButton>
-        <DockerButton onClick={exportShelf}>
-          <Export />
-        </DockerButton>
-        <DockerButton onClick={backUpBook}>
-          <Copy />
-        </DockerButton>
+        <DockerButton
+          label={"add book"}
+          onClick={addBook}
+          children={Icons.Add}
+        />
+        <DockerButton
+          label={"open shelf"}
+          onClick={importShelf}
+          children={Icons.LoadDir}
+        />
+        <DockerButton
+          label={"export shelf"}
+          onClick={exportShelf}
+          children={Icons.Export}
+        />
+        <DockerButton
+          label={"export book"}
+          onClick={backUpBook}
+          children={Icons.Copy}
+        />
       </Docker>
       <Mainer width={width}>
         {books.map((item, key) => (
@@ -90,175 +92,122 @@ export const Shelf = memo(() => {
           />
         ))}
       </Mainer>
-      <Spring cls={"deleteArea"} spring={spring} children={"拖动到此处删除"} />
+      <Spring cls={"deleteArea"} spring={spring}>
+        {Icons.Minus}
+        {"拖动到此处删除"}
+      </Spring>
     </Container>
   );
 });
 
-const DockerButton = (props: Props.Base) => {
-  return (
-    <Tooltip title={props.title} placement={'top'} className={"svgButton"}>
-      <Container onClick={props.onClick}>{props.children}</Container>
-    </Tooltip>
-  );
-};
-
 /** @Description 封面单体 */
-const BookCover = memo(
-  (props: {
-    item: Book;
-    index: number;
-    DestAnchor?: Props.DragZone;
-    /** @Description gesture 对象拖拽时触发 */
-    onDrag?(): void;
-    /** @Description gesture 对象 拖拽到目标位置并松开触发 */
-    onDest?(): void;
-  }) => {
-    const { item, index, onDrag = voidFn, onDest = voidFn, DestAnchor } = props;
-    const { t } = useTranslation();
-    const { toReading } = useNav();
-    const { book, openBook, modalEditBook, deleteBook } = useBook();
+const BookCover = memo((props: Props.BookCover) => {
+  const { item, index, onDrag = voidFn, onDest = voidFn, DestAnchor } = props;
+  const { t } = useTranslation();
+  const { toReading } = useNav();
+  const { book, openBook, modalEditBook, deleteBook } = useBook();
 
-    /** @Description 当前进度百分比 */
-    const progress = useMemo(
-      () =>
-        `进度：${_.round(
-          item._id === book._id
-            ? ((book.progress + 1) / item.total) * 100
-            : ((item.progress + 1) / item.total) * 100,
-          2
-        )}% `,
-      [item, book]
-    );
+  /** @Description 当前进度百分比 */
+  const progress = useMemo(
+    () =>
+      `进度：${_.round(
+        item._id === book._id
+          ? ((book.progress + 1) / item.total) * 100
+          : ((item.progress + 1) / item.total) * 100,
+        2
+      )}% `,
+    [item, book]
+  );
 
-    /** 右键上下文内容 */
-    const contextContent: (key: number) => Props.Menu.Option = useCallback(
-      () => ({
-        type: "menu",
-        sub: [
-          {
-            type: "item",
-            label: t("edit"),
-            onClick: () => modalEditBook(item),
-          },
-          {
-            type: "item",
-            label: t("path"),
-            onClick(): any {
-              window.shell.openExternal(
-                item.path.slice(0, item.path.lastIndexOf("\\"))
-              );
-            },
-          },
-          {
-            type: "item",
-            label: t("delete"),
-            cls: "Button_red",
-            onClick(): any {
-              Dialog.confirm("确定删除？").then(() => deleteBook(item));
-            },
-          },
-        ],
-      }),
-      []
-    );
+  /** 左键书籍封面 */
+  const bookClick = useEvent<Fn>(() => {
+    item._id === book._id ? toReading() : openBook(item);
+  });
 
-    /** 右键书籍封面 */
-    const contextShow = useEvent((event, key) => {
-      event.stopPropagation();
-      Pop.set(<Menu>{contextContent(key)}</Menu>, {
-        event: event,
-        position: "absolute",
-      }).open();
-    });
+  /** @Description bookItem initial */
+  const [spring, api] = useSpring(() => ({
+    from: {
+      x: 0,
+      y: 0,
+      scale: 0,
+      rotateY: 0,
+    },
+    to: {
+      scale: 1,
+    },
+    delay: index * 100,
+    config: {
+      mass: 2,
+      tension: 400,
+    },
+  }));
 
-    /** 左键书籍封面 */
-    const bookClick = useEvent<Fn>(() => {
-      item._id === book._id ? toReading() : openBook(item);
-    });
+  /** @Description check if the drag item is in the dest zone, return boolean */
+  const inDest = useCallback(
+    (current: { x: number; y: number }) => {
+      return (
+        DestAnchor!.left <= current.x &&
+        current.x <= DestAnchor!.width + DestAnchor!.left &&
+        current.y <= DestAnchor!.height + DestAnchor!.top &&
+        current.y >= DestAnchor!.top
+      );
+    },
+    [DestAnchor]
+  );
 
-    /** @Description bookItem initial */
-    const [spring, api] = useSpring(() => ({
-      from: {
-        x: 0,
-        y: 0,
-        zIndex: 20,
-        scale: 0,
-      },
-      to: {
-        scale: 1,
-      },
-      delay: index * 100,
-      config: {
-        mass: 2,
-        tension: 400,
-      },
-    }));
+  /** @Description bind drag hook */
+  const bind = useDrag(
+    ({ down, active, movement: [mx, my], initial, cancel }) => {
+      /** @Description drag item spring start */
+      api.start({
+        x: active ? mx : 0,
+        y: active ? my : 0,
+        delay: 0,
+        config: active ? config.stiff : config.wobbly,
+      });
 
-    /** @Description check if the drag item is in the dest zone, return boolean */
-    const inDest = useCallback(
-      (current: { x: number; y: number }) => {
-        return (
-          DestAnchor!.left <= current.x &&
-          current.x <= DestAnchor!.width + DestAnchor!.left &&
-          current.y <= DestAnchor!.height + DestAnchor!.top &&
-          current.y >= DestAnchor!.top
-        );
-      },
-      [DestAnchor]
-    );
+      /** @Description when down, trigger the onDrag method */
+      onDrag(down);
+      /** @Description if item (use event position) is in dest zone, trigger the onDest method*/
+      if (inDest({ y: initial[1] + my, x: initial[0] + mx })) onDest();
+      else onDest(false);
 
-    /** @Description bind drag hook */
-    const bind = useDrag(
-      ({ down, active, movement: [mx, my], initial, cancel }) => {
-        /** @Description drag item spring start */
-        api.start({
-          x: active ? mx : 0,
-          y: active ? my : 0,
-          delay: 0,
-          config: active ? config.stiff : config.wobbly,
+      /** @Description if place the item in the dest zone, do the function*/
+      if (inDest({ y: initial[1] + my, x: initial[0] + mx }) && !down) {
+        /** @Description end the drag */
+        cancel();
+        /** @Description deleteBook */
+        Pop.confirm(`确认删除${item.name}?`, () => {
+          deleteBook(item);
         });
-
-        /** @Description when down, trigger the onDrag method */
-        onDrag(down);
-        /** @Description if item (use event position) is in dest zone, trigger the onDest method*/
-        if (inDest({ y: initial[1] + my, x: initial[0] + mx })) onDest();
-        else onDest(false);
-
-        /** @Description if place the item in the dest zone, do the function*/
-        if (inDest({ y: initial[1] + my, x: initial[0] + mx }) && !down) {
-          /** @Description end the drag */
-          cancel();
-          /** @Description deleteBook */
-          Pop.confirm(`确认删除${item.name}?`, () => {
-            deleteBook(item);
-          });
-        }
-      },
-      {
-        /** @Description cancel the default event matter */
-        filterTaps: true,
       }
-    );
+    },
+    {
+      /** @Description cancel the default event matter */
+      filterTaps: true,
+    }
+  );
 
-    return (
-      <Spring
-        {...bind()}
-        style={{ touchAction: "none", overflow: "visible" }}
-        spring={spring}
+  const onContextMenu = () => {
+
+  };
+  return (
+    <Spring
+      {...bind()}
+      style={{ touchAction: "none", overflow: "visible" }}
+      spring={spring}
+    >
+      <Container
+        cls={"book"}
+        onClick={bookClick}
+        state={item._id === book._id ? "current" : undefined}
+        onContextMenu={onContextMenu}
       >
-        <Container
-          cls={"book"}
-          onClick={bookClick}
-          state={item._id === book._id ? "current" : undefined}
-          onContextMenu={contextShow}
-        >
-          <Container cls={"front"}>
-            <Container cls={"BookTitle"} children={item.name} />
-            <Container cls={"progress"} children={progress} />
-          </Container>
+        <Container cls={"front"}>
+          <Container cls={"BookTitle"} children={item.name} />
+          <Container cls={"progress"} children={progress} />
         </Container>
-      </Spring>
-    );
-  }
-);
+      </Container>
+    </Spring>
+  );
+});

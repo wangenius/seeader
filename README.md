@@ -1,4 +1,3 @@
 # seeader
 
-
-一些想法
+桌面txt，epub阅读器

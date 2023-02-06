@@ -7,11 +7,13 @@ declare namespace Props {
   import { TFuncKey } from "i18next";
   import {ReactDOMAttributes} from "@use-gesture/react/dist/declarations/src/types";
 
+
   type Original = import("@mui/system").BoxProps;
   type TextareaHTMLAttributes = import("react").TextareaHTMLAttributes;
 
   /** @Description 元素基本属性 */
   export interface Base extends Original {
+    label?:TFuncKey;
     children?: ReactNode;
     id?: string;
     index?: number;
@@ -163,7 +165,7 @@ declare namespace Props {
     /** @Description 鼠标事件 */
     event?: React.MouseEvent;
     /** @Description 停靠位置线 */
-    base?: "top" | "bottom";
+    base?: "top" | "bottom" | "right_middle";
     /** @Description 绝对定位 相对定位 */
     position?: "relative" | "absolute";
   }
@@ -185,5 +187,18 @@ declare namespace Props {
     height: number;
     left: number;
     top: number;
+  }
+
+  export interface BookCover {
+    /** @Description bookItem */
+    item: Book;
+    /** @Description 序号 */
+    index: number;
+    /** @Description 对象目标位置 */
+    DestAnchor?: Props.DragZone;
+    /** @Description gesture 对象拖拽时触发 */
+    onDrag?(): void;
+    /** @Description gesture 对象 拖拽到目标位置并松开触发 */
+    onDest?(): void;
   }
 }

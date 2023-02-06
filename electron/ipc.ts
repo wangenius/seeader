@@ -68,3 +68,7 @@ export function ipc_datastore() {
   handle(CHANNELS.db_update, db_update);
   handle(CHANNELS.db_count, db_count);
 }
+
+export function ipc_epub(){
+
+}

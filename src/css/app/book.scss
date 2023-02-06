@@ -33,8 +33,6 @@ $Contents_Height: calc(100% - $Title_Height);
       border-radius: 8px;
       cursor: $pointer;
       color: #3b423b;
-      transition: $trans_default;
-
       &:hover {
         background-color: #f6f6f6;
       }

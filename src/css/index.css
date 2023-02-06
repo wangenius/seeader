@@ -948,6 +948,40 @@ scroll*/
   background-color: #f6f6f6;
 }
 
+.drag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+  width: 100%;
+  background-color: transparent;
+  height: 24px;
+  cursor: url("/public/icon/hand.png"), pointer;
+  border-radius: 50%;
+  transition: all 200ms ease;
+  position: relative;
+  touch-action: none;
+}
+.drag * {
+  pointer-events: none;
+}
+.drag svg {
+  height: 100%;
+  width: 100%;
+  fill: #96969a;
+}
+
+.toolTip {
+  background-color: #212121;
+  padding: 2px 4px;
+  color: #f6f6f6;
+  margin-left: 5px;
+  border-radius: 4px;
+  border: 1px solid rgba(9, 30, 66, 0.1);
+  width: max-content;
+}
+
 /*font size*/
 /*border radius*/
 /*border*/
@@ -1035,7 +1069,6 @@ scroll*/
   border-radius: 8px;
   cursor: url("/public/icon/hand.png"), pointer;
   color: #3b423b;
-  transition: all 200ms ease;
 }
 .BookPage .Body .BodyTitle:hover {
   background-color: #f6f6f6;
@@ -1132,27 +1165,9 @@ scroll*/
   left: 270px;
 }
 .Header .expandable .drag {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  box-sizing: content-box;
-  width: 100%;
-  background-color: transparent;
-  height: 24px;
-  cursor: url("/public/icon/hand.png"), pointer;
-  border-radius: 50%;
-  transition: all 200ms ease;
-  position: relative;
   margin-bottom: 20px;
-  touch-action: none;
-}
-.Header .expandable .drag * {
-  pointer-events: none;
 }
 .Header .expandable .drag svg {
-  height: 100%;
-  width: 100%;
   fill: #f6f6f6;
 }
 .Header .expandable .drag[state=expand] svg {
@@ -1280,9 +1295,9 @@ scroll*/
   border-radius: 14px;
   justify-content: center;
   align-content: center;
-  transition: all 200ms ease;
   cursor: url("/public/icon/hand.png"), pointer;
   overflow: visible;
+  position: relative;
 }
 .ShelfArea .Docker .body .svgButton:hover {
   background-color: #dedede;
@@ -1301,31 +1316,28 @@ scroll*/
   transition: all 0.3s ease-in-out;
 }
 .ShelfArea .Body .book {
-  display: inline-flex;
-  overflow: visible;
   position: relative;
   cursor: pointer;
   height: 200px;
+  width: 160px;
   transition: all 0.3s ease-in-out;
+  border-radius: 12px;
+  padding: 0;
 }
 .ShelfArea .Body .book .front {
-  position: relative;
-  cursor: url("/public/icon/hand.png"), pointer;
-  overflow: visible;
+  position: absolute;
+  width: 100%;
   height: 100%;
-  border-radius: 12px;
-  top: 0;
-  left: 0;
-  width: 160px;
-  background-color: #2d5fe5;
-  transition: all 0.3s ease-in-out;
+  text-align: center;
+  cursor: url("/public/icon/hand.png"), pointer;
+  background-color: #ead5d5;
 }
 .ShelfArea .Body .book .front .BookTitle {
   padding: 12px;
   margin: 20px auto;
   text-align: justify;
   user-select: none;
-  color: #ffffff;
+  color: #4d4848;
 }
 .ShelfArea .Body .book .front .Tip {
   background-color: #7da953;
@@ -1345,16 +1357,18 @@ scroll*/
   bottom: 5px;
   left: 8px;
 }
+.ShelfArea .Body .book .back {
+  background-color: white;
+  transform: rotateY(180deg);
+}
 .ShelfArea .Body .book:hover {
   scale: 1.05;
-}
-.ShelfArea .Body .book:hover .front {
   box-shadow: rgb(229, 198, 198) 0 0 0 5px;
 }
 .ShelfArea .Body .book:active {
   scale: 0.95;
 }
-.ShelfArea .Body .book[state=current] .front {
+.ShelfArea .Body .book[state=current] {
   box-shadow: rgb(229, 198, 198) 0 0 0 5px;
 }
 .ShelfArea .deleteArea {
@@ -1376,6 +1390,12 @@ scroll*/
   position: absolute;
   bottom: 0;
   left: 0;
+}
+.ShelfArea .deleteArea svg {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  left: 20px;
 }
 
 /*font size*/

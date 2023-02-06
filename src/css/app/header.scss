@@ -47,23 +47,11 @@
 
 
     .drag {
-      @include xFlex;
-      @include FlexCenter;
-      @include NoBubbling;
-      box-sizing: content-box;
-      width: 100%;
-      background-color: transparent;
-      height: 24px;
-      cursor: $pointer;
-      border-radius: $br_iconButton;
-      transition: $trans_default;
-      position: relative;
       margin-bottom: 20px;
-      touch-action: none;
-        svg {
-          @include Max;
-          fill:#f6f6f6;
-        }
+
+      svg{
+        fill: #f6f6f6;
+      }
       &[state='expand'] {
         svg {
           fill: #818080;

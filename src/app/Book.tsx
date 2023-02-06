@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from "react";
-import {Container, Divider, ListButton, LoadingRing, Menu, Pop,} from "../component";
+import {Container, Divider, ListButton, LoadingRing, Spring,} from "../component";
 import {useBook} from "../context/BookProvider";
 import {
   MdOutlineContentCopy,
@@ -16,6 +16,10 @@ import {useTranslation} from "react-i18next";
 import {useNav} from "../hook/useNav";
 import {useHotkeys} from "react-hotkeys-hook";
 import {Docker, Mainer} from "./Docker";
+import {useSpring} from "@react-spring/web";
+import {useGesture} from "@use-gesture/react";
+import {config} from "react-spring";
+import {useMeasure} from "react-use";
 
 /** @Description 书页 */
 export const Book = () => {
@@ -137,10 +141,12 @@ const BookMainer = () => {
     [settings, book.progress]
   );
 
+  const [Ref, position] = useMeasure();
   /** @Description 右键 */
-  const onContextMenu = useEvent((event: React.MouseEvent) =>
-    Pop.set(<Menu children={TextBodyMenu()} />, { event: event }).open()
-  );
+  const onContextMenu = useEvent((event: React.MouseEvent) => {
+    if (event.clientX >= position.x + position.width / 2) return nextPage();
+    return lastPage();
+  });
 
   /** @Description 自定义样式 */
   const alterStyle = {
@@ -153,12 +159,36 @@ const BookMainer = () => {
     book.titles[book.progress]?.title
   }`;
 
+  const [spring, api] = useSpring(() => ({
+    x: 0,
+    y: 0,
+    config: config.gentle,
+  }));
+
+  const bind = useGesture(
+    {
+      onDrag: (state) => {
+        api.start({
+          x: state.active ? state.movement[0] : 0,
+        });
+      },
+    },
+    {
+      drag: {
+        filterTaps: true,
+      },
+    }
+  );
+
   return (
     <Mainer
+      ref={Ref}
       condition={settings.reading.chapterDocker}
       onContextMenu={onContextMenu}
     >
-      <Container
+      <Spring
+        {...bind()}
+        spring={spring}
         cls={"BodyTitle"}
         onClick={toggleContentBar}
         children={title}

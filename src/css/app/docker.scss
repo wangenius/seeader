@@ -55,9 +55,35 @@
     height: 20px;
     @include xFlex;
     @include FlexCenter;
-
     :hover {
       background-color: #f6f6f6;
     }
   }
+}
+.drag {
+  @include xFlex;
+  @include FlexCenter;
+  @include NoBubbling;
+  box-sizing: content-box;
+  width: 100%;
+  background-color: transparent;
+  height: 24px;
+  cursor: $pointer;
+  border-radius: $br_iconButton;
+  transition: $trans_default;
+  position: relative;
+  touch-action: none;
+  svg {
+    @include Max;
+    fill: #96969a;
+  }
+}
+.toolTip {
+  background-color: #212121;
+  padding: 2px 4px;
+  color: #f6f6f6;
+  margin-left: 5px;
+  border-radius: 4px;
+  border: $b_settingBar;
+  width: max-content;
 }

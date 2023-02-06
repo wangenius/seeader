@@ -1,11 +1,18 @@
-import React, { forwardRef, ReactNode, useEffect, useState } from "react";
+import React, {
+  forwardRef,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useWindows } from "../hook/useWindows";
 import { animated, useSpring } from "@react-spring/web";
 import { config } from "react-spring";
-import { useDrag } from "@use-gesture/react";
-import { Container, IconButton } from "../component";
+import { useDrag, useGesture } from "@use-gesture/react";
+import { Container, Pop, Spring } from "../component";
 import { MdMoreHoriz } from "react-icons/md";
 import { voidFn } from "../method";
+import { useTranslation } from "react-i18next";
 
 export const Docker = forwardRef(
   (
@@ -21,7 +28,7 @@ export const Docker = forwardRef(
     ref: any
   ) => {
     const { children, changeState = voidFn, state, width = 250 } = props;
-    const { w_width, w_height } = useWindows();
+    const { w_height } = useWindows();
     const [position, setPosition] = useState<"left" | "bottom" | "right">(
       "left"
     );
@@ -41,7 +48,7 @@ export const Docker = forwardRef(
     useEffect(() => {
       api.start({
         left: !state && position === "left" ? post.left : 20,
-        top: !state && position === "bottom" ? w_width + 20 : 50,
+        top: !state && position === "bottom" ? w_height + 20 : 50,
         config: state ? config.stiff : config.wobbly,
       });
     }, [state]);
@@ -75,10 +82,8 @@ export const Docker = forwardRef(
 
     return (
       <animated.div className={"Docker"} style={spring}>
-        <Container cls={"drag"} ref={ref}>
-          <IconButton {...bind()}>
-            <MdMoreHoriz />
-          </IconButton>
+        <Container {...bind()} cls={"drag"} ref={ref}>
+          <MdMoreHoriz />
         </Container>
         <Container cls={"body"}>{children}</Container>
       </animated.div>
@@ -92,11 +97,12 @@ interface MainProps extends Props.Base {
   width?: number;
 }
 
-export const Mainer = (props: MainProps) => {
+export const Mainer = forwardRef((props: MainProps, ref) => {
   const { condition = true, children, width = 250, ...other } = props;
   const { w_width } = useWindows();
   return (
     <Container
+      ref={ref}
       className={"Body"}
       {...other}
       style={{
@@ -107,4 +113,47 @@ export const Mainer = (props: MainProps) => {
       {children}
     </Container>
   );
+});
+/** @Description DockerButton */
+export const DockerButton = (props: Props.Base) => {
+    const Ref = useRef<HTMLElement>();
+    const {t} = useTranslation();
+
+    const [spring, api] = useSpring(() => ({
+        marginTop: 5,
+        config: config.gentle,
+    }));
+
+    const bind = useGesture(
+        {
+            onHover: () =>
+                Pop.set(
+                    <Container cls={"toolTip"}>{t(props.label) || "toolTip"}</Container>,
+                    {anchor: Ref.current, base: "right_middle", position: "absolute"}
+                ).open(),
+            onMouseLeave: Pop.close,
+            onDrag: (state) => {
+                api.start({
+                    marginTop: state.active ? state.movement[1] : 5,
+                });
+            },
+        },
+        {
+            drag: {
+                filterTaps: true,
+                bounds: {top: 0},
+            },
+        }
+    );
+    return (
+        <Spring
+            {...bind()}
+            ref={Ref}
+            spring={spring}
+            onClick={props.onClick}
+            cls={"svgButton"}
+        >
+            {props.children}
+        </Spring>
+    );
 };

@@ -1,8 +1,8 @@
 {
   "name": "a_root",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "this project",
-  "main": "./dist/index.js",
+  "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
