@@ -1,4 +1,4 @@
-import { DataStore, Projection } from "a_root";
+import {Channels, DataStore, Projection} from "a_root";
 
 /** @Description 静态数据库类 */
 export abstract class Data {
@@ -26,5 +26,5 @@ export abstract class Data {
     datastore: DataStore,
     query: Partial<T>,
     projection?: Projection<T>
-  ): Promise<T[]> => window.invoke("db_find", datastore, query, projection);
+  ): Promise<T[]> => window.invoke(Channels.db_find, datastore, query, projection);
 }

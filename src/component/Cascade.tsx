@@ -1,10 +1,10 @@
 import { ReactNode, useMemo, useState } from "react";
-import { useEvent } from "../hook/useEvent";
-import { ClickAwayListener } from "@mui/material";
+import { useEvent } from "@/hook/useEvent";
 import { Localizer } from "./Localizer";
+import ClickAwayListener from "react-click-away-listener";
 
 /** @Description cascade */
-const useCascade = () => {
+export const useCascade = () => {
   /** @Description content */
   const [content, setContent] = useState<ReactNode>(null);
   /** @Description state */
@@ -43,5 +43,3 @@ const useCascade = () => {
     closeCascade,
   };
 };
-
-export { useCascade };

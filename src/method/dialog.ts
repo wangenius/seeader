@@ -1,10 +1,10 @@
 import Electron from "electron";
-import { err } from "./general";
-import { remote } from "./remote";
+import {err} from "./general";
+import {remote} from "./remote";
 
 /** @Description 对话框类 */
 export abstract class Dialog {
-    /** @Description 提示信息 */
+  /** @Description 提示信息 */
   static message = (message: string = "暂无信息") =>
     remote("dialog_message", {
       title: "提示",
@@ -18,11 +18,11 @@ export abstract class Dialog {
     remote("dialog_message", {
       title: "提示",
       message: message,
-      buttons: ["确定", "取消"],
+      buttons: ["取消", "确定"],
       noLink: true,
       icon: "./public/icon.ico",
     }).then((res) => {
-      if (res.response !== 0) throw "取消";
+      if (res.response !== 1) throw "取消";
       return true;
     });
 

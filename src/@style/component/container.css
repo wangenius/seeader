@@ -1,0 +1,40 @@
+@charset "UTF-8";
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+@import "constant.css";
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+div {
+  background-color: transparent;
+  color: #000000;
+  font-family: "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
+  font-size: 0.875rem;
+  overflow: hidden;
+  user-select: none;
+  width: fit-content;
+  height: fit-content;
+}
+
+.Hangover {
+  flex: 1;
+}
+
+/*# sourceMappingURL=container.css.map */

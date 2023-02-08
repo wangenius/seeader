@@ -1,45 +1,37 @@
-import {Container, Hangover, IconButton, Spring} from "../component";
-import React, {useEffect, useRef, useState} from "react";
-import {remote} from "../method";
-import {useNav} from "../hook/useNav";
-import {useSettings} from "../hook/useSettings";
+import {Exp, IconButton, Icons, Once, Spring} from "@/component";
+import React, {createRef, useEffect, useState} from "react";
+import {remote} from "@/method";
+import {useNav} from "@/hook/useNav";
+import {useSettings} from "@/hook/useSettings";
 import {MdClose, MdCropSquare, MdMoreHoriz, MdRemove} from "react-icons/md";
-import {CHANNELS} from "a_root";
+import {Channels, Style} from "a_root";
 import {useSpring} from "@react-spring/web";
-import {ClickAwayListener} from "@mui/material";
 import {config} from "react-spring";
-import {STYLES} from "../@constant";
 import {useGesture} from "@use-gesture/react";
-import BookIcon from "../@static/book.svg";
-import ShelfIcon from "../@static/shelf.svg";
-import SettingIcon from "../@static/setting.svg";
+import ClickAwayListener from "react-click-away-listener";
 
 /** @Description 标题栏 */
 export function Header() {
   const { closeApp } = useSettings();
   return (
-    <Container cls={"Header"}>
+    <Once cs={"Header"}>
       <ExpandDocker />
-      <Hangover cls={"draggable"} />
-      <IconButton
-        icon={<MdRemove />}
-        value={CHANNELS.window_min}
-        onClick={remote}
-      />
+      <Exp cs={"draggable"} />
+      <IconButton icon={<MdRemove />} value={Channels.window_min} lc={remote} />
       <IconButton
         icon={<MdCropSquare />}
-        value={CHANNELS.window_max}
-        onClick={remote}
+        value={Channels.window_max}
+        lc={remote}
       />
-      <IconButton icon={<MdClose />} onClick={closeApp} />
-    </Container>
+      <IconButton icon={<MdClose />} lc={closeApp} />
+    </Once>
   );
 }
 
 /** @Description expandDocker */
 export const ExpandDocker = () => {
   const { toReading, toShelf, toSetting, switchShelfAndReading } = useNav();
-  const ref = useRef<HTMLElement>();
+  const ref = createRef();
   /** @Description state toggle */
   const [expand, setExpand] = useState(false);
   /** @Description init state */
@@ -53,7 +45,7 @@ export const ExpandDocker = () => {
     backgroundColor: "#03033a",
     color: "#f1f1f1",
     borderRadius: 12,
-    boxShadow: STYLES.shadow.docker_hide,
+    boxShadow: Style.shadow.docker_hide,
     config: config.gentle,
     scale: 1,
   };
@@ -64,7 +56,7 @@ export const ExpandDocker = () => {
     top: 13,
     left: 8,
     borderRadius: 12,
-    boxShadow: STYLES.shadow.docker,
+    boxShadow: Style.shadow.docker,
     backgroundColor: "#ffffff",
   };
   /** @Description generate spring */
@@ -104,13 +96,16 @@ export const ExpandDocker = () => {
         config: active ? config.stiff : config.wobbly,
       });
     },
+    onClick: () => {
+      setExpand(true);
+    },
   });
 
   /** @Description content item */
   const items = [
-    { icon: <BookIcon />, onClick: toReading },
-    { icon: <ShelfIcon />, onClick: toShelf },
-    { icon: <SettingIcon />, onClick: toSetting },
+    { icon: Icons.Book, onClick: toReading },
+    { icon: Icons.Folder, onClick: toShelf },
+    { icon: Icons.Setting, onClick: toSetting },
   ];
 
   return (
@@ -122,26 +117,21 @@ export const ExpandDocker = () => {
       <Spring
         ref={ref}
         spring={spring}
-        cls={"expandable"}
-        onClick={() => {
-          setExpand(true);
+        cs={"expandable"}
+        rc={() => {
+          !expand && switchShelfAndReading();
         }}
-        onContextMenu={()=>!expand && switchShelfAndReading() }
       >
-        <Container
-          {...bind()}
-          state={expand ? "expand" : undefined}
-          cls={"drag"}
-        >
+        <Once {...bind()} state={expand ? "expand" : undefined} cs={"drag"}>
           <MdMoreHoriz />
-        </Container>
+        </Once>
         {items.map((item, key) => {
           return (
-            <Container
+            <Once
               key={key}
-              cls={"item"}
-              onClick={(e) => {
-                e.stopPropagation();
+              cs={"item"}
+              lc={(event) => {
+                event.stopPropagation();
                 setExpand(false);
                 item.onClick();
               }}

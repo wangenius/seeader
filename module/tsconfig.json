@@ -6,7 +6,11 @@
     "outDir": "",  // 编译后生成的文件目录
     "strict": true,    // 启用所有严格的类型检查选项
     "rootDir": "./",
+    "declaration": true, // 自动生成声明文件
     "esModuleInterop": true,
-    "isolatedModules": false
-  }
+    "isolatedModules": false,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+  },
+  "include": ["json/*.json","index.ts","lib/*"]
 }

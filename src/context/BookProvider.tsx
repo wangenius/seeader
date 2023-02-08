@@ -1,18 +1,19 @@
 import React, {memo, ReactNode, useContext, useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../store/store";
+import {useAppDispatch, useAppSelector} from "@/store/store";
 import {useShelf} from "./ShelfProvider";
-import {useNav} from "../hook/useNav";
-import {bookStore} from "../store/bookStore";
-import {Card, Pop, TextInput} from "../component";
+import {useNav} from "@/hook/useNav";
+import {bookStore} from "@/store/bookStore";
 import {toast} from "react-toastify";
 import {useTranslation} from "react-i18next";
-import {Data} from "../method";
+import {Data, Dialog} from "@/method";
 import {DataStore} from "a_root";
+import {Book} from "@/app/Book";
+import {Pop, TextInput} from "@/component";
 
 // @ts-ignore
 const BookContext = React.createContext<BookContextProps>({});
 
-export const BookProvider = memo(({ children }: Props.Base) => {
+export const BookProvider = memo(({ children }: Props.Once) => {
   const book = useAppSelector((state) => state.book);
   const dispatch = useAppDispatch();
   const { loadShelf } = useShelf();
@@ -23,7 +24,7 @@ export const BookProvider = memo(({ children }: Props.Base) => {
   /** 当book改变时，重新加载章节内容 */
   useEffect(loadChapterBody, [book, book.progress]);
 
-  /** @Description 更改当前书籍信息 */
+  /** @Description 更改当前书籍store */
   const changeBook = async (book: Partial<Book>) =>
     dispatch(bookStore.actions.changeBook(book));
 
@@ -34,11 +35,13 @@ export const BookProvider = memo(({ children }: Props.Base) => {
   }
 
   function nextPage() {
+    if (book.progress >= book.total - 1) return;
     setCurrentBody([]);
     dispatch(bookStore.actions.nextProgress());
   }
 
   function lastPage() {
+    if (book.progress <= 0) return;
     setCurrentBody([]);
     dispatch(bookStore.actions.lastProgress());
   }
@@ -73,12 +76,17 @@ export const BookProvider = memo(({ children }: Props.Base) => {
         });
         setCurrentBody(result);
       })
-      .catch(() => {
-        toast.error("load error");
-      });
+      .catch(loadChapterBody);
   }
 
-  /** @Description 更新当前数据库信息 无参数时更新当前书籍信息，一个参数时更新目标书籍信息（参数内含有_id），两个参数时更新_id=id的对象信息 */
+  /**
+   *  @Description
+   * 更新当前数据库信息
+   * 无参数时更新当前书籍信息，
+   * 一个参数时更新目标书籍信息（参数内含有_id），
+   * 两个参数时更新_id=id的对象信息
+   *
+   */
   async function updateBook(targetBook?: Partial<Book>, id?: string) {
     await Data.update<Book>(
       DataStore.bookshelf,
@@ -88,47 +96,39 @@ export const BookProvider = memo(({ children }: Props.Base) => {
     await loadShelf();
   }
 
-  /** @Description 编辑书籍信息 */
-  async function editBook(pair: Partial<Book>, target?: Book) {
-    /*当编辑书籍是正在阅读书籍时，上传最新书籍信息*/
-    if (target?._id === book._id || !target?._id) await updateBook();
-    /*更新书籍编辑信息*/
-    await updateBook(pair, target?._id || book._id);
-    /*当编辑书籍是正在阅读书籍时，重新加载书籍*/
-    if (target?._id === book._id || !target?._id) await loadBook();
-    toast.success(t("update successfully"));
-  }
-
   /** @Description 编辑书籍信息，当前仅支持修改标题 */
-  async function modalEditBook(target?: Book) {
+  async function editBook(target: Book) {
     Pop.modal(
-      <Card style={{ width: 500, height: 300 }}>
-        <TextInput
-          button
-          onClick={async (value) => {
-            await editBook({ name: value }, target);
-            Pop.close();
-          }}
-          init={target?.name || book.name}
-        />
-      </Card>
+      <TextInput
+        button
+        onClick={async (value) => {
+          await updateBook({ name: value }, target._id);
+          toast.success(t("update successfully"));
+          Pop.close();
+        }}
+        init={target?.name}
+      />
     );
   }
 
   /** @Description 删除书籍 */
-  async function deleteBook(targetBook?: Book) {
-    try {
+  async function deleteBook(books: Book[]) {
+    /** @Description 确认 */
+    await Dialog.confirm(
+      `确定删除选中书籍:\n${books.map((item) => item.name + "\n")}`
+    );
+    /** @Description 以此删除 */
+    books.map(async (item) => {
       await Data.remove(DataStore.bookshelf, {
-        _id: targetBook?._id || book._id,
+        _id: item._id,
       });
       await Data.remove(DataStore.bookBody, {
-        _id: targetBook?._id || book._id,
+        _id: item._id,
       });
+      /** @Description 重新加载 */
       loadShelf();
-      toast.success(t("delete successfully"));
-    } catch (e) {
-      toast(e as string);
-    }
+    });
+    toast.success(t("delete successfully"));
   }
 
   return (
@@ -143,7 +143,7 @@ export const BookProvider = memo(({ children }: Props.Base) => {
         openBook,
         jumpToPage,
         currentBody,
-        modalEditBook,
+        modalEditBook: editBook,
       }}
     >
       {children as ReactNode}

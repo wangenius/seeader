@@ -1,0 +1,48 @@
+@import "../@variants/constant";
+@import "../@variants/color";
+.Pop {
+  position: absolute;
+  z-index: $z_pop;
+  overflow: visible
+}
+.Tip {
+  position: absolute;
+  z-index: $z_pop;
+  overflow: visible
+}
+
+.confirmBox {
+  @include yFlex;
+  background-color: #ffffff;
+  width: 360px;
+  border-radius: $br_default;
+  padding: 10px 10px 5px 10px;
+  .title {
+    width: 100%;
+  }
+  .msg {
+    margin:5px;
+  }
+  .foot {
+    margin-top: 10px;
+    text-align: right;
+    width: 100%;
+    .Button {
+      display: inline-block;
+      padding: 0 10px;
+
+    }
+    >:last-child {
+      background-color: $color_primary;
+      z-index: 1;
+      .Button_Chars{
+        z-index: 2;
+        color: $bc_default;
+      }
+      &:hover {
+        background-color: #4259cb;
+      }
+
+    }
+  }
+}

@@ -1,0 +1,1563 @@
+@charset "UTF-8";
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+@font-face {
+  font-display: block;
+  font-family: "Noto_Light";
+  src: url("/public/Noto/NotoSans-Light.ttf");
+}
+@font-face {
+  font-display: block;
+  font-family: "Noto_Medium";
+  src: url("/public/Noto/NotoSans-Medium.ttf");
+}
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+div {
+  background-color: transparent;
+  color: #000000;
+  font-family: "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
+  font-size: 0.875rem;
+  overflow: hidden;
+  user-select: none;
+  width: fit-content;
+  height: fit-content;
+}
+
+.Hangover {
+  flex: 1;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+.Button {
+  cursor: url("/public/icon/hand.png"), pointer;
+  height: 30px;
+  border-radius: 8px;
+  position: relative;
+  max-width: 300px;
+  user-select: none;
+  white-space: nowrap;
+  padding: 0 5px;
+  margin: 0 1px;
+  background-color: transparent;
+  transition: all 200ms ease;
+  box-sizing: border-box;
+}
+.Button * {
+  pointer-events: none;
+}
+.Button::after {
+  content: "";
+  width: 0;
+  height: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.Button .text {
+  display: inline-block;
+  vertical-align: middle;
+  font-family: "Noto_Medium", "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
+  font-size: 0.815rem;
+  color: #71717a;
+  margin: 0 6px;
+}
+.Button .start {
+  display: inline-block;
+  vertical-align: middle;
+  height: 16px;
+  width: 16px;
+}
+.Button .start svg {
+  height: 100%;
+  width: 100%;
+  fill: rgba(121, 128, 134, 0.87);
+}
+.Button:hover {
+  background-color: rgba(210, 215, 232, 0.26);
+}
+.Button:hover .text {
+  color: #0f172a;
+}
+
+.IconButton {
+  cursor: url("/public/icon/hand.png"), pointer;
+  border-radius: 50%;
+  transition: all 200ms ease;
+  position: relative;
+  margin: 3px 2px;
+  background-color: rgba(255, 227, 210, 0);
+}
+.IconButton * {
+  pointer-events: none;
+}
+.IconButton .SvgIcon {
+  height: 16px;
+  width: 16px;
+  margin: 4px;
+}
+.IconButton .SvgIcon svg {
+  height: 100%;
+  width: 100%;
+  fill: rgba(121, 128, 134, 0.87);
+}
+.IconButton:hover {
+  background-color: rgba(210, 215, 232, 0.26);
+}
+.IconButton:hover svg {
+  fill: #798086;
+}
+
+.ListButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  overflow: visible;
+  border-radius: 8px;
+  cursor: url("/public/icon/hand.png"), pointer;
+  transition: all 200ms ease;
+  padding: 8px 16px;
+  margin: 2px 0;
+}
+.ListButton > div {
+  font-size: 0.815rem;
+}
+.ListButton:hover {
+  background-color: rgba(210, 215, 232, 0.26);
+}
+.ListButton:hover .div {
+  color: #0f172a;
+}
+.ListButton[state=active] {
+  background-color: #2d5fe5;
+}
+.ListButton[state=active]::after {
+  content: "";
+  position: absolute;
+  top: 40%;
+  width: 80%;
+  left: 10%;
+  height: 60%;
+  background-color: inherit;
+  z-index: -1;
+  filter: blur(15px) brightness(100%) opacity(0.4);
+}
+.ListButton[state=active] > div {
+  color: #ffffff;
+}
+
+.DC {
+  display: none;
+}
+
+.DX {
+  display: block;
+  font-size: 2rem;
+  color: #e89a24;
+}
+
+.YX {
+  font-size: 3rem;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.CB {
+  font-size: 1.2rem;
+  margin: 2px;
+  padding-left: 6px;
+}
+
+.JX {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+  color: #000000;
+}
+
+hr {
+  display: none;
+}
+
+.LJ {
+  padding-left: 10px;
+  display: block;
+  margin: 5px;
+}
+
+.LS {
+  opacity: 0.8;
+  padding-left: 1rem;
+}
+
+.entryDot {
+  display: none;
+}
+
+.section_title {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+.JS > .YX {
+  font-size: 3rem;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.JS > .CY {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.loader {
+  margin: calc(30% - 20px) auto;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+.Menu {
+  background-color: #fff;
+  border: 1px solid rgba(9, 30, 66, 0.1);
+  border-radius: 8px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px;
+  padding: 6px 6px 3px;
+  overflow: visible;
+  transform-origin: top left;
+}
+.Menu .Divider {
+  margin: 6px;
+  width: auto;
+}
+.Menu .MenuItem {
+  cursor: url("/public/icon/hand.png"), pointer;
+  position: relative;
+  overflow: visible;
+  margin-bottom: 3px;
+  width: 100%;
+}
+.Menu .MenuItem:hover > .MenuButton::before {
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  background-color: rgba(135, 151, 187, 0.14);
+  content: "";
+  border-radius: 8px;
+}
+.Menu .MenuItem .MenuButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+  user-select: none;
+  border-radius: 8px;
+  min-width: 80px;
+  width: 100%;
+  padding: 0 8px;
+  height: 32px;
+  font-size: 0.81rem;
+  color: #666666;
+}
+.Menu .MenuItem .MenuButton * {
+  pointer-events: none;
+}
+.Menu .MenuItem .MenuButton:hover::before {
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  background-color: rgba(135, 151, 187, 0.14);
+  content: "";
+  border-radius: 8px;
+}
+.Menu .MenuItem .MenuButton svg:first-of-type {
+  fill: #666666;
+  scale: 1.1;
+  margin-right: 5px;
+}
+.Menu .MenuItem .MenuButton svg:last-of-type {
+  fill: #666666;
+  scale: 1.1;
+  margin-left: 5px;
+}
+.Menu .MenuItem .Button_red {
+  background-color: rgba(234, 188, 188, 0.9);
+  color: #c50101;
+}
+.Menu .MenuItem .Button_red svg:first-of-type {
+  fill: #c50101;
+}
+.Menu .MenuItem .Button_red:hover {
+  background-color: rgba(234, 188, 188, 0.9);
+}
+
+:root {
+  --toastify-toast-min-height: 34px;
+  --toastify-toast-width: auto;
+}
+
+.Toastify__toast-container {
+  overflow: visible;
+}
+
+.Toastify__toast {
+  border-radius: 14px;
+  padding: 14px;
+  /*cursor: url("/public/icon/Rem/arrow.cur"), auto;*/
+  min-width: 160px;
+}
+
+.Toastify__toast-body {
+  margin: 0;
+  padding: 0;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+.Divider {
+  background-color: #e2e8f0;
+  width: 100%;
+  height: 1px;
+  margin: 0.5pc 0;
+}
+.Divider[state=vertical] {
+  height: 100%;
+  width: 1px;
+  margin: 0 0.5pc;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+.Modal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  z-index: 600;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(3px);
+  background-color: rgba(49, 52, 56, 0.22);
+}
+.Modal .ContentBox {
+  z-index: 800;
+  overflow: visible;
+}
+
+.modalBox {
+  width: 500px;
+  height: 300px;
+}
+
+.SliderContainer {
+  width: 100%;
+  max-width: 220px;
+  min-width: 160px;
+  overflow: visible;
+  height: 26px;
+}
+.SliderContainer .Slider {
+  color: #0015ff;
+}
+.SliderContainer .Slider .MuiSlider-track {
+  border: none;
+  position: relative;
+  height: 22px;
+}
+.SliderContainer .Slider .MuiSlider-mark {
+  display: none;
+}
+.SliderContainer .Slider .MuiSlider-markLabel {
+  font-size: 0.8rem;
+  display: none;
+  color: #808080;
+}
+.SliderContainer .Slider .MuiSlider-markLabelActive {
+  color: #0015ff;
+}
+.SliderContainer .Slider .MuiSlider-thumb {
+  display: none;
+  transition: 0.3s cubic-bezier(0.47, 1.64, 0.41, 0.8);
+}
+.SliderContainer .Slider .MuiSlider-rail {
+  background-color: #dedede;
+  height: 22px;
+}
+
+.Switch {
+  width: 42px;
+  height: 26px;
+  padding: 0;
+}
+.Switch .MuiSwitch-switchBase {
+  transition-duration: 300ms;
+}
+.Switch .MuiSwitch-switchBase.Mui-checked {
+  transform: translateX(16px);
+  color: #fff;
+}
+.Switch .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
+  opacity: 1;
+  background-color: #0015ff;
+  border: 0;
+}
+.Switch .MuiSwitch-switchBase.Mui-checked.Mui-disabled + .MuiSwitch-track {
+  opacity: 0.5;
+}
+.Switch .MuiSwitch-switchBase.Mui-focusVisible .MuiSwitch-thumb {
+  border: 6px solid #fff;
+}
+.Switch .MuiSwitch-switchBase.Mui-disabled .MuiSwitch-thumb {
+  color: #ffd700;
+}
+.Switch .MuiSwitch-switchBase.Mui-disabled + .MuiSwitch-track {
+  opacity: 0.7;
+}
+.Switch .MuiSwitch-thumb {
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+}
+.Switch .MuiSwitch-track {
+  border-radius: 26px/2;
+  background-color: #39393d;
+  opacity: 1;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+.TextInput {
+  width: 100%;
+  transition: all 200ms ease;
+  border-radius: 8px;
+  background-color: #fff;
+  max-width: 600px;
+  position: relative;
+  padding: 15px;
+}
+.TextInput :hover {
+  background-color: #fff;
+}
+.TextInput :focus-within {
+  background-color: #fff;
+}
+.TextInput .TextButton {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  scale: 1.1;
+  background-color: #ffdd00;
+  border-radius: 8px;
+}
+.TextInput .TextButton:hover {
+  scale: 1;
+}
+.TextInput .TextButton:hover::after {
+  content: "";
+  position: absolute;
+  top: 40%;
+  width: 80%;
+  left: 10%;
+  height: 60%;
+  background-color: inherit;
+  z-index: -1;
+  filter: blur(15px) brightness(100%) opacity(0.4);
+}
+.TextInput .TextButton svg {
+  fill: #505050;
+}
+.TextInput textarea {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  font-family: "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+.Pop {
+  position: absolute;
+  z-index: 800;
+  overflow: visible;
+}
+
+.Tip {
+  position: absolute;
+  z-index: 800;
+  overflow: visible;
+}
+
+.confirmBox {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  width: 360px;
+  border-radius: 8px;
+  padding: 10px 10px 5px 10px;
+}
+.confirmBox .title {
+  width: 100%;
+}
+.confirmBox .msg {
+  margin: 5px;
+}
+.confirmBox .foot {
+  margin-top: 10px;
+  text-align: right;
+  width: 100%;
+}
+.confirmBox .foot .Button {
+  display: inline-block;
+  padding: 0 10px;
+}
+.confirmBox .foot > :last-child {
+  background-color: #2d5fe5;
+  z-index: 1;
+}
+.confirmBox .foot > :last-child .Button_Chars {
+  z-index: 2;
+  color: #ffffff;
+}
+.confirmBox .foot > :last-child:hover {
+  background-color: #4259cb;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+.iconPng {
+  width: 100%;
+  height: 100%;
+}
+
+.App {
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  max-width: 100vw;
+  min-height: 100vh;
+  min-width: 100vw;
+  overflow: visible;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+.Docker {
+  background-color: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 5px 20px 0, rgba(9, 30, 66, 0.08) 0 0 0 1px;
+  height: calc(100vh - 30px - 40px);
+  border-radius: 0.8pc;
+  position: absolute;
+  z-index: 20;
+}
+.Docker .body {
+  width: 100%;
+}
+.Docker .Button {
+  margin-bottom: 5px;
+  height: 40px;
+  width: 100%;
+}
+.Docker .Button .text {
+  display: inline;
+  text-align: center;
+}
+
+.Body {
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  transition: all 300ms ease;
+  scrollbar-width: 8px;
+  padding-left: 8px;
+  padding-right: 2px;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transition: all 300ms ease-in-out;
+  height: calc(100vh - 30px);
+  z-index: 19;
+  padding: 20px;
+}
+.Body::-webkit-scrollbar {
+  display: block;
+  width: 14px;
+  background-color: transparent;
+  background-clip: content-box;
+}
+.Body::-webkit-scrollbar-thumb {
+  background-color: rgba(140, 140, 140, 0.3);
+  height: 60px;
+  border-radius: 20px;
+  border: 3px solid #fff;
+}
+.Body::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(140, 140, 140, 0.5);
+}
+.Body::-webkit-scrollbar-track {
+  margin: 20px 0;
+  background-color: transparent;
+}
+.Body::-webkit-scrollbar {
+  display: block;
+  width: 14px;
+  background-color: transparent;
+  background-clip: content-box;
+}
+.Body::-webkit-scrollbar-thumb {
+  background-color: rgba(140, 140, 140, 0.3);
+  height: 60px;
+  border-radius: 20px;
+  border: 3px solid #fff;
+}
+.Body::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(140, 140, 140, 0.5);
+}
+.Body::-webkit-scrollbar-track {
+  margin: 20px 0;
+  background-color: transparent;
+}
+
+.drag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  width: 100%;
+  height: 30px;
+}
+.drag .IconButton {
+  border-radius: 10px;
+  padding: 0 10px;
+  height: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.drag .IconButton :hover {
+  background-color: #f6f6f6;
+}
+
+.drag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+  width: 100%;
+  background-color: transparent;
+  height: 24px;
+  cursor: url("/public/icon/hand.png"), pointer;
+  border-radius: 50%;
+  transition: all 200ms ease;
+  position: relative;
+  touch-action: none;
+}
+.drag * {
+  pointer-events: none;
+}
+.drag svg {
+  height: 100%;
+  width: 100%;
+  fill: #96969a;
+}
+
+.toolTip {
+  background-color: #212121;
+  padding: 2px 4px;
+  color: #f6f6f6;
+  margin-left: 5px;
+  border-radius: 4px;
+  border: 1px solid rgba(9, 30, 66, 0.1);
+  width: max-content;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+.BookPage {
+  width: 100%;
+  height: calc(100vh - 30px);
+}
+.BookPage .Docker .list {
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  transition: all 300ms ease;
+  scrollbar-width: 8px;
+  padding-left: 8px;
+  padding-right: 2px;
+  height: calc(100vh - 30px - 60px);
+  padding: 0 5px 10px 5px;
+  width: 100%;
+}
+.BookPage .Docker .list::-webkit-scrollbar {
+  display: block;
+  width: 14px;
+  background-color: transparent;
+  background-clip: content-box;
+}
+.BookPage .Docker .list::-webkit-scrollbar-thumb {
+  background-color: rgba(140, 140, 140, 0.3);
+  height: 60px;
+  border-radius: 20px;
+  border: 3px solid #fff;
+}
+.BookPage .Docker .list::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(140, 140, 140, 0.5);
+}
+.BookPage .Docker .list::-webkit-scrollbar-track {
+  margin: 20px 0;
+  background-color: transparent;
+}
+.BookPage .Docker .list .ListButton[state=active] {
+  position: sticky;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+}
+.BookPage .Body .BodyTitle {
+  width: fit-content;
+  font-size: 2rem;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: url("/public/icon/hand.png"), pointer;
+  color: #3b423b;
+  touch-action: none;
+}
+.BookPage .Body .BodyTitle:hover {
+  background-color: #f6f6f6;
+}
+.BookPage .Body .toolPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.BookPage .Body .BodyPara {
+  width: 100%;
+  font-size: 1rem;
+  user-select: text;
+  text-indent: 2rem;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+.Header {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 30px;
+  min-height: 30px;
+  max-height: 30px;
+  z-index: 200;
+  border-bottom: 1px solid #dedede;
+  padding: 0 4pt;
+  transition: all 200ms ease;
+  position: relative;
+  overflow: visible;
+  background-color: #ffffff;
+}
+.Header .expandable {
+  border-radius: 20px;
+  z-index: 2;
+  position: relative;
+  backdrop-filter: blur(5px);
+  padding: 0;
+}
+.Header .expandable .item {
+  position: absolute;
+  border-radius: 20px;
+  cursor: url("/public/icon/hand.png"), pointer;
+  width: 100px;
+  height: 100px;
+}
+.Header .expandable .item:hover {
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px;
+}
+.Header .expandable .item svg {
+  scale: 0.8;
+}
+.Header .expandable .item:nth-of-type(2) {
+  left: 30px;
+}
+.Header .expandable .item:nth-of-type(3) {
+  left: 150px;
+}
+.Header .expandable .item:nth-of-type(4) {
+  left: 270px;
+}
+.Header .expandable .drag {
+  margin-bottom: 20px;
+}
+.Header .expandable .drag svg {
+  fill: #f6f6f6;
+}
+.Header .expandable .drag[state=expand] svg {
+  fill: #818080;
+}
+.Header .Hangover {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+}
+.Header .Hangover .draggable {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 0 10px;
+  height: 20px;
+  background-color: #f6f6f6;
+}
+.Header .Button {
+  background-color: #ffffff;
+  height: 24px;
+  border-radius: 12px;
+  padding: 0;
+}
+.Header .Button .Button_Chars {
+  transition: all 200ms ease;
+  color: #676767;
+  margin: 0 3px;
+  padding: 0 8px 0 0;
+}
+.Header .Button .Button_startIcon {
+  margin: 2px;
+  width: 20px;
+  height: 20px;
+}
+.Header .Button .Button_startIcon svg {
+  fill: #2d5fe5;
+}
+.Header .Button:hover {
+  background-color: #f6f6f6;
+}
+.Header .Button:hover .Button_startIcon {
+  animation: rotate;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1200ms;
+  animation-iteration-count: infinite;
+}
+.Header .logo {
+  margin-top: 4px;
+}
+
+@keyframes rotate {
+  0% {
+    rotate: 0;
+  }
+  100% {
+    rotate: 720deg;
+  }
+}
+svg {
+  width: inherit;
+  height: inherit;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
+.ShelfArea {
+  width: 100%;
+  height: calc(100vh - 30px);
+  z-index: 1;
+  background-image: radial-gradient(rgba(68, 76, 247, 0.24) 0.9px, #ffffff 0.9px);
+  background-size: 18px 18px;
+}
+.ShelfArea .Docker {
+  height: fit-content;
+  padding: 0 5px 5px 5px;
+}
+.ShelfArea .Docker .body .DockerButton {
+  width: 50px;
+  height: 50px;
+  margin-top: 5px;
+  border-radius: 14px;
+  justify-content: center;
+  align-content: center;
+  cursor: url("/public/icon/hand.png"), pointer;
+  overflow: visible;
+  position: relative;
+  touch-action: none;
+}
+.ShelfArea .Docker .body .DockerButton:hover {
+  background-color: #dedede;
+}
+.ShelfArea .Docker .body .DockerButton:active {
+  scale: 0.96;
+}
+.ShelfArea .Body {
+  display: grid;
+  width: calc(100% - 85px);
+  overflow: visible;
+  grid-gap: 20px 20px;
+  grid-template-columns: repeat(auto-fill, 160px);
+  grid-template-rows: repeat(auto-fill, 200px);
+  transform-style: preserve-3d;
+  transition: all 0.3s ease-in-out;
+}
+.ShelfArea .Body .book {
+  position: relative;
+  cursor: pointer;
+  height: 200px;
+  width: 160px;
+  border-radius: 12px;
+  padding: 0;
+  touch-action: none;
+  transition: all 0.15s ease;
+  text-align: center;
+  background-color: #3c70ec;
+  overflow: visible;
+  box-sizing: border-box;
+}
+.ShelfArea .Body .book:hover {
+  outline: 0;
+  box-shadow: 0 0 0 4px rgba(70, 24, 238, 0.4);
+}
+.ShelfArea .Body .book:active {
+  scale: 0.96;
+}
+.ShelfArea .Body .book .selected {
+  position: absolute;
+  display: block;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 3px solid #b5bfd9;
+  border-radius: 50%;
+  top: 0.25rem;
+  left: 0.25rem;
+  opacity: 0;
+  transform: scale(0);
+  transform-origin: center;
+  transition: all 0.25s ease;
+  background-image: url("/public/svg/done.svg");
+  background-size: 12px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-color: #fce599;
+  z-index: 1;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ShelfArea .Body .book .selected svg {
+  box-sizing: border-box;
+  padding: 2px;
+  width: 100%;
+  stroke-width: 5px;
+  height: 100%;
+  fill: #3c70ec;
+}
+.ShelfArea .Body .book .BookTitle {
+  padding: 12px;
+  margin: 20px auto;
+  text-align: justify;
+  user-select: none;
+  color: #ffffff;
+}
+.ShelfArea .Body .book .Tip {
+  background-color: #7da953;
+  height: 16px;
+  border-radius: 12px;
+  padding: 0 6px;
+  font-size: 0.72rem;
+  color: #ffffff;
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+}
+.ShelfArea .Body .book .current {
+  position: absolute;
+  bottom: 25px;
+  color: white;
+  font-size: 0.72rem;
+  width: 100%;
+  background-color: #ffd900;
+}
+.ShelfArea .Body .book .progress {
+  color: #ffffff;
+  font-size: 0.72rem;
+  position: absolute;
+  bottom: 5px;
+  left: 8px;
+}
+.ShelfArea .Body .book[state=current] {
+  box-shadow: rgb(229, 198, 198) 0 0 0 5px;
+}
+.ShelfArea .Body .book[state=selected] {
+  box-shadow: 0 0 0 4px #b5c9fc;
+}
+.ShelfArea .Body .book[state=selected] .selected {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+.Setting {
+  height: calc(100vh - 30px);
+  width: 100%;
+}
+.Setting .Docker {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  min-width: 180px;
+  padding: 0 5px;
+}
+.Setting .Docker .Divider {
+  margin: 0.1pc 0;
+}
+.Setting .Docker .Button {
+  height: 40px;
+  padding: 0 20px;
+  margin: 5px 0;
+  width: 100%;
+}
+.Setting .Body .SettingBox .title {
+  margin: 25px 10px 10px 10px;
+}
+.Setting .Body .SettingBox .SettingLabel {
+  color: #5f6065;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.Setting .Body .SettingBox .Options {
+  width: max-content;
+  border: 1px solid rgba(9, 30, 66, 0.1);
+  border-radius: 8px;
+  white-space: nowrap;
+  padding: 1px;
+}
+.Setting .Body .SettingBox .Options .Option {
+  cursor: url("/public/icon/hand.png"), pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px;
+  height: 30px;
+  padding: 10px;
+  width: max-content;
+  border-radius: 5px;
+  position: relative;
+}
+.Setting .Body .SettingBox .Options .Option:hover {
+  background-color: #f1f1f1;
+}
+.Setting .Body .SettingBox .Options .Option:hover::before {
+  transform: scale(1);
+  opacity: 1;
+}
+.Setting .Body .SettingBox .Options .Option[state=actived] {
+  background-color: #2260ff;
+  color: #ffffff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  cursor: url("/public/icon/default.png"), auto;
+}
+body * {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.draggable {
+  -webkit-app-region: drag;
+}
+
+/*# sourceMappingURL=index.css.map */

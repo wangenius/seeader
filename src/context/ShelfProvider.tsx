@@ -1,14 +1,14 @@
 import React, {memo, ReactNode, useContext, useState} from "react";
 import {useEffectOnce} from "react-use";
-import {chaptersParser, Data, Dialog, err, File, is, jsonParse, pathParser} from "../method";
+import {chaptersParser, Data, Dialog, err, File, is, jsonParse, pathParser,} from "../method";
 import {toast} from "react-toastify";
 import {useTranslation} from "react-i18next";
-import { DataStore } from "a_root";
+import {DataStore} from "a_root";
 
 // @ts-ignore
 const ShelfContext = React.createContext<ShelfContextProps>({});
 
-export const ShelfProvider = memo(({ children }: Props.Base) => {
+export const ShelfProvider = memo(({ children }: Props.Once) => {
   const [books, setBooks] = useState<Book[]>([]);
   const { t } = useTranslation();
   useEffectOnce(loadShelf);
@@ -91,14 +91,35 @@ export const ShelfProvider = memo(({ children }: Props.Base) => {
     }
   }
 
-  /** @Description 备份当前书架的所有书籍 */
-  async function backUpBook() {
-    /*选择目录地址*/
-    const res = await Dialog.directory();
-    res.canceled && err("已取消备份");
-    /*顺序复制书籍到置顶目录*/
-    for (const item of books)
-      await File.copy(item.path, res.filePaths[0] + `\\${item.name}.txt`);
+  /** @Description 备份书籍 */
+  async function backUpBook(items: Book[]) {
+    try {
+      /*选择目录地址*/
+      const res = await Dialog.directory();
+      res.canceled && err("已取消备份");
+      let result = {
+        success: 0,
+        fail: 0,
+      };
+      /*顺序复制书籍到置顶目录*/
+      for (const item of items) {
+        const a = await File.copy(
+          item.path,
+          res.filePaths[0] + `\\${item.name}.txt`
+        );
+        if (a) result.success++;
+        else {
+          result.fail++;
+          toast.error(`已存在同名文件${item.name}`);
+        }
+      }
+
+      toast.info(
+        `共备份${items.length}个 ,成功${result.success}个,失败${result.fail}个`
+      );
+    } catch (e) {
+      toast.error(e as string);
+    }
   }
 
   return (

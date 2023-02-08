@@ -1,6 +1,6 @@
 import React, {memo, useState} from "react";
 import {Spring} from "./index";
-import {EventManager, ModalEmit} from "./event";
+import {EventHandler, ModalEmit} from "./event";
 import {useSpring} from "@react-spring/web";
 import {useEffectOnce} from "react-use";
 
@@ -31,11 +31,11 @@ const ModalContainer = memo(() => {
     config: { duration: 300 },
   });
 
-  return open && <Spring cls={"Modal"} onClick={clickAway} spring={spring} />;
+  return open && <Spring cs={"Modal"} lc={clickAway} spring={spring} />;
 });
 
 /** @Description 事件管理器 */
-const ModalEvent = new EventManager<ModalEmit>();
+const ModalEvent = new EventHandler<ModalEmit>();
 const modal = () => ModalEvent.emit(ModalEmit.Open);
 modal.close = () => ModalEvent.emit(ModalEmit.Close);
 export { ModalContainer, modal };

@@ -1,0 +1,20 @@
+@import "../@variants/constant";
+.Modal {
+  @include xFlex;
+  @include FlexCenter;
+  z-index: $z_modal;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(3px);
+  background-color: rgba(49,52,56,0.22);
+  .ContentBox {
+    z-index: $z_pop;
+    overflow: visible;
+  }
+
+}
+.modalBox {
+  width: 500px;
+  height: 300px;
+}

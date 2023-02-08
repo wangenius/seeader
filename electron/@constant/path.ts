@@ -1,28 +1,8 @@
-import path from "path";
 import { app } from "electron";
+import { Path } from "a_root";
 
 const root_packaged = __dirname.slice(0, __dirname.indexOf("resources") - 1);
 const root_dev = __dirname.slice(0, __dirname.indexOf("end") - 1);
-
-class Path {
-  path: string;
-  [props: string]: any;
-  constructor(path) {
-    this.path = path;
-  }
-
-  exit(): Path {
-    return new Path(this.path.slice(0, this.path.lastIndexOf("\\")));
-  }
-
-  enter(...props: string[]): Path {
-    return new Path(path.join(this.path, ...props));
-  }
-
-  end(...props: string[]): string {
-    return path.join(this.path, ...props);
-  }
-}
 
 /** @Description 项目根目录 */
 export const Dir_root = new Path(app.isPackaged ? root_packaged : root_dev);

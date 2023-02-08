@@ -12,7 +12,7 @@ export function useSettings() {
   const { t } = useTranslation();
 
   /** @Description 改变redux设置状态 */
-  const changeSettings = (settings: Partial<Settings>) =>
+  const changeSettings = (settings: Partial<SettingObject>) =>
     dispatch(settingsStore.actions.changeSettings(settings));
 
   /** @Description 关闭App */
@@ -25,10 +25,10 @@ export function useSettings() {
   /** @Description 保存设置到数据库 */
   async function saveSettings() {
     try {
-      const res = await Data.select<Settings>(DataStore.settings, {});
+      const res = await Data.select<SettingObject>(DataStore.settings, {});
       res.length
         ? await Data.update(DataStore.settings, { _id: settings._id }, settings)
-        : await Data.insert<Settings>(DataStore.settings, settings);
+        : await Data.insert<SettingObject>(DataStore.settings, settings);
       toast.success("保存成功");
     } catch {
       toast.error("保存失败");
@@ -46,7 +46,7 @@ export function useSettings() {
 
   /** @Description 刷新数据库设置 */
   async function refreshSettings() {
-    const setting = await Data.select<Settings>(DataStore.settings, {});
+    const setting = await Data.select<SettingObject>(DataStore.settings, {});
     changeSettings(setting[0]);
     toast.success("刷新成功");
   }

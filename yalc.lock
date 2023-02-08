@@ -1,9 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "a_root": {
-      "signature": "5d3c4e8c49c1275aea1e73e96c0dc732",
-      "file": true
-    }
-  }
-}

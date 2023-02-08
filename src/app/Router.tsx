@@ -3,16 +3,16 @@ import { App } from "./App";
 import { Book } from "./Book";
 import { Shelf } from "./Shelf";
 import { Setting } from "./Setting";
-import {APP} from "../@constant";
+import {Config} from "a_root";
 
 export const Router = () => (
   <HashRouter>
     <Routes>
       <Route path="/" element={<App />}>
         <Route path={""} element={<Book />} />
-        <Route path={APP.router.reading} element={<Book />} />
-        <Route path={APP.router.shelf} element={<Shelf />} />
-        <Route path={APP.router.settings} element={<Setting />} />
+        <Route path={Config.router.reading} element={<Book />} />
+        <Route path={Config.router.shelf} element={<Shelf />} />
+        <Route path={Config.router.settings} element={<Setting />} />
       </Route>
     </Routes>
   </HashRouter>

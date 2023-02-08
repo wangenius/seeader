@@ -1,11 +1,11 @@
 import React, { forwardRef, LegacyRef, memo, useRef } from "react";
-import { Container, IconButton } from "./index";
+import { Once, IconButton } from "./index";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
-import { voidFn } from "../method";
+import { fn } from "@/method";
 import { useTranslation } from "react-i18next";
 import { TFuncKey } from "i18next";
 import _ from "lodash";
-import { useEvent } from "../hook/useEvent";
+import { useEvent } from "@/hook/useEvent";
 
 export const TextInput = memo(
   forwardRef((props: Props.Input.Text, ref: LegacyRef<any>) => {
@@ -15,18 +15,17 @@ export const TextInput = memo(
       sx,
       init,
       button = false,
-      onClick = voidFn,
+      onClick = fn,
       ...other
     } = props;
     const Ref = useRef<HTMLInputElement>();
     const next = useEvent(() => onClick(Ref.current?.value));
     return (
-      <Container cls={"TextInput"}>
+      <Once cs={"TextInput"}>
         <IconButton
           open={button}
-          onClick={next}
-          cls={"TextButton"}
-          size={30}
+          lc={next}
+          cs={"TextButton"}
           icon={<MdOutlineArrowRightAlt />}
         />
         <textarea
@@ -37,32 +36,32 @@ export const TextInput = memo(
           placeholder={placeholder}
           ref={button ? Ref : ref}
         />
-      </Container>
+      </Once>
     );
   })
 );
 
 /** @Description 选择器 */
 export const Selector = memo((props: Props.Input.Selector) => {
-  const { onClick = voidFn, children, open = true } = props;
+  const { onClick = fn, children, open = true } = props;
   const { t } = useTranslation();
   return (
-    <Container sx={{ display: open ? "block" : "none" }} cls={"SettingBox"}>
-      <Container cls={"title"}>{t(props.title as TFuncKey)}</Container>
-      <Container cls={"Options"}>
+    <Once style={{ display: open ? "block" : "none" }} cs={"SettingBox"}>
+      <Once cs={"title"}>{t(props.title as TFuncKey)}</Once>
+      <Once cs={"Options"}>
         {_.toPairsIn(children).map((item, key) => {
           return (
-            <Container
-              cls={"Option"}
+            <Once
+              cs={"Option"}
               state={props.value === item[1] ? "actived" : undefined}
-              onClick={() => onClick(item[1])}
+              lc={() => onClick(item[1])}
               key={key}
             >
               {t(item[0] as TFuncKey) || item}
-            </Container>
+            </Once>
           );
         })}
-      </Container>
-    </Container>
+      </Once>
+    </Once>
   );
 });

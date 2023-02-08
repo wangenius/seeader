@@ -1,7 +1,7 @@
 import * as React from "react";
 import {memo, useCallback, useLayoutEffect, useRef, useState} from "react";
-import {Container} from "./Container";
-import {useWindows} from "../hook/useWindows";
+import {Once} from "./Once";
+import {useWindows} from "@/hook/useWindows";
 
 /** @Description 位置定位器 对于视窗而言 */
 export const Localizer = memo(
@@ -106,9 +106,9 @@ export const Localizer = memo(
     );
 
     return (
-      <Container
+      <Once
         ref={ref}
-        sx={{ overflow: "visible", position: "absolute", top: top, left: left }}
+        style={{ overflow: "visible", position: "absolute", top: top, left: left }}
         children={children}
       />
     );

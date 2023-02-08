@@ -1,0 +1,55 @@
+@import "../@variants/constant";
+@import "../@variants/color";
+
+$Title_Height: 60px;
+$Contents_Height: calc(100% - $Title_Height);
+
+.BookPage {
+  width: $full;
+  height: $height_body;
+
+  .Docker {
+    .list {
+      @include ScrollY;
+      height: calc($height_body - 60px);
+      padding: 0 5px 10px 5px;
+      width: 100%;
+      .ListButton {
+        &[state="active"] {
+          position: sticky;
+          top: 0;
+          bottom: 0;
+          z-index: 1;
+        }
+      }
+    }
+  }
+
+  .Body {
+    .BodyTitle {
+      width: fit-content;
+      font-size: 2rem;
+      padding: 6px;
+      border-radius: 8px;
+      cursor: $pointer;
+      color: #3b423b;
+      touch-action: none;
+      &:hover {
+        background-color: #f6f6f6;
+      }
+    }
+
+    .toolPanel {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    .BodyPara {
+      width: 100%;
+      font-size: 1rem;
+      user-select: text;
+      text-indent: 2rem;
+    }
+  }
+}

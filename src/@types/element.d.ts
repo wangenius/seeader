@@ -1,32 +1,46 @@
 declare namespace Props {
+  import { TFuncKey } from "i18next";
   import { SxProps, Theme } from "@mui/system";
   import * as React from "react";
-  import { CSSProperties, ReactNode } from "react";
+  import { ReactNode } from "react";
   import { SpringValues } from "react-spring";
   import { PickAnimated } from "@react-spring/web";
-  import { TFuncKey } from "i18next";
-  import {ReactDOMAttributes} from "@use-gesture/react/dist/declarations/src/types";
+  import { DetailedHTMLProps, HTMLAttributes } from "react";
+  /** @Description 元素初始信息 */
+  type Original = DetailedHTMLProps<
+    HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  >;
 
-
-  type Original = import("@mui/system").BoxProps;
+  /** @Description react */
   type TextareaHTMLAttributes = import("react").TextareaHTMLAttributes;
 
   /** @Description 元素基本属性 */
-  export interface Base extends Original {
-    label?:TFuncKey;
-    children?: ReactNode;
-    id?: string;
-    index?: number;
-    sx?: SxProps<Theme>;
-    cls?: string;
+  export interface Once
+    extends Omit<Original, "ref" | "className" | "onContextMenu" | "onClick"> {
+    /** @Description TFuncKey 标签 */
+    label?: Label;
+    /** @Description 组件含值 */
+    value?: Value;
+    /** @define classname */
+    cs?: string;
+    /** @Description 是否处于加载状态 */
     loading?: boolean;
+    /** @Description 是否显示元素 不显示返回null  默认显示*/
     open?: boolean;
+    /** @Description state状态 */
     state?: string;
-    focus?: boolean;
 
-    onClick?(...props): any;
+    /** @Description 左键点击 */
+    lc?(event: MouseEvent<HTMLDivElement>, value: Value, ...rest: any[]): any;
 
-    onContextMenu?(...props): any;
+    /** @Description 右键点击 */
+    rc?(event: MouseEvent<HTMLDivElement>, value: Value, ...rest: any[]): any;
+  }
+
+  export interface Mainer extends Once {
+    condition?: boolean;
+    width?: number;
   }
 
   /** @Description
@@ -39,45 +53,40 @@ declare namespace Props {
    * Button */
   declare namespace Button {
     /** @Description Btn基本属性 */
-    export interface Main extends Base {
-      index?: number;
-      value?: string | number | boolean;
+    export interface Default extends Once {
+      /** @Description text */
+      label?: TFuncKey;
+      /** @Description icons */
       startIcon?: ReactNode;
-      state?: "active" | "none";
-      label?: TFuncKey | string;
+      /** @Description icon */
       endIcon?: ReactNode;
-      href?: string;
-      tip?: boolean;
-      small?: boolean;
+
+      /** @Description 左键点击 */
+      lc?(value?: Value, ...rest: any[]): any;
+
+      /** @Description 右键点击 */
+      rc?(value?: Value, ...rest: any[]): any;
     }
 
     /** @Description ListButtonProps */
-    export interface ListButton extends Main {
-      value: number;
+    export interface InList extends Omit<Default, "label"> {
       isActive?: boolean;
+
+      primary?: TFuncKey;
+      secondary?: TFuncKey;
     }
 
     /** @Description IconBtn 基本属性 */
-    export interface IconButton extends Main {
-      children?: SvgIconObject;
-      icon?: SvgIconObject | string;
-      SvgSx?: SxProps<Theme>;
-      size?: number;
+    export interface Icon
+      extends Omit<Default, "startIcon" | "endIcon" | "children"> {
+      /** @Description icon */
+      icon: ReactNode;
     }
+  }
 
-    /** @Description SvgIcon 对象*/
-    type SvgIconObject = JSX.Element;
-
-    /** @Description svgBtn base attr */
-    export interface SvgIcon extends Base {
-      size?: number;
-      icon?: ReactNode;
-    }
-
-    export interface MenuButton extends Button.Main {
-      context: Menu.Option;
-      size?: number;
-    }
+  /** @Description svgBtn base attr */
+  export interface SvgIcon extends Once {
+    icon: ReactNode;
   }
 
   /** @Description
@@ -107,14 +116,14 @@ declare namespace Props {
 
     export interface Selector {
       /** @Description 是否显示 */
-      open?:boolean;
+      open?: boolean;
       /** @Description 标题 */
       title?: TFuncKey | string;
       /** @Description 初始值 */
       value?: string | boolean | number;
       /** @Description 对象 */
       children: {
-        [propsName:string]:string | number | boolean
+        [propsName: string]: string | number | boolean;
       };
 
       onClick?(value?: string | boolean | number): void;
@@ -128,12 +137,12 @@ declare namespace Props {
    * */
   declare namespace Menu {
     /** @Description menu props */
-    export interface Main extends Button.Main {
+    export interface Main extends Button.Default {
       children: Option;
     }
 
     /** @Description MenuItem Props */
-    export interface Item extends Button.Main {
+    export interface Item extends Button.Default {
       children: Option;
       base?: string | number | boolean;
       type?: "item" | "menu" | "divider" | "title";
@@ -165,22 +174,16 @@ declare namespace Props {
     /** @Description 鼠标事件 */
     event?: React.MouseEvent;
     /** @Description 停靠位置线 */
-    base?: "top" | "bottom" | "right_middle";
+    base?: LocalizerBase;
     /** @Description 绝对定位 相对定位 */
     position?: "relative" | "absolute";
   }
 
-  export interface Spring {
-    open?:boolean,
-    children?:ReactNode,
-    cls?:string,
-    onClick?:Fn,
-    onContextMenu?:Fn,
+  /** @Description 动画组件 */
+  export interface Spring extends Omit<Once, "style"> {
+    /** @Description 动画spring */
     spring?: SpringValues<PickAnimated<{}>>;
-    style?: CSSProperties;
-    bind?:(...args: any[]) => ReactDOMAttributes
   }
-
 
   export interface DragZone {
     width: number;
@@ -192,13 +195,28 @@ declare namespace Props {
   export interface BookCover {
     /** @Description bookItem */
     item: Book;
-    /** @Description 序号 */
-    index: number;
-    /** @Description 对象目标位置 */
-    DestAnchor?: Props.DragZone;
-    /** @Description gesture 对象拖拽时触发 */
-    onDrag?(): void;
-    /** @Description gesture 对象 拖拽到目标位置并松开触发 */
-    onDest?(): void;
+    /** @Description selected 状态 */
+
+    selected?: boolean;
+    /** @Description 当有其他对象选中时 */
+    selectedExist?: boolean;
+
+    /** @Description 右键选择 当选中时 */
+    onSelected(item: Book): void;
+
+    /** @Description 取消选择 */
+    onCancelSelected(item: Book): void;
+  }
+
+  export interface Docker {
+    children: ReactNode;
+    /** @Description Docker显隐状态 */
+    state: boolean;
+
+    /** @Description 状态改变方法 */
+    changeState?(): any;
+
+    /** @Description Docker宽度 */
+    width?: number;
   }
 }

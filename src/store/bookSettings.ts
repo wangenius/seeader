@@ -1,23 +1,23 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import _ from "lodash";
-import {SETTINGS} from "../@constant";
+import {Settings as Set} from "a_root";
 
 /** @Description 初始化设置*/
-export const initialSettings: Settings = {
+export const initialSettings: SettingObject = {
   common: {
-    minWithTray: SETTINGS.minWithTray.yes,
+    minWithTray: Set.minWithTray.yes,
   },
   preference: {
     theme: "default",
-    language: SETTINGS.language.english,
+    language: Set.language.english,
   },
   reading: {
-    chapterDocker: SETTINGS.chapterDocker.show,
-    lineHeight: SETTINGS.lineHeight.medium,
-    fontSize: SETTINGS.fontSize.medium,
-    paragraphSpacing: SETTINGS.paragraphSpacing.medium,
+    chapterDocker: Set.chapterDocker.show,
+    lineHeight: Set.lineHeight.medium,
+    fontSize: Set.fontSize.medium,
+    paragraphSpacing: Set.paragraphSpacing.medium,
     fontFamily: "noto",
-    dictionary: SETTINGS.dictionary.local,
+    dictionary: Set.dictionary.local,
   }
 };
 
@@ -27,7 +27,7 @@ export const settingsStore = createSlice({
   initialState: initialSettings,
   reducers: {
     /** @Description 更改设置 */
-    changeSettings(state, action: PayloadAction<Partial<Settings>>) {
+    changeSettings(state, action: PayloadAction<Partial<SettingObject>>) {
       return _.defaultsDeep(action.payload, state);
     },
   },

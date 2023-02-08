@@ -6,12 +6,14 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc -p tsconfig.json"
+    "a_root_complier": "tsc -p tsconfig.json",
+    "watch": "tsc -w"
   },
   "author": {
     "name": "wangenius",
     "email": "wangenius@qq.com"
   },
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "files": ["lib/**/*","index.ts"]
 }

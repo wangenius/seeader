@@ -1,14 +1,16 @@
-import { Container } from "./Container";
+import { Once } from "./Once";
+import * as React from "react";
 import { memo, ReactNode } from "react";
 import { Ring } from "@uiball/loaders";
+import clsx from "clsx";
 
-export const LoadingRing = memo((props: Props.Base) => (
-  <Container open={props.open} cls={"loader"}>
+const req = require.context("../../public/svg", true, /\.svg$/);
+
+export const LoadingRing = memo((props: Props.Once) => (
+  <Once open={props.open} cs={"loader"}>
     <Ring size={35} color={`${"#3e4859"}`} />
-  </Container>
+  </Once>
 ));
-
-const req = require.context("../@static", true, /\.svg$/);
 
 /** @Description  type generated*/
 interface Icons {
@@ -19,7 +21,18 @@ interface Icons {
 export const Icons: Icons = {};
 
 /** @Description 生成 */
-req.keys().map(req).map((item) => {
-  const X = (item as any).default;
-  return Icons[X.name.slice(3, X.name.length)] = <X />;
-});
+req
+  .keys()
+  .map(req)
+  .map((item, key) => {
+    const X = (item as any).default;
+    return (Icons[X.name.slice(3, X.name.length)] = <X />);
+  });
+
+/** @Description svg container root element => div */
+export const SVG = (props: Props.SvgIcon) => {
+  const { open, cs, icon, ...rest } = props;
+  return (
+    <Once open={open} cs={clsx("SvgIcon", cs)} children={icon} {...rest} />
+  );
+};

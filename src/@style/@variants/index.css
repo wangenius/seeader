@@ -1,0 +1,14 @@
+@import "constant.css";
+@import "color.css";
+@font-face {
+  font-display: block;
+  font-family: "Noto_Light";
+  src: url("/public/Noto/NotoSans-Light.ttf");
+}
+@font-face {
+  font-display: block;
+  font-family: "Noto_Medium";
+  src: url("/public/Noto/NotoSans-Medium.ttf");
+}
+
+/*# sourceMappingURL=index.css.map */

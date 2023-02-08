@@ -1,12 +1,12 @@
 import { useLayoutEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Pop } from "../component";
-import { useAppSelector } from "../store/store";
+import { Pop } from "@/component";
+import { useAppSelector } from "@/store/store";
 import { useTranslation } from "react-i18next";
-import { APP } from "../@constant";
+import {Config} from "a_root";
 
 /** @Description router name */
-const router = APP.router;
+const router = Config.router;
 
 /** @Description 使用nav router*/
 export function useNav() {

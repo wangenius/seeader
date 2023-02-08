@@ -1,12 +1,13 @@
 import { Header } from "./Header";
-import { Container, ModalContainer, PopContainer } from "../component";
+import { Once, ModalContainer, PopContainer } from "@/component";
 import { Outlet } from "react-router-dom";
-import { BookProvider } from "../context/BookProvider";
-import { ShelfProvider } from "../context/ShelfProvider";
+import { BookProvider } from "@/context/BookProvider";
+import { ShelfProvider } from "@/context/ShelfProvider";
 import { ToastContainer } from "react-toastify";
+import {TipContainer} from "@/component/Tip";
 
 export const App = () => (
-  <Container cls={"App"}>
+  <Once cs={"App"}>
     <ToastContainer
       position="bottom-left"
       autoClose={4000}
@@ -22,11 +23,12 @@ export const App = () => (
     />
     <ModalContainer />
     <PopContainer />
+    <TipContainer />
     <ShelfProvider>
       <BookProvider>
         <Header />
         <Outlet />
       </BookProvider>
     </ShelfProvider>
-  </Container>
+  </Once>
 );

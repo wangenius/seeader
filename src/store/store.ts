@@ -24,8 +24,10 @@ const combinedReducer = combineReducers({
   settings: settingsStore.reducer,
 });
 
+/** @Description 持久化*/
 const persistedReducer = persistReducer(storageConfig, combinedReducer);
 
+/** @Description store生成 */
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: [thunk],

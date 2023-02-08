@@ -1,12 +1,12 @@
 import React, {memo, ReactNode, useState} from "react";
-import {Button, Container, Divider, Localizer, modal, Spring} from "./index";
-import {ClickAwayListener} from "@mui/material";
+import {Button, Once, Divider, Localizer, modal, Spring} from "./index";
 import {useEffectOnce} from "react-use";
-import {EventManager, PopEventEmit} from "./event";
+import {EventHandler, PopEventEmit} from "./event";
 import i18next from "i18next";
 import {useDrag} from "@use-gesture/react";
 import {config} from "react-spring";
 import {useSpring} from "@react-spring/web";
+import ClickAwayListener from "react-click-away-listener";
 
 /** @Description Pop Container */
 const PopContainer = memo(() => {
@@ -40,15 +40,15 @@ const PopContainer = memo(() => {
 
   return (
     open && (
-      <ClickAwayListener disableReactTree onClickAway={Pop.close}>
-        <Container cls={"Pop"}>{content}</Container>
+      <ClickAwayListener onClickAway={Pop.close}>
+        <Once cs={"Pop"}>{content}</Once>
       </ClickAwayListener>
     )
   );
 });
 
 /** @Description 事件管理器 */
-const PopEvent = new EventManager<PopEventEmit>();
+const PopEvent = new EventHandler<PopEventEmit>();
 
 abstract class Pop {
   static set(content: ReactNode, configs?: Props.Localizer) {
@@ -61,7 +61,7 @@ abstract class Pop {
 
   static modal = (content: ReactNode, configs?: Props.Localizer) => {
     modal();
-    this.set(content, configs).open();
+    this.set(<Once cs={"modalBox"}>{content}</Once>, configs).open();
     return this;
   };
 
@@ -112,17 +112,17 @@ const ConfirmBox = memo((props: { msg: string; next: Fn; cancel: Fn }) => {
 
   return (
     <Spring spring={spring}>
-      <Container cls={"confirmBox"}>
-        <Spring {...bind()} cls={"title"}>
+      <Once cs={"confirmBox"}>
+        <Spring {...bind()} cs={"title"}>
           {i18next.t("confirm")}
         </Spring>
         <Divider />
-        <Container cls={"msg"}>{props.msg}</Container>
-        <Container cls={"foot"}>
-          <Button label={"cancel"} onClick={props.cancel} />
-          <Button label={"confirm"} onClick={props.next} />
-        </Container>
-      </Container>
+        <Once cs={"msg"}>{props.msg}</Once>
+        <Once cs={"foot"}>
+          <Button label={"cancel"} lc={props.cancel} />
+          <Button label={"confirm"} lc={props.next} />
+        </Once>
+      </Once>
     </Spring>
   );
 });

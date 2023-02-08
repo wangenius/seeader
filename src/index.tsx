@@ -6,16 +6,15 @@ import {persistor, store} from "./store/store";
 import {i18nInit} from "./locales";
 import {createRoot} from "react-dom/client";
 import "react-toastify/ReactToastify.min.css";
-import "./css/index.css";
-import {APP} from "./@constant";
-
+import "@/@style/index.css";
+import {Config} from "a_root";
 
 /** @Description 初始化 */
 const renderInit = () => {
-    /** @Description app name */
-  document.title = APP.name;
+  /** @Description app name */
+  document.title = Config.name;
   /** @Description render root */
-  createRoot(document.getElementById(APP.HTML.root)!).render(
+  createRoot(document.getElementById(Config.HTML.root)!).render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Router />

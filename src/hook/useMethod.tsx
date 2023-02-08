@@ -1,7 +1,7 @@
-import { Browser, Clipboard, Dialog, remote } from "../method";
+import { Browser, Clipboard, Dialog, remote } from "@/method";
 import { toast } from "react-toastify";
-import { useAppSelector } from "../store/store";
-import { Container, Pop, TextInput } from "../component";
+import { useAppSelector } from "@/store/store";
+import { Once, Pop, TextInput } from "@/component";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -40,8 +40,8 @@ export function useMethod() {
       strings || window.getSelection()?.toString() || ""
     );
     Pop.modal(
-      <Container
-        className={"Dict"}
+      <Once
+        cs={"Dict"}
         dangerouslySetInnerHTML={{ __html: content.definition }}
       />
     );
@@ -55,13 +55,13 @@ export function useMethod() {
 
   function report() {
     Pop.modal(
-      <Container sx={{ maxWidth: "90vw",width:600 }}>
+      <Once style={{ maxWidth: "90vw",width:600 }}>
         <TextInput
           placeholder={t("input what you want to report")}
           onClick={function (): void {}}
           button
         />
-      </Container>
+      </Once>
     );
   }
 

@@ -1,6 +1,5 @@
-import { Container } from "./Container";
-import React, { memo } from "react";
+import { Once } from "./Once";
 
-export const Divider = memo(({ open }: Props.Base) => (
-  <Container cls={"Divider"} open={open} />
-));
+export const Divider = ({ open }: Props.Once) => (
+  <Once cs={"Divider"} open={open} />
+);

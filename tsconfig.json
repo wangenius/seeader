@@ -28,6 +28,7 @@
     ]
   },
   "include": [
-    "src"
-  ]
+    "src","templates"
+  ],
+  "extends": "./pathAlias.json"
 }

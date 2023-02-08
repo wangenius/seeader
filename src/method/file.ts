@@ -1,5 +1,6 @@
-
 /** @Description 文件操作类 */
+import {Channels} from "a_root";
+
 export abstract class File {
 
   /** @Description path :文件路径  content：string*/
@@ -8,11 +9,11 @@ export abstract class File {
 
   /** @Description 读取文件 */
   static read = (path: string): Promise<string> =>
-    window.invoke("file_read", path);
+    window.invoke(Channels.file_read, path);
 
   /** @Description 拷贝文件 */
-  static copy = (src: string, dest: string) =>
-    window.invoke("file_copy", src, dest);
+  static copy = (from: string, to: string) =>
+    window.invoke(Channels.file_copy, from, to);
 
   /** @Description 拷贝且覆盖 */
   static copyForce = (src: string, dest: string) =>

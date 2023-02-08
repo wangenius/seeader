@@ -1,83 +1,70 @@
 import * as React from "react";
-import { forwardRef, memo, useImperativeHandle, useRef } from "react";
-import { Container } from "./Container";
+import {forwardRef, memo} from "react";
+import {Exp, Once, SVG} from "@/component";
 import _ from "lodash";
 import clsx from "clsx";
-import { voidFn } from "../method";
-import { useTranslation } from "react-i18next";
+import {fn} from "@/method";
+import {useTranslation} from "react-i18next";
 
-export const Button = memo(
-  forwardRef((props: Props.Button.Main, ref) => {
-    const {
-      children,
-      startIcon,
-      endIcon,
-      label = "",
-      cls,
-      onClick = voidFn,
-      value,
-      ...other
-    } = props;
-    const { t } = useTranslation();
-    return (
-      <Container
-        ref={ref}
-        cls={clsx("Button", cls)}
-        onClick={() => onClick(value)}
-        {...other}
-      >
-        <Container
-          cls={"start"}
-          open={!!startIcon}
-          children={startIcon}
-        />
-        <Container
-          cls={"text"}
-          children={_.capitalize(t(label)) || children}
-        />
-        <Container cls={"end"} open={!!endIcon} children={endIcon} />
-      </Container>
-    );
-  })
-);
-
-export const IconButton = forwardRef((props: Props.Button.IconButton, ref) => {
-  const { children, cls, icon, onClick = voidFn, value, ...other } = props;
+/** @Description button
+ *
+ * default label "click";
+ * default value undefined
+ *
+ * */
+export const Button = forwardRef((props: Props.Button.Default, ref) => {
+  const {
+    children,
+    startIcon,
+    endIcon,
+    label = "click",
+    cs,
+    lc = fn,
+    value,
+    ...rest
+  } = props;
+  const { t } = useTranslation();
   return (
-    <Container
-      cls={clsx("IconButton", cls)}
+    <Once ref={ref} cs={clsx("Button", cs)} lc={() => lc(value)} {...rest}>
+      <SVG cs={"start"} open={!!startIcon} icon={startIcon} />
+      <Once cs={"text"} children={_.capitalize(t(label))} />
+      <SVG cs={"end"} open={!!endIcon} icon={endIcon} />
+    </Once>
+  );
+});
+
+export const IconButton = forwardRef((props: Props.Button.Icon, ref) => {
+  const { cs, icon, lc = fn, value, ...rest } = props;
+  return (
+    <Once
+      cs={clsx("IconButton", cs)}
       ref={ref}
-      children={<SvgIcon icon={icon || children} />}
-      onClick={() => onClick(value)}
-      {...other}
+      children={<SVG icon={icon} />}
+      lc={() => lc(value)}
+      {...rest}
     />
   );
 });
 
-export const SvgIcon = memo((props: Props.Button.SvgIcon) => {
-  const { open, cls, ...other } = props;
-  return (
-    <Container open={open} cls={clsx("SvgIcon", cls)} {...other}>
-      {props.icon || props.children}
-    </Container>
-  );
-});
-
+/** @Description List*
+ *  @overview flex布局，primary为左字符，secondary为右字符
+ * */
 export const ListButton = memo(
-  forwardRef((props: Props.Button.ListButton, ref) => {
-    const { isActive, sx, label, onClick = voidFn, value, ...other } = props;
-    const Ref = useRef<HTMLElement>();
-    /** @Description 暴露组件 */
-    useImperativeHandle(ref, () => Ref.current);
+  forwardRef((props: Props.Button.InList, ref) => {
+    const { isActive, primary, secondary, lc = fn, value, cs, ...rest } = props;
+    const { t } = useTranslation();
     return (
-      <Button
-        ref={Ref}
+      <Once
+        ref={ref}
         state={isActive ? "active" : undefined}
-        label={label}
-        onClick={() => onClick(value)}
-        cls={"ListButton"}
-        {...other}
-      />
+        cs={clsx("ListButton", cs)}
+        lc={() => lc(value)}
+        {...rest}
+      >
+        <Once cs={"primary"} children={_.capitalize(t(primary))} />
+        <Exp />
+        <Once cs={"secondary"} children={_.capitalize(t(secondary))} />
+      </Once>
     );
   })
 );

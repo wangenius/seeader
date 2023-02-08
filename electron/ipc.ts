@@ -1,4 +1,4 @@
-import { handle } from "./@constant/constant";
+import { handle } from "./handle/handle";
 import {
   app_close,
   window_close,
@@ -29,44 +29,44 @@ import {
   db_insert,
   db_update,
 } from "./dataStore/dataStore";
-import { CHANNELS } from "a_root";
+import { Channels } from "a_root";
 
 export function ipc_win() {
-  handle(CHANNELS.window_toggleDevTools, window_toggleDevTools);
-  handle(CHANNELS.window_min, window_min);
-  handle(CHANNELS.window_max, window_max);
-  handle(CHANNELS.window_new, window_new);
-  handle(CHANNELS.window_resize, window_resize);
-  handle(CHANNELS.window_close, window_close);
-  handle(CHANNELS.app_close, app_close);
+  handle(Channels.window_toggleDevTools, window_toggleDevTools);
+  handle(Channels.window_min, window_min);
+  handle(Channels.window_max, window_max);
+  handle(Channels.window_new, window_new);
+  handle(Channels.window_resize, window_resize);
+  handle(Channels.window_close, window_close);
+  handle(Channels.app_close, app_close);
 }
 
 export function ipc_method() {
-  handle(CHANNELS.dict_search, dict_search);
+  handle(Channels.dict_search, dict_search);
 }
 
 export function ipc_file() {
-  handle(CHANNELS.file_write, file_write);
-  handle(CHANNELS.file_read, file_read);
-  handle(CHANNELS.file_copy, file_copy);
-  handle(CHANNELS.file_copy_force, file_copy_force);
-  handle(CHANNELS.shell_open, shell_open);
+  handle(Channels.file_write, file_write);
+  handle(Channels.file_read, file_read);
+  handle(Channels.file_copy, file_copy);
+  handle(Channels.file_copy_force, file_copy_force);
+  handle(Channels.shell_open, shell_open);
 }
 
 export function ipc_dialog() {
-  handle(CHANNELS.dialog_message, dialog_message);
-  handle(CHANNELS.dialog_open, dialog_open);
-  handle(CHANNELS.dialog_save, dialog_save);
-  handle(CHANNELS.notification, notification);
+  handle(Channels.dialog_message, dialog_message);
+  handle(Channels.dialog_open, dialog_open);
+  handle(Channels.dialog_save, dialog_save);
+  handle(Channels.notification, notification);
 }
 
 /** @Description 数据库的ipc handle */
 export function ipc_datastore() {
-  handle(CHANNELS.db_insert, db_insert);
-  handle(CHANNELS.db_delete, db_delete);
-  handle(CHANNELS.db_find, db_find);
-  handle(CHANNELS.db_update, db_update);
-  handle(CHANNELS.db_count, db_count);
+  handle(Channels.db_find, db_find);
+  handle(Channels.db_insert, db_insert);
+  handle(Channels.db_delete, db_delete);
+  handle(Channels.db_update, db_update);
+  handle(Channels.db_count, db_count);
 }
 
 export function ipc_epub(){

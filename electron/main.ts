@@ -24,7 +24,7 @@ const icon_path = Dir_statics.end("icon", "icon.png");
 /** @Description 窗口特性 */
 const BrowserConfig: BrowserWindowConstructorOptions = {
   titleBarStyle: "hidden",
-  width: 1280,
+  width: 560,
   height: 760,
   minWidth: 560,
   minHeight: 660,
@@ -46,6 +46,7 @@ async function createWindow(): Promise<BrowserWindow> {
   if (app.isPackaged) await mainWindows.loadURL(Dir_statics.end("index.html"));
   else await mainWindows.loadURL("http://localhost:3000/index.html");
 
+  mainWindows.webContents.openDevTools()
   /*优化启动白屏问题*/
   mainWindows.on("ready-to-show", () => {
     mainWindows.show();

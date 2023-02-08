@@ -1,4 +1,4 @@
-import { File } from "./file";
+import {File} from "./file";
 
 /** @Description 判断是否属于接口 */
 export function is<T extends object>(obj: any, key: string): obj is T {
@@ -12,7 +12,7 @@ export const jsonParse = <T extends object>(text: string): T =>
 /** @Description 路径解析器，返回{name名称} */
 export const pathParser = (path: string) => {
   const array = path.split(/\\/g);
-  return { name: array[array.length - 1] };
+  return { name: array[array.length - 1].slice(0, -4) };
 };
 
 /** @Description txt文件解析 */

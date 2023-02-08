@@ -1,11 +1,11 @@
-import {Button, Container, Divider, Hangover, Selector} from "../component";
+import {Button, Once, Divider, Exp, Selector} from "@/component";
 import React, {useState} from "react";
-import {useSettings} from "../hook/useSettings";
+import {useSettings} from "@/hook/useSettings";
 import {useTranslation} from "react-i18next";
-import {useMethod} from "../hook/useMethod";
-import {SETTINGS} from "../@constant";
+import {useMethod} from "@/hook/useMethod";
 import {Docker, Mainer} from "./Docker";
-import {useEvent} from "../hook/useEvent";
+import {useEvent} from "@/hook/useEvent";
+import {Settings} from "a_root";
 
 /** @Description settings */
 export const Setting = () => {
@@ -35,19 +35,19 @@ export const Setting = () => {
     localStorage.setItem("settingTab", val.toString());
   });
   return (
-    <Container cls={"Setting"}>
+    <Once cs={"Setting"}>
       <Docker state={true} width={width}>
-        <Button label={t("common")} value={0} onClick={changeTab} />
-        <Button label={t("preference")} value={1} onClick={changeTab} />
-        <Button label={t("reading")} value={2} onClick={changeTab} />
+        <Button label={t("common")} value={0} lc={changeTab} />
+        <Button label={t("preference")} value={1} lc={changeTab} />
+        <Button label={t("reading")} value={2} lc={changeTab} />
         <Divider />
-        <Button label={t("devTools")} onClick={devTools} />
-        <Button label={t("report issue")} onClick={report} />
-        <Button label={t("about")} onClick={about} />
-        <Hangover />
-        <Button label={t("save")} onClick={saveSettings} />
-        <Button label={t("export")} onClick={exportSettings} />
-        <Button label={t("reset")} onClick={resetSettings} />
+        <Button label={t("devTools")} lc={devTools} />
+        <Button label={t("report issue")} lc={report} />
+        <Button label={t("about")} lc={about} />
+        <Exp />
+        <Button label={t("save")} lc={saveSettings} />
+        <Button label={t("export")} lc={exportSettings} />
+        <Button label={t("reset")} lc={resetSettings} />
       </Docker>
 
       <Mainer width={width}>
@@ -56,44 +56,44 @@ export const Setting = () => {
           title={"close the main panel minimized to the tray"}
           value={settings.common.minWithTray}
           onClick={changeCloseMode}
-          children={SETTINGS.minWithTray}
+          children={Settings.minWithTray}
         />
         <Selector
           title={"language"}
           open={tab === 1}
           value={settings.preference.language}
           onClick={changeLanguage}
-          children={SETTINGS.language}
+          children={Settings.language}
         />
         <Selector
           open={tab === 2}
           title={"dictionary"}
           value={settings.reading.dictionary}
           onClick={changeDictionaryOrigin}
-          children={SETTINGS.dictionary}
+          children={Settings.dictionary}
         />
         <Selector
           open={tab === 2}
           title={"font size"}
           value={settings.reading.fontSize}
           onClick={changeFontSize}
-          children={SETTINGS.fontSize}
+          children={Settings.fontSize}
         />
         <Selector
           open={tab === 2}
           title={"line height"}
           value={settings.reading.lineHeight}
           onClick={changeLineHeight}
-          children={SETTINGS.lineHeight}
+          children={Settings.lineHeight}
         />
         <Selector
           open={tab === 2}
           title={"paragraph space"}
           value={settings.reading.paragraphSpacing}
           onClick={changeParagraphSpacing}
-          children={SETTINGS.paragraphSpacing}
+          children={Settings.paragraphSpacing}
         />
       </Mainer>
-    </Container>
+    </Once>
   );
 };

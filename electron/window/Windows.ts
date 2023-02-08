@@ -33,7 +33,6 @@ export const app_close: ListenerFunc = (event) => {
   currentWindow(event).destroy();
   app.quit();
 };
-
 export const window_toggleDevTools: ListenerFunc = (event) => {
   event.sender.isDevToolsOpened()
     ? event.sender.closeDevTools()
