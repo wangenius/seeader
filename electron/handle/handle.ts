@@ -1,5 +1,4 @@
-import { app, ipcMain } from "electron";
-import path from "path";
+import { ipcMain } from "electron";
 import { Channels } from "a_root";
 
 export const handle = (

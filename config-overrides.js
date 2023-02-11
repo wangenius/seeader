@@ -1,8 +1,7 @@
 const {
   addWebpackModuleRule,
   override,
-  removeModuleScopePlugin,
-  addWebpackAlias,
+  addWebpackAlias, removeModuleScopePlugin,
 } = require("customize-cra");
 const path = require("path");
 if (process.env.NODE_ENV === "production") {
@@ -12,16 +11,17 @@ module.exports = {
   webpack: override(
     addWebpackModuleRule({
       test: /\.svg$/,
-      use: ["@svgr/webpack"],
+      loader: 'svg-sprite-loader',
+      include: path.resolve(__dirname, './src/svg') // 只带自己人玩
     }),
     addWebpackModuleRule({
       test: /\.(png|jpg|gif)$/i,
       use: [
         {
-          loader: 'url-loader',
+          loader: "url-loader",
           options: {
             limit: 8192,
-            name: '/[path][name].[hash:7].[ext]'
+            name: "/[path][name].[hash:7].[ext]",
           },
         },
       ],

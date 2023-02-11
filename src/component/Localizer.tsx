@@ -6,11 +6,11 @@ import {useWindows} from "@/hook/useWindows";
 /** @Description 位置定位器 对于视窗而言 */
 export const Localizer = memo(
   ({
-    children,
     anchor,
     event,
     base,
-    position = "relative",
+    position = "absolute",
+    ...rest
   }: Props.Localizer) => {
     const [left, setLeft] = useState<number>();
     const [top, setTop] = useState<number>();
@@ -108,8 +108,13 @@ export const Localizer = memo(
     return (
       <Once
         ref={ref}
-        style={{ overflow: "visible", position: "absolute", top: top, left: left }}
-        children={children}
+        style={{
+          overflow: "visible",
+          position: "absolute",
+          top: top,
+          left: left,
+        }}
+        {...rest}
       />
     );
   }

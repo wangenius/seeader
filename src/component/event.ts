@@ -2,7 +2,6 @@
 enum ModalEmit {
     Open,
     Close,
-    Fade,
 }
 
 /** @Description  pop事件发射器通道*/

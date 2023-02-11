@@ -1,29 +1,34 @@
 import * as React from "react";
-import {memo, useCallback, useRef} from "react";
+import {memo, ReactNode, useCallback, useMemo, useRef, useState} from "react";
 import {Once} from "./Once";
 import {Pop} from "./Pop";
 import {Divider} from "./Accessory";
 import _ from "lodash";
-import {useCascade} from "./Cascade";
 import clsx from "clsx";
 import {fn} from "@/method";
 import {Spring} from "./Spring";
-import {config} from "react-spring";
 import {useSpring} from "@react-spring/web";
 import {TFuncKey} from "i18next";
 import {useTranslation} from "react-i18next";
+import {Localizer} from "@/component/Localizer";
+import {useEvent} from "@/hook/useEvent";
+import ClickAwayListener from "react-click-away-listener";
 
 /** @Description 菜单 */
 export const Menu = memo((props: Props.Menu.Main) => {
   const { children } = props;
   const spring = useSpring({
     from: {
-      scale: 0,
+      scale: 0.5,
+      opacity:0,
+      y:100
     },
     to: {
       scale: 1,
+      opacity:1,
+      y:0
     },
-    config: config.stiff,
+    config: {duration:200},
   });
 
   return (
@@ -37,6 +42,46 @@ export const Menu = memo((props: Props.Menu.Main) => {
   );
 });
 
+/** @Description cascade */
+export const useCascade = () => {
+  /** @Description content */
+  const [content, setContent] = useState<ReactNode>(null);
+  /** @Description state */
+  const [cascadeOpen, setCascadeOpen] = useState<boolean>(false);
+  /** @Description change content */
+  const cascade = (content: ReactNode, configs?: Props.Localizer) => {
+    setContent(<Localizer {...configs}>{content}</Localizer>);
+    openCascade();
+  };
+
+  const closeCascade = useEvent<Fn>(() => {
+    setCascadeOpen(false);
+  });
+
+  const openCascade = useEvent<Fn>(() => {
+    setCascadeOpen(true);
+  });
+
+  const onClickAway = useEvent<Fn>(() => {
+    closeCascade();
+  });
+
+  const container = useMemo(
+      () =>
+          cascadeOpen && (
+              <ClickAwayListener onClickAway={onClickAway}>
+                <>{content}</>
+              </ClickAwayListener>
+          ),
+      [content, cascadeOpen]
+  );
+
+  return {
+    container,
+    cascade,
+    closeCascade,
+  };
+};
 /** @Description 菜单item */
 export const MenuItem = memo((props: Props.Menu.Item) => {
   const { children, startIcon, open, lc: click = fn, ...other } = props;
@@ -44,7 +89,6 @@ export const MenuItem = memo((props: Props.Menu.Item) => {
   /** @Description anchor标记 */
   const Ref = useRef<HTMLElement>();
   const { container, cascade, closeCascade } = useCascade();
-
   /** @Description hover事件 */
   const onMouseEnter = useCallback<Fn>(() => {
     if (children.type === "item") return;

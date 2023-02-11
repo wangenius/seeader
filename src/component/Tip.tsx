@@ -1,43 +1,19 @@
 import {Once} from "@/component/Once";
-import React, {memo, ReactNode, useState} from "react";
+import React, {memo, ReactNode, RefObject, useState} from "react";
 import i18next, {TFuncKey} from "i18next";
 import {useEffectOnce} from "react-use";
 import {EventHandler, TipEventEmit} from "@/component/event";
 import {Localizer} from "@/component/Localizer";
 
-/** @Description Pop Container */
+/** @Description Tip Container */
 const TipContainer = memo(() => {
-  /** @Description content */
   const [content, setContent] = useState<ReactNode>(null);
-  /** @Description 状态 */
-  const [open, setOpen] = useState<true | null>(null);
-  /** @Description init */
   useEffectOnce(() => {
-    TipEvent.on(TipEventEmit.Open, tipChange).on(
-      TipEventEmit.Close,
-      tipClose
-    );
+    TipEvent.on(TipEventEmit.Open, (content: ReactNode) =>
+      setContent(content)
+    ).on(TipEventEmit.Close, () => setContent(null));
   });
-  /** @Description popChange */
-  const tipChange = (content: ReactNode) => {
-    tipClose();
-    setContent(content);
-    setTimeout(() => {
-      setOpen(true);
-    }, 10);
-  };
-
-  /** @Description 关闭pop */
-  const tipClose = () => {
-    setContent(null);
-    setOpen(null);
-  };
-
-  return (
-    <Once open={!!open} cs={"Tip"}>
-      {content}
-    </Once>
-  );
+  return <Once open={!!content} cs={"Tip"} children={content} />;
 });
 
 /** @Description 事件管理器 */
@@ -45,13 +21,16 @@ const TipEvent = new EventHandler<TipEventEmit>();
 
 /** @Description tip */
 const tip =
-  (label: Label, Ref: any, base: LocalizerBase = "right_middle") =>
+  (content: Label, Ref: RefObject<any>, base: LocalizerBase = "right_middle") =>
   () => {
     TipEvent.emit(
       TipEventEmit.Open,
-      <Localizer anchor={Ref.current} base={base} position={"absolute"}>
-        <Once cs={"toolTip"}>{i18next.t(label as TFuncKey)}</Once>
-      </Localizer>
+      <Localizer
+        base={base}
+        cs={"toolTip"}
+        anchor={Ref.current}
+        children={i18next.t(content as TFuncKey)}
+      />
     );
   };
 

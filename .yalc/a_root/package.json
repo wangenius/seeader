@@ -1,0 +1,24 @@
+{
+  "name": "a_root",
+  "version": "1.3.0",
+  "description": "this project",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "a_root_complier": "tsc -p tsconfig.json",
+    "watch": "tsc -w"
+  },
+  "author": {
+    "name": "wangenius",
+    "email": "wangenius@qq.com"
+  },
+  "license": "ISC",
+  "type": "commonjs",
+  "files": [
+    "lib/**/*",
+    "index.ts",
+    "json"
+  ],
+  "yalcSig": "a9a2df1a73655de542688e82dd84be22"
+}

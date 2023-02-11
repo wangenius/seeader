@@ -11,7 +11,6 @@ import {
 import { dict_search } from "./other/dict";
 import {
   file_copy,
-  file_copy_force,
   file_read,
   file_write,
   shell_open,
@@ -30,6 +29,7 @@ import {
   db_update,
 } from "./dataStore/dataStore";
 import { Channels } from "a_root";
+import { json_read, json_write } from "./file/json";
 
 export function ipc_win() {
   handle(Channels.window_toggleDevTools, window_toggleDevTools);
@@ -49,7 +49,6 @@ export function ipc_file() {
   handle(Channels.file_write, file_write);
   handle(Channels.file_read, file_read);
   handle(Channels.file_copy, file_copy);
-  handle(Channels.file_copy_force, file_copy_force);
   handle(Channels.shell_open, shell_open);
 }
 
@@ -69,6 +68,7 @@ export function ipc_datastore() {
   handle(Channels.db_count, db_count);
 }
 
-export function ipc_epub(){
-
+export function ipc_json() {
+  handle(Channels.json_write, json_write);
+  handle(Channels.json_read, json_read);
 }

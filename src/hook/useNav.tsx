@@ -1,12 +1,12 @@
-import { useLayoutEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Pop } from "@/component";
-import { useAppSelector } from "@/store/store";
-import { useTranslation } from "react-i18next";
-import {Config} from "a_root";
+import {useLayoutEffect} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
+import {Pop} from "@/component";
+import {useAppSelector} from "@/data/store";
+import {useTranslation} from "react-i18next";
+import {AppConfig} from "a_root";
 
 /** @Description router name */
-const router = Config.router;
+const router = AppConfig.router;
 
 /** @Description 使用nav router*/
 export function useNav() {
@@ -15,19 +15,17 @@ export function useNav() {
   const { t } = useTranslation();
   const book = useAppSelector((state) => state.book);
   const current = param.pathname.slice(1, param.pathname.length);
-  const isReading = current === (router.reading || "");
+  const isShelf = current === (router.shelf || "");
 
   useLayoutEffect(Pop.close, [param]);
 
-  const toShelf = () => nav("../" + router.shelf);
-  const toSetting = () => nav("../" + router.settings);
-  const toReading = () => nav("../" + router.reading);
+  abstract class Nav {
+    static label = isShelf ? book.name : t("shelf");
+    static shelf = () => nav("../" + router.shelf);
+    static settings = () => nav("../" + router.settings);
+    static reading = () => nav("../" + router.reading);
+    static switch = () => (isShelf ? this.reading() : this.shelf());
+  }
 
-  return {
-    currentName: isReading ? t("shelf") : book.name,
-    switchShelfAndReading: () => (isReading ? toShelf() : toReading()),
-    toShelf,
-    toSetting,
-    toReading,
-  };
+  return Nav;
 }

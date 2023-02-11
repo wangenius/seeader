@@ -29,26 +29,26 @@ export function appExit(window: BrowserWindow) {
     });
 }
 
-export const app_close: ListenerFunc = (event) => {
+export const app_close: Motion = (event) => {
   currentWindow(event).destroy();
   app.quit();
 };
-export const window_toggleDevTools: ListenerFunc = (event) => {
+export const window_toggleDevTools: Motion = (event) => {
   event.sender.isDevToolsOpened()
     ? event.sender.closeDevTools()
     : event.sender.openDevTools({ mode: "undocked" });
 };
-export const window_min: ListenerFunc = (event) => {
+export const window_min: Motion = (event) => {
   currentWindow(event).minimize();
 };
-export const window_max: ListenerFunc = (event) => {
+export const window_max: Motion = (event) => {
   currentWindow(event).maximize();
 };
-export const window_resize: ListenerFunc = (event) => {
+export const window_resize: Motion = (event) => {
   const win = currentWindow(event);
   win.isMaximized() ? win.unmaximize() : win.maximize();
 };
-export const window_new: ListenerFunc = async (
+export const window_new: Motion = async (
   event,
   url: string,
   BrowserConfig?: BrowserWindowConstructorOptions
@@ -61,6 +61,6 @@ export const window_new: ListenerFunc = async (
   await newWin.loadURL(url);
 };
 
-export const window_close: ListenerFunc = (event) => {
+export const window_close: Motion = (event) => {
   currentWindow(event).close();
 };

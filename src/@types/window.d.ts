@@ -1,10 +1,18 @@
 interface Window extends Window {
-  invoke: (
+  /** @Description communicate with electron */
+  invoke(
     channel: keyof typeof import("a_root").Channels,
     ...args: any[]
-  ) => Promise<any>;
+  ): Promise<any>;
+  /** @Description clipboard */
   clipboard: import("electron").Clipboard;
+  /** @Description showItemInFolder etc */
   shell: import("electron").Shell;
+  /** @Description 绝对路径 */
+  paths: any;
+
+  /** @Description 导入文件 */
+  file(filepath: string): any;
 
   [propsName: string]: any;
 }
@@ -17,6 +25,8 @@ declare module "*.svg" {
 }
 
 declare module "*.png" {
-  const content: React.StatelessComponent<React.ImgHTMLAttributes<HTMLDivElement>>;
+  const content: React.StatelessComponent<
+    React.ImgHTMLAttributes<HTMLDivElement>
+  >;
   export default content;
 }

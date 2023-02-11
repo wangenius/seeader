@@ -100,10 +100,6 @@
         transform: scale(0);
         transform-origin: center;
         transition:  all 0.25s ease;
-        background-image: url("/public/svg/done.svg");
-        background-size: 12px;
-        background-repeat: no-repeat;
-        background-position: 50% 50%;
         background-color: #fce599;
         z-index: 1;
         overflow: hidden;

@@ -1,22 +1,6 @@
-import {File} from "./file";
+import { file } from "@/method/file";
 
-/** @Description 判断是否属于接口 */
-export function is<T extends object>(obj: any, key: string): obj is T {
-  return key in obj;
-}
-
-/** json 解析器*/
-export const jsonParse = <T extends object>(text: string): T =>
-  JSON.parse(text);
-
-/** @Description 路径解析器，返回{name名称} */
-export const pathParser = (path: string) => {
-  const array = path.split(/\\/g);
-  return { name: array[array.length - 1].slice(0, -4) };
-};
-
-/** @Description txt文件解析 */
-export async function chaptersParser(filePath: string) {
+export const textToBook = async (filePath: string) => {
   /*正则表达式*/
   const reg =
     /((?<=\s|\S+|\d+)【\S+】)|((?<=^|\s)第\S{1,5}章\S*\s)|((?<=^|\s)\d+.\d+\s)/g;
@@ -25,7 +9,7 @@ export async function chaptersParser(filePath: string) {
   const isTitle = (content: string) => content.search(regCheck) !== -1;
 
   /*从文件读取string*/
-  const text = await File.read(filePath);
+  const text = await file(filePath);
 
   /*分解text成数组并过滤*/
   const contentArray = text.split(reg).filter(Boolean);
@@ -33,7 +17,7 @@ export async function chaptersParser(filePath: string) {
   /*标题列表 array*/
   const titles: chapterTitle[] = [];
   /*章节*/
-  const Chapters: BookBodies = {};
+  const Chapters: Chapters = {};
 
   /*每章节内容初始化*/
   let chapterItem: Chapter = {
@@ -42,7 +26,7 @@ export async function chaptersParser(filePath: string) {
     content: "",
   };
   /*总数*/
-  let index = 0;
+  let total = 0;
   /*遍历*/
   for (let i = 0; i < contentArray.length; i++) {
     /*如果是标题，将该条与现在的标题合并，检查上下文*/
@@ -59,14 +43,14 @@ export async function chaptersParser(filePath: string) {
         (i === contentArray.length - 1 || isTitle(contentArray[i + 1]))
       ) {
         /*将该item插入titles*/
-        titles.push({ index: index, title: chapterItem.title });
+        titles.push({ index: total, title: chapterItem.title });
         /*将该item插入chapters*/
-        Chapters[index] = chapterItem;
-        index = index + 1;
+        Chapters[total] = chapterItem;
+        total = total + 1;
         /*chapterItem初始化*/
-        chapterItem = { index: index, title: "", content: "" };
+        chapterItem = { index: total, title: "", content: "" };
       }
     }
   }
-  return { Chapters, total: index, titles };
-}
+  return { Chapters, total, titles };
+};

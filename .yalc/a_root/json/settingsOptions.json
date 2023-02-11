@@ -1,0 +1,39 @@
+{
+  "minWithTray": {
+    "yes": true,
+    "no": false
+  },
+  "chapterDocker": {
+    "hide": false,
+    "show": true
+  },
+  "language": {
+    "english": "en",
+    "chinese": "zh"
+  },
+  "dictionary": {
+    "online": "online",
+    "local": "local"
+  },
+  "fontSize": {
+    "tiny": 0.96,
+    "small": 1,
+    "medium": 1.04,
+    "big": 1.08,
+    "large": 1.12
+  },
+  "lineHeight": {
+    "tiny": 1.32,
+    "small": 1.4,
+    "medium": 1.48,
+    "big": 1.56,
+    "large": 1.64
+  },
+  "paragraphSpacing": {
+    "tiny": 0.2,
+    "small": 0.4,
+    "medium": 0.6,
+    "big": 0.8,
+    "large": 1.0
+  }
+}

@@ -1,36 +1,40 @@
-import {Exp, IconButton, Icons, Once, Spring} from "@/component";
+import {Exp, IconButton, icons, Once, Spring} from "@/component";
 import React, {createRef, useEffect, useState} from "react";
-import {remote} from "@/method";
 import {useNav} from "@/hook/useNav";
-import {useSettings} from "@/hook/useSettings";
 import {MdClose, MdCropSquare, MdMoreHoriz, MdRemove} from "react-icons/md";
 import {Channels, Style} from "a_root";
 import {useSpring} from "@react-spring/web";
 import {config} from "react-spring";
 import {useGesture} from "@use-gesture/react";
 import ClickAwayListener from "react-click-away-listener";
+import {invoke} from "@/method";
+import {app} from "@/method/frag";
+import {store} from "@/data/store";
 
 /** @Description 标题栏 */
 export function Header() {
-  const { closeApp } = useSettings();
+
+  console.log(window.paths)
+  console.log(store.getState())
+
   return (
     <Once cs={"Header"}>
       <ExpandDocker />
       <Exp cs={"draggable"} />
-      <IconButton icon={<MdRemove />} value={Channels.window_min} lc={remote} />
+      <IconButton icon={<MdRemove />} value={Channels.window_min} lc={invoke} />
       <IconButton
         icon={<MdCropSquare />}
         value={Channels.window_max}
-        lc={remote}
+        lc={invoke}
       />
-      <IconButton icon={<MdClose />} lc={closeApp} />
+      <IconButton icon={<MdClose />} lc={app.close} />
     </Once>
   );
 }
 
 /** @Description expandDocker */
 export const ExpandDocker = () => {
-  const { toReading, toShelf, toSetting, switchShelfAndReading } = useNav();
+  const nav = useNav();
   const ref = createRef();
   /** @Description state toggle */
   const [expand, setExpand] = useState(false);
@@ -103,9 +107,9 @@ export const ExpandDocker = () => {
 
   /** @Description content item */
   const items = [
-    { icon: Icons.Book, onClick: toReading },
-    { icon: Icons.Folder, onClick: toShelf },
-    { icon: Icons.Setting, onClick: toSetting },
+    { icon: icons.book, onClick: nav.reading },
+    { icon: icons.folder, onClick: nav.shelf },
+    { icon: icons.setting, onClick: nav.settings },
   ];
 
   return (
@@ -119,7 +123,7 @@ export const ExpandDocker = () => {
         spring={spring}
         cs={"expandable"}
         rc={() => {
-          !expand && switchShelfAndReading();
+          !expand && nav.switch();
         }}
       >
         <Once {...bind()} state={expand ? "expand" : undefined} cs={"drag"}>

@@ -166,7 +166,7 @@ declare namespace Props {
   }
 
   /** @Description LocalizerProps */
-  export interface Localizer {
+  export interface Localizer extends Once{
     /** @Description 子元素 */
     children?: ReactNode;
     /** @Description 锚元素 鼠标事件和锚元素必须设置一个 */

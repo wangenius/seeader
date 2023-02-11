@@ -12,7 +12,7 @@ const ModalContainer = memo(() => {
   const [visible, setVisible] = useState<boolean>(false);
   /** @Description 监听外部event */
   useEffectOnce(() => {
-    ModalEvent.on(ModalEmit.Open, openModal).on(ModalEmit.Close, clickAway)
+    ModalEvent.on(ModalEmit.Open, openModal).on(ModalEmit.Close, clickAway);
   });
   /** @Description 关闭modal */
   const closeModal = () => setOpen(null);
@@ -31,7 +31,7 @@ const ModalContainer = memo(() => {
     config: { duration: 300 },
   });
 
-  return open && <Spring cs={"Modal"} lc={clickAway} spring={spring} />;
+  return open && <Spring cs={"Modal"} lc={modal.close} spring={spring} />;
 });
 
 /** @Description 事件管理器 */

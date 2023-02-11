@@ -4,8 +4,12 @@ import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { bookStore } from "./bookStore";
-import { settingsStore } from "./bookSettings";
+import { bookSlice } from "./store/bookSlice";
+import { settingsStore } from "./store/settingsSlice";
+import {shelfSlice} from "@/data/store/shelfSlice";
+import {chapterSlice} from "@/data/store/chapterSlice";
+
+
 type RootState = ReturnType<typeof store.getState>;
 type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -20,8 +24,10 @@ const storageConfig = {
 
 //组合压缩器
 const combinedReducer = combineReducers({
-  book: bookStore.reducer,
+  book: bookSlice.reducer,
   settings: settingsStore.reducer,
+  shelf: shelfSlice.reducer,
+  chapter: chapterSlice.reducer,
 });
 
 /** @Description 持久化*/

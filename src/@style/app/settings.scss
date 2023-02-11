@@ -5,10 +5,15 @@
   width: $full;
 
   .Docker {
-    @include yFlex;
     width: 180px;
     min-width: 180px;
     padding: 0 5px;
+
+    .body {
+
+      @include yFlex;
+      height: calc(100% - 25px);
+    }
 
     .Divider {
       margin: 0.1pc 0;

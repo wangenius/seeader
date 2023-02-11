@@ -1,28 +1,17 @@
 import {Button, Once, Divider, Exp, Selector} from "@/component";
 import React, {useState} from "react";
-import {useSettings} from "@/hook/useSettings";
 import {useTranslation} from "react-i18next";
-import {useMethod} from "@/hook/useMethod";
 import {Docker, Mainer} from "./Docker";
 import {useEvent} from "@/hook/useEvent";
-import {Settings} from "a_root";
+import {SettingsOptions} from "a_root";
+import {_sets} from "@/data/method/_sets";
+import {useAppSelector} from "@/data/store";
+import {about, devTools, report} from "@/method/frag";
 
 /** @Description settings */
-export const Setting = () => {
+export const SettingsPage = () => {
   const { t } = useTranslation();
-  const {
-    settings,
-    saveSettings,
-    changeLanguage,
-    changeDictionaryOrigin,
-    exportSettings,
-    changeCloseMode,
-    resetSettings,
-    changeFontSize,
-    changeLineHeight,
-    changeParagraphSpacing,
-  } = useSettings();
-  const { devTools, about, report } = useMethod();
+  const settings = useAppSelector((state) => state.settings);
   /** @Description tab */
   const [tab, setTab] = useState<number>(
     parseInt(localStorage.getItem("settingTab") || "0")
@@ -45,9 +34,9 @@ export const Setting = () => {
         <Button label={t("report issue")} lc={report} />
         <Button label={t("about")} lc={about} />
         <Exp />
-        <Button label={t("save")} lc={saveSettings} />
-        <Button label={t("export")} lc={exportSettings} />
-        <Button label={t("reset")} lc={resetSettings} />
+        <Button label={t("save")} lc={_sets.save} />
+        <Button label={t("export")} lc={_sets.export} />
+        <Button label={t("reset")} lc={_sets.reset} />
       </Docker>
 
       <Mainer width={width}>
@@ -55,43 +44,43 @@ export const Setting = () => {
           open={tab === 0}
           title={"close the main panel minimized to the tray"}
           value={settings.common.minWithTray}
-          onClick={changeCloseMode}
-          children={Settings.minWithTray}
+          onClick={_sets.closeMode}
+          children={SettingsOptions.minWithTray}
         />
         <Selector
           title={"language"}
           open={tab === 1}
           value={settings.preference.language}
-          onClick={changeLanguage}
-          children={Settings.language}
+          onClick={_sets.language}
+          children={SettingsOptions.language}
         />
         <Selector
           open={tab === 2}
           title={"dictionary"}
           value={settings.reading.dictionary}
-          onClick={changeDictionaryOrigin}
-          children={Settings.dictionary}
+          onClick={_sets.dictionary}
+          children={SettingsOptions.dictionary}
         />
         <Selector
           open={tab === 2}
           title={"font size"}
           value={settings.reading.fontSize}
-          onClick={changeFontSize}
-          children={Settings.fontSize}
+          onClick={_sets.fontSize}
+          children={SettingsOptions.fontSize}
         />
         <Selector
           open={tab === 2}
           title={"line height"}
           value={settings.reading.lineHeight}
-          onClick={changeLineHeight}
-          children={Settings.lineHeight}
+          onClick={_sets.lineHeight}
+          children={SettingsOptions.lineHeight}
         />
         <Selector
           open={tab === 2}
           title={"paragraph space"}
           value={settings.reading.paragraphSpacing}
-          onClick={changeParagraphSpacing}
-          children={Settings.paragraphSpacing}
+          onClick={_sets.paragraphSpacing}
+          children={SettingsOptions.paragraphSpacing}
         />
       </Mainer>
     </Once>

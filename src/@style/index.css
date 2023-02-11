@@ -374,12 +374,11 @@ scroll*/
 /*background*/
 .Menu {
   background-color: #fff;
-  border: 1px solid rgba(9, 30, 66, 0.1);
   border-radius: 8px;
-  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   padding: 6px 6px 3px;
   overflow: visible;
-  transform-origin: top left;
+  transform-origin: center;
 }
 .Menu .Divider {
   margin: 6px;
@@ -562,7 +561,6 @@ scroll*/
 
 .modalBox {
   width: 500px;
-  height: 300px;
 }
 
 .SliderContainer {
@@ -1398,10 +1396,6 @@ scroll*/
   transform: scale(0);
   transform-origin: center;
   transition: all 0.25s ease;
-  background-image: url("/public/svg/done.svg");
-  background-size: 12px;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
   background-color: #fce599;
   z-index: 1;
   overflow: hidden;
@@ -1482,11 +1476,14 @@ scroll*/
   width: 100%;
 }
 .Setting .Docker {
-  display: flex;
-  flex-direction: column;
   width: 180px;
   min-width: 180px;
   padding: 0 5px;
+}
+.Setting .Docker .body {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 25px);
 }
 .Setting .Docker .Divider {
   margin: 0.1pc 0;

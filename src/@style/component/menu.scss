@@ -6,12 +6,12 @@ $color_menu_btn_notAllowed : #d5d5d5;
 
 .Menu {
   background-color: $bc_menu;
-  border: $b_settingBar;
+  //border: $b_settingBar;
   border-radius: $br_menu;
-  box-shadow: $boxShadow;
+  box-shadow: $bs_menu;
   padding: 6px 6px 3px;
   overflow: visible;
-  transform-origin: top left;
+  transform-origin: center;
   .Divider {
     margin: 6px;
     width: auto;

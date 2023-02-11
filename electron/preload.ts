@@ -1,5 +1,13 @@
-import { contextBridge, ipcRenderer, clipboard, shell } from "electron";
+import { clipboard, contextBridge, ipcRenderer, shell } from "electron";
+import { Dir_resources, Dirs } from "./@constant/path";
 
-contextBridge.exposeInMainWorld("invoke", ipcRenderer.invoke);
-contextBridge.exposeInMainWorld("clipboard", clipboard);
-contextBridge.exposeInMainWorld("shell", shell);
+const exp = contextBridge.exposeInMainWorld;
+
+exp("invoke", ipcRenderer.invoke);
+/** @Description 剪切板 */
+exp("clipboard", clipboard);
+exp("shell", shell);
+/** @Description 绝对地址 */
+exp("paths", Dirs);
+/** @Description 文件打开 */
+exp("file",(filePath:string)=> require(filePath))

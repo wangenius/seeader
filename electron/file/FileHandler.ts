@@ -1,8 +1,6 @@
 import fs from "fs/promises";
 import jschardet from "jschardet";
 import iconvLite from "iconv-lite";
-import path from "path";
-import { constants } from "fs";
 import { shell } from "electron";
 import { Dir_root } from "../@constant/path";
 
@@ -19,10 +17,10 @@ export async function isExist(path: string) {
   }
 }
 
-export const file_write: ListenerFunc = (event, path, content) =>
+export const file_write: Motion = (event, path, content) =>
   fs.writeFile(path, content);
 
-export const file_read: ListenerFunc = async (event, path) => {
+export const file_read: Motion = async (event, path) => {
   try {
     await checkFileExist(path);
     const fileHandler = await fs.open(path, "r");
@@ -38,26 +36,14 @@ export const file_read: ListenerFunc = async (event, path) => {
   }
 };
 
-export const file_copy: ListenerFunc = async (event, src, dest) => {
+export const file_copy: Motion = async (event, src, dest) => {
   const is = await isExist(dest);
-  console.log(is)
+  console.log(is);
   if (is) return false;
   await fs.copyFile(src, dest);
   return dest;
 };
 
-export const file_copy_force: ListenerFunc = async (event, src, dest) => {
-  try {
-    await fs
-      .copyFile(
-        src,
-        path.join(__dirname, "..", "..", "public", dest),
-        constants.COPYFILE_FICLONE
-      )
-      .then((res) => path.join(__dirname, "..", "..", "public", dest));
-  } catch {}
-};
-
-export const shell_open: ListenerFunc = (event, filePath) => {
+export const shell_open: Motion = (event, filePath) => {
   return shell.openPath(Dir_root.end(filePath));
 };

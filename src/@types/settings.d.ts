@@ -1,11 +1,10 @@
-/** @Description 定义基本方法 */
-declare type Fn = (...props: any) => any;
+
 
 /** @Description language */
 declare type Language = string | "zh" | "en";
 
 /** @Description 设置 */
-declare interface SettingObject {
+declare interface Setting {
   _id?: string;
   /** @Description 常规设置 */
   common: {

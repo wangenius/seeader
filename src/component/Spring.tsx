@@ -9,14 +9,8 @@ export const Spring = memo(
     return (
       <animated.div
         ref={ref}
-        onClick={(event) => {
-          event.stopPropagation();
-          lc(event, value);
-        }}
-        onContextMenu={(event) => {
-          event.stopPropagation();
-          rc(event, value);
-        }}
+        onClick={(event) => {lc(event, value);}}
+        onContextMenu={(event) => {rc(event, value);}}
         className={cs}
         style={spring}
         {...other}

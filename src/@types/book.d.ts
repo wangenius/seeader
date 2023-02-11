@@ -1,6 +1,13 @@
+/** @define 正文内容 */
+declare type Content = string;
+
+declare interface Shelf {
+  books:Book[]
+}
+
 /** @Description 定义基本书籍对象接口，包含id，名称，路径，标题和章节标题，当前进度等等 */
 declare interface Book {
-  /** @Description 数据库id */
+  /** @Description Book id */
   _id?: string;
   /** @Description 名称 */
   name: string;
@@ -15,8 +22,8 @@ declare interface Book {
 }
 
 /** @Description 书籍正文接口 */
-declare interface BookBodies {
-  /** @Description 数据库id */
+declare interface Chapters {
+  /** @Description Book id */
   _id?: string;
 
   /** @Description 章节序号和章节内容 */
@@ -26,7 +33,7 @@ declare interface BookBodies {
 /** @Description 章节内容 */
 declare interface Chapter extends chapterTitle {
   /** @Description 章节内容 */
-  content: string;
+  content: Content;
 }
 
 /** @Description 章节标题 */
@@ -35,29 +42,4 @@ declare interface chapterTitle {
   index: number;
   /** @Description 标题 */
   title: string;
-}
-
-/** @Description book context 属性和方法*/
-declare interface BookContextProps {
-  book: Book;
-  currentBody: string[];
-  openBook(target?: Book): void;
-  nextPage(): void;
-  lastPage(): void;
-  jumpToPage(index: number): void;
-  updateBook(book?: Partial<Book>): void;
-  changeBook(pair: Partial<Book>): void;
-  deleteBook(book: Book[]): void;
-  modalEditBook(book?: Book): void;
-}
-
-
-/** @Description shelf上下文 的属性和方法 */
-declare interface ShelfContextProps {
-  books: Book[];
-  addBook(): void;
-  exportShelf(): void;
-  importShelf(): void;
-  loadShelf(): void;
-  backUpBook(items:Book[]): void;
 }

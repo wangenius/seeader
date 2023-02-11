@@ -1,21 +1,24 @@
-import {Divider, Icons, Once, SVG} from "@/component";
-import {useBook} from "@/context/BookProvider";
-import {useShelf} from "@/context/ShelfProvider";
+import {Divider, icons, Once, SVG} from "@/component";
 import React, {memo, useMemo, useState} from "react";
 import _ from "lodash";
 import {useTranslation} from "react-i18next";
 import {useNav} from "@/hook/useNav";
 import {Docker, DockerButton, Mainer} from "./Docker";
-import {Dialog} from "@/method";
+import {dialog, file} from "@/method";
+import {_book} from "@/data";
+import {useAppSelector} from "@/data/store";
+import {_shelf} from "@/data/method/_shelf";
+import {useEffectOnce} from "react-use";
 
 /** @Description 书架 */
-export const Shelf = memo(() => {
+export const ShelfPage = memo(() => {
   /** @Description 书架方法 */
-  const { books, addBook, importShelf, exportShelf, backUpBook } = useShelf();
-  const { deleteBook,modalEditBook} = useBook();
+  const shelf = useAppSelector((state) => state.shelf);
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
   const width = 60;
-
+  useEffectOnce(() => {
+    _shelf.load();
+  });
   const onSelected = (item: Book) => {
     setSelectedBooks((prevState) =>
       prevState.includes(item)
@@ -23,9 +26,11 @@ export const Shelf = memo(() => {
         : prevState.concat(item)
     );
   };
+
   const onCancelSelected = (item: Book) => {
     setSelectedBooks((prevState) => _.remove(prevState, (it) => item !== it));
   };
+
   const cancelSelected = () => {
     setSelectedBooks([]);
   };
@@ -33,40 +38,52 @@ export const Shelf = memo(() => {
   return (
     <Once cs={"ShelfArea"}>
       <Docker state={!selectedBooks.length} width={width}>
-        <DockerButton label={"add book"} lc={addBook} children={Icons.Add} />
+        <DockerButton label={"add book"} lc={_book.add} children={icons.add} />
         <DockerButton
           label={"change shelf"}
-          lc={importShelf}
-          children={Icons.Box}
+          lc={_shelf.import}
+          children={icons.box}
         />
         <Divider />
         <DockerButton
           label={"export shelf"}
-          lc={exportShelf}
-          children={Icons.Export}
+          lc={_shelf.export}
+          children={icons.export}
         />
       </Docker>
       <Docker state={!!selectedBooks.length} width={width}>
         <DockerButton
           label={"edit"}
-          lc={() => modalEditBook(selectedBooks[0])}
-          children={Icons.Edit}
+          lc={() => {
+            _book.edit(selectedBooks[0], cancelSelected);
+          }}
+          children={icons.edit}
         />
         <DockerButton
           label={"export"}
-          lc={() => backUpBook(selectedBooks)}
-          children={Icons.Copy}
+          lc={() => _book.backup(selectedBooks)}
+          children={icons.copy}
         />
         <Divider />
         <DockerButton
           label={"delete book"}
-          lc={() => deleteBook(selectedBooks)}
-          children={Icons.Remove}
+          lc={async () => {
+            await _book.delete(selectedBooks);
+            selectedBooks.map((item) => {
+              onCancelSelected(item);
+            });
+          }}
+          children={icons.remove}
+        />
+        <DockerButton
+          label={"show in folder"}
+          lc={() => file.openInFolder(selectedBooks[0].path)}
+          children={icons.showInFolder}
         />
         <DockerButton
           label={"book info"}
           lc={() =>
-            Dialog.message(
+            dialog(
               selectedBooks[0].name +
                 "\n" +
                 selectedBooks[0]._id +
@@ -77,11 +94,11 @@ export const Shelf = memo(() => {
                 "章"
             )
           }
-          children={Icons.Info}
+          children={icons.info}
         />
       </Docker>
       <Mainer width={width} lc={cancelSelected}>
-        {books.map((item, key) => (
+        {shelf.books.map((item, key) => (
           <BookCover
             selected={selectedBooks.includes(item)}
             onSelected={onSelected}
@@ -106,8 +123,9 @@ const BookCover = memo((props: Props.BookCover) => {
     selected = false,
   } = props;
   const { t } = useTranslation();
-  const { toReading } = useNav();
-  const { book, openBook } = useBook();
+  const to = useNav();
+  const book = useAppSelector((state) => state.book);
+
   const isReading = item._id === book._id;
 
   /** @Description 当前进度百分比 */
@@ -130,13 +148,13 @@ const BookCover = memo((props: Props.BookCover) => {
       : selectedExist
       ? onSelected(item)
       : isReading
-      ? toReading()
-      : openBook(item);
+      ? to.reading()
+      : _book.open(item).then(to.reading);
   };
 
   return (
     <Once rc={rc} lc={lc} cs={"book"} state={selected ? "selected" : undefined}>
-      <SVG cs={"selected"} icon={Icons.Done} />
+      <SVG cs={"selected"} icon={icons.done} />
       <Once cs={"BookTitle"} children={item.name} />
       <Once cs={"progress"} children={progress} />
       <Once

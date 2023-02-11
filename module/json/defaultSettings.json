@@ -1,0 +1,18 @@
+{
+  "_id": "settings",
+  "common": {
+    "minWithTray": true
+  },
+  "preference": {
+    "theme": "default",
+    "language": "en"
+  },
+  "reading": {
+    "chapterDocker": true,
+    "lineHeight": 1.48,
+    "fontSize": 1.04,
+    "paragraphSpacing": 0.6,
+    "fontFamily": "noto",
+    "dictionary": "local"
+  }
+}
