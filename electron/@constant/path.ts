@@ -1,4 +1,4 @@
-import { Dest } from "a_root";
+import { Dest } from "local";
 
 const root_packaged = __dirname.slice(0, __dirname.indexOf("resources") - 1);
 const root_dev = __dirname.slice(0, __dirname.indexOf("end") - 1);

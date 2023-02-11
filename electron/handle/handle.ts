@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import { Channels } from "a_root";
+import { Channels } from "local";
 
 export const handle = (
   channel: Channels,

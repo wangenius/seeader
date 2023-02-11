@@ -1,4 +1,4 @@
-import { AppConfig, Channels, Path } from "a_root";
+import { AppConfig, Channels, Path } from "local";
 import _ from "lodash";
 
 export const invoke = window.invoke;

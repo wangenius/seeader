@@ -1,4 +1,4 @@
-import {DataStore, Path} from "a_root";
+import {DataStore, Path} from "local";
 import {dialog, err} from "@/method";
 import {data} from "@/method/data";
 import {file} from "@/method/file";

@@ -3,7 +3,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {Pop} from "@/component";
 import {useAppSelector} from "@/data/store";
 import {useTranslation} from "react-i18next";
-import {AppConfig} from "a_root";
+import {AppConfig} from "local";
 
 /** @Description router name */
 const router = AppConfig.router;

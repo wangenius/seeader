@@ -3,7 +3,7 @@
  * 4 |   height: $height_body;
  *   |           ^^^^^^^^^^^^
  *   '
- *   settings.scss 4:11  root stylesheet */
+ *   settings.scss 4:11  local stylesheet */
 
 body::before {
   font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",

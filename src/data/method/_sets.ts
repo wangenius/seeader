@@ -6,7 +6,7 @@ import {paths} from "@/method/invoke";
 import {settingsStore} from "@/data/store/settingsSlice";
 import {store} from "@/data/store";
 import {toast} from "react-toastify";
-import {defaultSettings} from "a_root";
+import {defaultSettings} from "local";
 import i18n from "i18next";
 import {json} from "@/method";
 import {dialog} from "@/method/dialog";

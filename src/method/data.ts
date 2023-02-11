@@ -1,4 +1,4 @@
-import { Channels, DataStore, Projection } from "a_root";
+import { Channels, DataStore, Projection } from "local";
 import { invoke } from "@/method/invoke";
 
 export const data = () => DataStore;

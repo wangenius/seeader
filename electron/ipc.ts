@@ -28,7 +28,7 @@ import {
   db_insert,
   db_update,
 } from "./dataStore/dataStore";
-import { Channels } from "a_root";
+import { Channels } from "local";
 import { json_read, json_write } from "./file/json";
 
 export function ipc_win() {

@@ -1,5 +1,5 @@
 import { clipboard, contextBridge, ipcRenderer, shell } from "electron";
-import { Dir_resources, Dirs } from "./@constant/path";
+import { Dirs } from "./@constant/path";
 
 const exp = contextBridge.exposeInMainWorld;
 
@@ -10,4 +10,4 @@ exp("shell", shell);
 /** @Description 绝对地址 */
 exp("paths", Dirs);
 /** @Description 文件打开 */
-exp("file",(filePath:string)=> require(filePath))
+exp("file", (filePath: string) => require(filePath));

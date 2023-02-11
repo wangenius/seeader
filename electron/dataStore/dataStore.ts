@@ -1,6 +1,6 @@
-import {DataStore, AppConfig, Projection, Query, RemoveOptions} from "a_root";
+import {DataStore, AppConfig, Projection, Query, RemoveOptions} from "local";
 import Datastore from "nedb-promises";
-import {Dir_Data, Dir_resources} from "../@constant/path";
+import {Dir_Data} from "../@constant/path";
 import * as fs from "fs";
 
 /** @Description 连接数据库 */

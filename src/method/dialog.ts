@@ -1,4 +1,4 @@
-import { Channels } from "a_root";
+import { Channels } from "local";
 import Electron from "electron";
 import { err, invoke } from "@/method/index";
 

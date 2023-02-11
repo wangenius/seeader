@@ -3,7 +3,7 @@
  * 8 |   background-color: $bc_menu;
  *   |                     ^^^^^^^^
  *   '
- *   menu.scss 8:21  root stylesheet */
+ *   menu.scss 8:21  local stylesheet */
 
 body::before {
   font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",

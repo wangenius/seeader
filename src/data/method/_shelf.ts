@@ -1,5 +1,5 @@
 import {data} from "@/method/data";
-import {DataStore} from "a_root";
+import {DataStore} from "local";
 import {dialog} from "@/method/dialog";
 import { err, file, json} from "@/method";
 import {toast} from "react-toastify";

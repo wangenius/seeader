@@ -5,7 +5,7 @@
  *    '
  *   index.scss 11:9    @import
  *   ..\index.scss 2:9  @import
- *   input.scss 1:9     root stylesheet */
+ *   input.scss 1:9     local stylesheet */
 
 body::before {
   font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",

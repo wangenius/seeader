@@ -1,4 +1,4 @@
-import { Channels } from "a_root";
+import { Channels } from "local";
 import { invoke } from "@/method/invoke";
 
 /** @Description 返回导入文件 */

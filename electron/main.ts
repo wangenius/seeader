@@ -20,7 +20,7 @@ import {
   ipc_win,
 } from "./ipc";
 import fs from "fs/promises";
-import {AppConfig, defaultSettings} from "a_root";
+import {AppConfig, defaultSettings} from "local";
 
 /** @Description 窗口特性 */
 const BrowserConfig: BrowserWindowConstructorOptions = {

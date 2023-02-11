@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Docker, Mainer} from "./Docker";
 import {useEvent} from "@/hook/useEvent";
-import {SettingsOptions} from "a_root";
+import {SettingsOptions} from "local";
 import {_sets} from "@/data/method/_sets";
 import {useAppSelector} from "@/data/store";
 import {about, devTools, report} from "@/method/frag";
