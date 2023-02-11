@@ -1,6 +1,7 @@
 import _ from "lodash";
 import {Channels} from "local";
 import {invoke} from "@/method/invoke";
+import {err} from "@/method/index";
 
 /** @Description 读取绝对路径下的json文件 返回对象 */
 export const json = <T extends object>(path: string):T => window.file(path);
@@ -11,7 +12,7 @@ json.parser = <T extends object>(
   reference?: T
 ): T | undefined => {
   const res = JSON.parse(text);
-  for (const item of _.keys(reference)) if (!(item in res)) return;
+  for (const item of _.keys(reference)) if (!(item in res)) err("文件内容错误");
   return res;
 };
 

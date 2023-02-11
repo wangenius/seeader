@@ -1,7 +1,7 @@
 import {data} from "@/method/data";
 import {DataStore} from "local";
 import {dialog} from "@/method/dialog";
-import { err, file, json} from "@/method";
+import {file, json} from "@/method";
 import {toast} from "react-toastify";
 import {store} from "@/data/store";
 import {shelfSlice} from "@/data/store/shelfSlice";
@@ -34,16 +34,14 @@ _shelf.export = async () => {
 _shelf.import = async () => {
   try {
     /*选择书架文件*/
-    const res = await dialog.file({
+    const [path] = await dialog.file({
       title: "打开书架",
       filters: [{ name: "bookshelf", extensions: ["bookshelf"] }],
     });
     /*解析书架文件*/
-    const shelf = json.parser<Shelf>(await file(res[0]), {
+    const shelf = json.parser<Shelf>(await file.read(path), {
       books: [],
     });
-    /*判断文件格式*/
-    !shelf && err("文件内容错误");
     /*循环解析书架书籍*/
     for (let book of shelf!.books) {
       await _book.insert(book.path);

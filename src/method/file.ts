@@ -1,8 +1,10 @@
-import { Channels } from "local";
-import { invoke } from "@/method/invoke";
+import {Channels} from "local";
+import {invoke} from "@/method/invoke";
 
 /** @Description 返回导入文件 */
 export const file = (path: string): any => window.file(path);
+
+file.read = (path: string) => invoke(Channels.file_read, path);
 
 /** @Description text保存文件保存 */
 file.save = (path: string, content: string) =>

@@ -9,7 +9,7 @@ export const textToBook = async (filePath: string) => {
   const isTitle = (content: string) => content.search(regCheck) !== -1;
 
   /*从文件读取string*/
-  const text = await file(filePath);
+  const text = await file.read(filePath);
 
   /*分解text成数组并过滤*/
   const contentArray = text.split(reg).filter(Boolean);
