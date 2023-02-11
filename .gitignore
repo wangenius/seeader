@@ -1,6 +1,19 @@
+#  依赖文件
 /node_modules
+# webpack打包文件
 /build
+# electron-builder发布文件
 /release
+# idea设置
 /.idea
+# 资源文件
 /resources
+# electron tsc 文件
 /end
+#yalc 文件
+/.yalc
+#a_root tsc files
+/module/*.js
+/module/*.d.ts
+/module/**/*.js
+/module/**/*.d.ts
