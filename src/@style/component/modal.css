@@ -3,7 +3,7 @@
  * 3 |   @include xFlex;
  *   |   ^^^^^^^^^^^^^^
  *   '
- *   modal.scss 3:3  root stylesheet */
+ *   modal.scss 3:3  local stylesheet */
 
 body::before {
   font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",

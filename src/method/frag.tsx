@@ -1,6 +1,6 @@
 import {_sets} from "@/data";
 import {browser, clipboard, invoke} from "@/method/invoke";
-import {Channels} from "a_root";
+import {Channels} from "local";
 import {dialog} from "@/method/dialog";
 import {toast} from "react-toastify";
 import {Once, Pop, TextInput} from "@/component";

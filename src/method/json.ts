@@ -1,5 +1,5 @@
 import _ from "lodash";
-import {Channels} from "a_root";
+import {Channels} from "local";
 import {invoke} from "@/method/invoke";
 
 /** @Description 读取绝对路径下的json文件 返回对象 */

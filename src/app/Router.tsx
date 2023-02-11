@@ -3,7 +3,7 @@ import { App } from "./App";
 import { BookPage } from "./BookPage";
 import { ShelfPage } from "./ShelfPage";
 import { SettingsPage } from "./SettingsPage";
-import { AppConfig } from "a_root";
+import { AppConfig } from "local";
 import { createBrowserHistory } from "history";
 
 export const history = createBrowserHistory();

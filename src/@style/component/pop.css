@@ -3,7 +3,7 @@
  * 5 |   z-index: $z_pop;
  *   |            ^^^^^^
  *   '
- *   pop.scss 5:12  root stylesheet */
+ *   pop.scss 5:12  local stylesheet */
 
 body::before {
   font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",

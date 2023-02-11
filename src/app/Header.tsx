@@ -2,7 +2,7 @@ import {Exp, IconButton, icons, Once, Spring} from "@/component";
 import React, {createRef, useEffect, useState} from "react";
 import {useNav} from "@/hook/useNav";
 import {MdClose, MdCropSquare, MdMoreHoriz, MdRemove} from "react-icons/md";
-import {Channels, Style} from "a_root";
+import {Channels, Style} from "local";
 import {useSpring} from "@react-spring/web";
 import {config} from "react-spring";
 import {useGesture} from "@use-gesture/react";

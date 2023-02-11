@@ -1,6 +1,6 @@
 {
   "deepLink": true,
   "packages": [
-    "./module"
+    "./local"
   ]
 }

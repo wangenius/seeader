@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import _ from "lodash";
-import {defaultSettings} from "a_root";
+import {defaultSettings} from "local";
 import {json} from "@/method";
 import {_sets} from "@/data";
 

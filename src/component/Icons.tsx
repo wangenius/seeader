@@ -19,7 +19,7 @@ required!
       ))
   );
 
-/** @Description svg container root element => div */
+/** @Description svg container local element => div */
 export const SVG = ({ open, cs, icon, ...rest }: Props.SvgIcon) => (
   <Once open={open} cs={clsx("SvgIcon", cs)} children={icon} {...rest} />
 );
