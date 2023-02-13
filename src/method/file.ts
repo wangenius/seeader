@@ -1,5 +1,5 @@
-import {Channels} from "local";
-import {app} from "@/method/app";
+import { Channels } from "local";
+import { app } from "@/method/app";
 
 /** @Description 返回导入文件 */
 export const file = (path: string): any => window.file(path);
@@ -20,4 +20,4 @@ file.json_read = <T extends object>(path: string): T => window.file(path);
 
 /** @Description 保存json文件 */
 file.json_save = (path: string, content: object, partial: boolean = true) =>
-  app(Channels.json_save, path, content, partial);
+  app("json_save", path, content, partial);

@@ -1,7 +1,7 @@
 import {Exp, IconButton, icons, Once, Spring} from "@/component";
 import React, {createRef, useEffect, useState} from "react";
 import {useNav} from "@/hook/useNav";
-import {MdClose, MdCropSquare, MdMoreHoriz, MdRemove,} from "react-icons/md";
+import {MdClose, MdCropSquare, MdRemove,} from "react-icons/md";
 import {Channels, Style} from "local";
 import {useSpring} from "@react-spring/web";
 import {config} from "react-spring";
@@ -42,7 +42,7 @@ export const ExpandDocker = () => {
     top: 3,
     x: 0,
     y: 0,
-    backgroundColor: "#ffffff",
+    backgroundColor: "rgba(175,200,222,0.34)",
     color: "#f1f1f1",
     borderRadius: 12,
     boxShadow: Style.shadow.docker_hide,
@@ -55,9 +55,9 @@ export const ExpandDocker = () => {
     width: 400,
     top: 13,
     left: 8,
-    borderRadius: 12,    boxShadow: Style.shadow.docker,
-
-    backgroundColor: "#ffffff",
+    borderRadius: 12,
+    boxShadow: Style.shadow.docker,
+    backgroundColor: "rgba(245,245,245,0.86)",
   };
   /** @Description generate spring */
   const [spring, api] = useSpring(() => before);
