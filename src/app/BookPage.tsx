@@ -16,7 +16,8 @@ import { config } from "react-spring";
 import { useAppSelector } from "@/data/store";
 import { _sets } from "@/data/method/_sets";
 import {_chapter} from "@/data";
-import {copyText, searchWeb, translate} from "@/method/frag";
+import {toa} from "@/method";
+import {app} from "@/method/app";
 
 /** @Description 书页 */
 export const BookPage = () => {
@@ -78,10 +79,6 @@ const BookMainer = () => {
     enabled: book.progress > 0,
   });
 
-  useEffect(()=>{
-    _chapter.load()
-  },[book.progress,book._id])
-
   /** @Description 自定义样式 */
   const alterStyle = {
     fontSize: settings.reading.fontSize + "rem",
@@ -131,10 +128,10 @@ const BookMainer = () => {
               {
                 type: "item",
                 label: "copy",
-                onClick: copyText,
+                onClick: toa(app.copy,"复制成功"),
               },
-              { type: "item", label: "translate", onClick: translate },
-              { type: "item", label: "search", onClick: searchWeb },
+              { type: "item", label: "translate", onClick: app.dict },
+              { type: "item", label: "search", onClick: app.search },
             ],
           }}
         </Menu>,

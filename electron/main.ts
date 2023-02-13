@@ -9,16 +9,17 @@ import {
   Tray,
 } from "electron";
 import autoReload from "electron-reload";
-import { appExit } from "./window/Windows";
-import {Dir_asar, Dir_resources, Dir_statics, isPackaged, Path_icon} from "./@constant/path";
+import {appExit} from "./ipc/Windows";
+import {Dir_asar, Dir_resources, Dir_statics, isPackaged, Path_icon,} from "./@constant/path";
 import {
+  ipc_book,
   ipc_datastore,
   ipc_dialog,
   ipc_file,
   ipc_json,
   ipc_method,
   ipc_win,
-} from "./ipc";
+} from "./ipc/ipc";
 import fs from "fs/promises";
 import {AppConfig, defaultSettings} from "local";
 
@@ -63,6 +64,7 @@ async function createWindow(): Promise<BrowserWindow> {
     mainWindows.hide(); // 隐藏主程序窗口
   });
 
+  mainWindows.webContents.openDevTools()
   return mainWindows;
 }
 
@@ -83,7 +85,7 @@ function initialSet() {
 /*app完成*/
 app.whenReady().then(async () => {
   initialSet();
-
+  ipc_book();
   ipc_datastore();
   ipc_method();
   ipc_file();
@@ -124,5 +126,5 @@ function traySet(windows: BrowserWindow) {
     },
   ]);
   tray.setContextMenu(contextMenu);
-  tray.setToolTip(isPackaged?AppConfig.name:"dev");
+  tray.setToolTip(isPackaged ? AppConfig.name : "dev");
 }

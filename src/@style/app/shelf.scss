@@ -135,11 +135,12 @@
       }
       .current {
         position: absolute;
-        bottom: 25px;
+        bottom: 5px;
+        right: 5px;
         color: white;
         font-size: $fs_mark;
-        width: 100%;
-        background-color: #ffd900;
+        width: 20px;
+        height: 20px;
       }
 
       .progress {

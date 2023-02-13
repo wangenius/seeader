@@ -1,7 +1,7 @@
 interface Window extends Window {
   /** @Description communicate with electron */
   invoke(
-    channel: keyof typeof import("a_root").Channels,
+    channel: keyof typeof import("local").Channels,
     ...args: any[]
   ): Promise<any>;
   /** @Description clipboard */

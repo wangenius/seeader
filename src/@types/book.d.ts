@@ -8,7 +8,7 @@ declare interface Shelf {
 /** @Description 定义基本书籍对象接口，包含id，名称，路径，标题和章节标题，当前进度等等 */
 declare interface Book {
   /** @Description Book id */
-  _id?: string;
+  _id: string;
   /** @Description 名称 */
   name: string;
   /** @Description 路径 */
@@ -33,7 +33,7 @@ declare interface Chapters {
 /** @Description 章节内容 */
 declare interface Chapter extends chapterTitle {
   /** @Description 章节内容 */
-  content: Content;
+  content: string[];
 }
 
 /** @Description 章节标题 */

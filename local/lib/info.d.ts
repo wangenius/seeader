@@ -4,11 +4,12 @@ export declare const SettingsOptions: any;
 export declare const defaultSettings: any;
 export declare const Style: any;
 export declare enum Channels {
+    book_add = "book_add",
     window_toggleDevTools = "window_toggleDevTools",
     app_close = "app_close",
     dialog_message = "dialog_message",
     json_read = "json_read",
-    json_write = "json_write",
+    json_save = "json_save",
     dialog_open = "dialog_open",
     dialog_save = "dialog_save",
     window_min = "window_min",

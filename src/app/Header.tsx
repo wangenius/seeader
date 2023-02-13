@@ -1,31 +1,27 @@
 import {Exp, IconButton, icons, Once, Spring} from "@/component";
 import React, {createRef, useEffect, useState} from "react";
 import {useNav} from "@/hook/useNav";
-import {MdClose, MdCropSquare, MdMoreHoriz, MdRemove} from "react-icons/md";
+import {MdClose, MdCropSquare, MdMoreHoriz, MdRemove,} from "react-icons/md";
 import {Channels, Style} from "local";
 import {useSpring} from "@react-spring/web";
 import {config} from "react-spring";
 import {useGesture} from "@use-gesture/react";
 import ClickAwayListener from "react-click-away-listener";
-import {invoke} from "@/method";
-import {app} from "@/method/frag";
-import {store} from "@/data/store";
+import {app} from "@/method/app";
 
 /** @Description 标题栏 */
 export function Header() {
-
-  console.log(window.paths)
-  console.log(store.getState())
-
+  const nav = useNav();
   return (
     <Once cs={"Header"}>
       <ExpandDocker />
       <Exp cs={"draggable"} />
-      <IconButton icon={<MdRemove />} value={Channels.window_min} lc={invoke} />
+      <IconButton icon={icons.settings} lc={nav.switchSettings} />
+      <IconButton icon={<MdRemove />} value={Channels.window_min} lc={app} />
       <IconButton
         icon={<MdCropSquare />}
         value={Channels.window_max}
-        lc={invoke}
+        lc={app}
       />
       <IconButton icon={<MdClose />} lc={app.close} />
     </Once>
@@ -46,7 +42,7 @@ export const ExpandDocker = () => {
     top: 3,
     x: 0,
     y: 0,
-    backgroundColor: "#03033a",
+    backgroundColor: "#ffffff",
     color: "#f1f1f1",
     borderRadius: 12,
     boxShadow: Style.shadow.docker_hide,
@@ -59,8 +55,8 @@ export const ExpandDocker = () => {
     width: 400,
     top: 13,
     left: 8,
-    borderRadius: 12,
-    boxShadow: Style.shadow.docker,
+    borderRadius: 12,    boxShadow: Style.shadow.docker,
+
     backgroundColor: "#ffffff",
   };
   /** @Description generate spring */
@@ -79,7 +75,6 @@ export const ExpandDocker = () => {
             scale: 0.96,
           })
         : api.start({
-            backgroundColor: "#2b7eea",
           });
     },
     onMouseLeave: () => {
@@ -100,9 +95,16 @@ export const ExpandDocker = () => {
         config: active ? config.stiff : config.wobbly,
       });
     },
-    onClick: () => {
+    onContextMenu: () => {
       setExpand(true);
     },
+    onClick: () => {
+      !expand && nav.switch();
+    },
+  },{
+    drag:{
+      filterTaps:true
+    }
   });
 
   /** @Description content item */
@@ -118,16 +120,9 @@ export const ExpandDocker = () => {
         setExpand(false);
       }}
     >
-      <Spring
-        ref={ref}
-        spring={spring}
-        cs={"expandable"}
-        rc={() => {
-          !expand && nav.switch();
-        }}
-      >
+      <Spring ref={ref} spring={spring} cs={"expandable"}>
         <Once {...bind()} state={expand ? "expand" : undefined} cs={"drag"}>
-          <MdMoreHoriz />
+          {expand? icons.more:icons.exchange}
         </Once>
         {items.map((item, key) => {
           return (

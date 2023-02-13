@@ -1,5 +1,4 @@
 
-
 /** @Description language */
 declare type Language = string | "zh" | "en";
 
@@ -9,6 +8,8 @@ declare interface Setting {
   /** @Description 常规设置 */
   common: {
     minWithTray?: boolean;
+    /** @Description 打开直接进入阅读页面 */
+    openWithReading?:boolean;
   };
   /** @Description 外观 */
   preference: {

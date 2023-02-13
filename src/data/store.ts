@@ -12,7 +12,8 @@ import {chapterSlice} from "@/data/store/chapterSlice";
 
 type RootState = ReturnType<typeof store.getState>;
 type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;
+export let useAppDispatch: () => AppDispatch;
+useAppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 const storageConfig = {

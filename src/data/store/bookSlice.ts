@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import _ from "lodash";
 
 export const initialBook: Book = {
+  _id: "",
   name: "",
   path: "",
   titles: [],

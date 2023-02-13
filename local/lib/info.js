@@ -8,11 +8,12 @@ exports.defaultSettings = require("../json/defaultSettings.json");
 exports.Style = require("../json/style.json");
 var Channels;
 (function (Channels) {
+    Channels["book_add"] = "book_add";
     Channels["window_toggleDevTools"] = "window_toggleDevTools";
     Channels["app_close"] = "app_close";
     Channels["dialog_message"] = "dialog_message";
     Channels["json_read"] = "json_read";
-    Channels["json_write"] = "json_write";
+    Channels["json_save"] = "json_save";
     Channels["dialog_open"] = "dialog_open";
     Channels["dialog_save"] = "dialog_save";
     Channels["window_min"] = "window_min";

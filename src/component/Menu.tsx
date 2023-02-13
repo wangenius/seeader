@@ -2,7 +2,7 @@ import * as React from "react";
 import {memo, ReactNode, useCallback, useMemo, useRef, useState} from "react";
 import {Once} from "./Once";
 import {Pop} from "./Pop";
-import {Divider} from "./Accessory";
+import {Divider} from "./Divider";
 import _ from "lodash";
 import clsx from "clsx";
 import {fn} from "@/method";

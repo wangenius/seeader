@@ -4,20 +4,16 @@ import zh from "./zh/zh.json";
 import en from "./en/en.json";
 import { _sets } from "@/data";
 
-export function i18nInit() {
-  i18n
-    .use(initReactI18next)
-    .init({
-      returnNull: false,
-      resources: {
-        zh: { translation: zh },
-        en: { translation: en },
-      },
-      lng: _sets.value().preference.language,
-      fallbackLng: "en",
-      interpolation: {
-        escapeValue: false,
-      },
-    })
-    .then();
-}
+export const i18nInit = () =>
+  i18n.use(initReactI18next).init({
+    returnNull: false,
+    resources: {
+      zh: { translation: zh },
+      en: { translation: en },
+    },
+    lng: _sets.value().preference.language,
+    fallbackLng: "en",
+    interpolation: {
+      escapeValue: false,
+    },
+  });

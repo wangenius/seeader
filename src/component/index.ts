@@ -1,5 +1,5 @@
 export * from "./Button";
-export * from "./Accessory";
+export * from "./Divider";
 export * from "./Once";
 export * from "./Icons";
 export * from "./Input";

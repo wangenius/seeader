@@ -1,9 +1,9 @@
 import { Channels } from "local";
-import Electron from "electron";
-import { err, invoke } from "@/method/index";
+import { err } from "@/method/index";
+import {app} from "@/method/app";
 
 export const dialog = (message: string = "暂无信息") =>
-  invoke(Channels.dialog_message, {
+  app(Channels.dialog_message, {
     title: "提示",
     message: message,
     noLink: true,
@@ -11,7 +11,7 @@ export const dialog = (message: string = "暂无信息") =>
   });
 
 dialog.confirm = (message: string = "确认？"): Promise<true> =>
-  invoke(Channels.dialog_message, {
+  app(Channels.dialog_message, {
     title: "提示",
     message: message,
     buttons: ["取消", "确定"],
@@ -22,16 +22,22 @@ dialog.confirm = (message: string = "确认？"): Promise<true> =>
     return true;
   });
 
-/** @Description 选择文件 返回promise file path string[]*/
-dialog.file = (args: Electron.OpenDialogOptions): Promise<string[]> =>
-  invoke(Channels.dialog_open, args).then((res) => {
-    res.canceled && err("取消选择");
-    return res.filePaths;
-  });
+/** @Description 选择文件 返回地址字符串数组*/
+dialog.file = (
+  title: string = "打开文件",
+  name: string = "all",
+  extensions?: string[]
+): Promise<string[]> =>
+  app(Channels.dialog_open, { title, filters: [{ name, extensions }] }).then(
+    (res) => {
+      res.canceled && err("取消选择");
+      return res.filePaths;
+    }
+  );
 
-/** @Description 选择目录 */
+/** @Description 选择目录  返回地址字符串数组*/
 dialog.directory = (): Promise<string[]> =>
-  invoke(Channels.dialog_open, {
+  app(Channels.dialog_open, {
     message: "选择目录：",
     properties: ["openDirectory"],
   }).then((res) => {
@@ -44,7 +50,7 @@ dialog.save = (
   defaultPath: string,
   message: string = "保存到..."
 ): Promise<string> =>
-  invoke(Channels.dialog_save, {
+  app(Channels.dialog_save, {
     title: message,
     defaultPath: defaultPath,
   }).then((res) => {
@@ -54,4 +60,4 @@ dialog.save = (
 
 /** @Description 系统通知 */
 dialog.notification = (body: string, title: string = "提示") =>
-  invoke(Channels.notification, title, body);
+  app(Channels.notification, title, body);

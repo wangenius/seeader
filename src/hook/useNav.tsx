@@ -16,15 +16,17 @@ export function useNav() {
   const book = useAppSelector((state) => state.book);
   const current = param.pathname.slice(1, param.pathname.length);
   const isShelf = current === (router.shelf || "");
+  const isSettings = current === (router.settings || "");
 
   useLayoutEffect(Pop.close, [param]);
 
   abstract class Nav {
     static label = isShelf ? book.name : t("shelf");
     static shelf = () => nav("../" + router.shelf);
-    static settings = () => nav("../" + router.settings);
+    static settings = () =>  nav("../" + router.settings);
     static reading = () => nav("../" + router.reading);
     static switch = () => (isShelf ? this.reading() : this.shelf());
+    static switchSettings = ()=>isSettings?nav(-1):Nav.settings()
   }
 
   return Nav;

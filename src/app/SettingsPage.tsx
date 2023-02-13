@@ -1,12 +1,13 @@
-import {Button, Once, Divider, Exp, Selector} from "@/component";
+import {Button, Divider, Exp, Once, Selector} from "@/component";
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Docker, Mainer} from "./Docker";
 import {useEvent} from "@/hook/useEvent";
 import {SettingsOptions} from "local";
-import {_sets} from "@/data/method/_sets";
+import {_sets, } from "@/data/method/_sets";
 import {useAppSelector} from "@/data/store";
-import {about, devTools, report} from "@/method/frag";
+import { toa} from "@/method";
+import {app} from "@/method/app";
 
 /** @Description settings */
 export const SettingsPage = () => {
@@ -30,11 +31,14 @@ export const SettingsPage = () => {
         <Button label={t("preference")} value={1} lc={changeTab} />
         <Button label={t("reading")} value={2} lc={changeTab} />
         <Divider />
-        <Button label={t("devTools")} lc={devTools} />
-        <Button label={t("report issue")} lc={report} />
-        <Button label={t("about")} lc={about} />
+        <Button label={t("devTools")} lc={app.dev} />
+        <Button label={t("report issue")} lc={app.report} />
+        <Button label={t("about")} lc={app.about} />
         <Exp />
-        <Button label={t("save")} lc={_sets.save} />
+        <Button
+          label={t("save")}
+          lc={toa(_sets.save, "保存成功", "保存失败")}
+        />
         <Button label={t("export")} lc={_sets.export} />
         <Button label={t("reset")} lc={_sets.reset} />
       </Docker>

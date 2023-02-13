@@ -1,15 +1,14 @@
-import {DataStore, Path} from "local";
-import {dialog, err} from "@/method";
 import {data} from "@/method/data";
 import {file} from "@/method/file";
 import {toast} from "react-toastify";
 import {_shelf} from "@/data/method/_shelf";
 import i18n from "i18next";
-import {bookSlice} from "@/data/store/bookSlice";
+import {bookSlice, initialBook} from "@/data/store/bookSlice";
 import {store} from "@/data/store";
 import {modal, Pop, TextInput} from "@/component";
-import _ from "lodash";
-import {textToBook} from "@/method/parser";
+import {_chapter} from "@/data";
+import {app} from "@/method/app";
+import {dialog} from "@/method/dialog";
 
 /** @Description
  *
@@ -18,91 +17,64 @@ import {textToBook} from "@/method/parser";
  * redux book */
 export const _book = () => store.getState().book;
 
+/** @Description change redux book state*/
 _book.dispatch = (book: Partial<Book>) =>
   store.dispatch(bookSlice.actions.changeBook(book));
 
-_book.switch = (book: Book) =>
-  store.dispatch(bookSlice.actions.switchBook(book));
+_book.close = ()=>{
+  _book.switch([initialBook])
+  _chapter.dispatch()
+}
 
-_book.add = async () => {
-  const [path] = await dialog.file({
-    title: "添加书籍",
-    filters: [{ name: "txt", extensions: ["txt", "epub"] }],
-  });
-  await _book.insert(path);
-  await _shelf.load();
+/** @Description change redux book totally*/
+_book.switch = (book: Book[]) =>
+  store.dispatch(bookSlice.actions.switchBook(book[0]));
+
+_book.dialog_to_add = async () => {
+  const [path] = await dialog.file("添加书籍", "txt", ["txt", "epub"]);
+  await _book.add(path);
   toast.success(i18n.t("add successfully"));
 };
 
-/** @Description 将path的文件解析为可读取数据库对象并插入 */
-_book.insert = async (path: string) => {
-  /*判断中含有该书*/
-  const res = await data.select(DataStore.bookshelf, { path: path });
-  res.length && err(`已经添加过该书籍《${Path.parser(path).name}》`);
-  /*解析书籍*/
-  const { Chapters, total, titles } = await textToBook(path);
-  /*保存body数据库*/
-  const { _id } = await data.insert<Chapters>(DataStore.bookBody, Chapters);
-  const book: Book = {
-    _id: _id,
-    name: Path.parser(path).name,
-    path: path,
-    total: total,
-    progress: 0,
-    titles: titles,
-  };
-  await data.insert<Book>(DataStore.bookshelf, book);
-};
+/** @Description add book and refresh shelf */
+_book.add = (path: string) => app("book_add", path).then(_shelf.load);
 
 /** @description 从数据库中加载书籍信息 */
-_book.load = (target: Book) =>
-  data
-    .select<Book>(DataStore.bookshelf, {
-      _id: target._id,
-    })
-    .then((res) => _book.switch(res[0]));
+_book.load = (target: Book = _book()) =>
+  data.select<Book>(data().bookshelf, { _id: target._id }).then(_book.switch);
 
-_book.open = async (book: Book) => {
-  /** @Description 更新当前书籍ds信息 */
-  await _book.update();
-  /** @Description 加载目标书籍 */
-  await _book.load(book);
-};
+/** @Description open book 1. update current 2. load next */
+_book.open = async (book: Book) =>
+  await _book.update().then(() => _book.load(book));
 
-_book.update = async (targetBook?: Book, id?: string) => {
-  await data.update<Book>(
-    DataStore.bookshelf,
-    { _id: id || targetBook?._id || _book()._id },
-    targetBook || _book()
-  );
-  await _book.load(_book());
-  await _shelf.load();
-};
+/** @Description 不带参数更新当前书籍到db */
+_book.update = async (
+  id: string = _book()._id,
+  targetBook: Partial<Book> = _book()
+) =>
+  await data
+    .update<Book>(data().bookshelf, { _id: id }, targetBook)
+    .then(() => _book.load)
+    .then(_shelf.load);
 
 _book.delete = async (books: Book[]) => {
   try {
     /** @Description 确认 */
-    await dialog.confirm(
-        `确定删除选中书籍:\n${books.map((item) => item.name + "\n")}`
-    );
+    let msg = `确定删除选中书籍:\n${books.map((item) => item.name + "\n")}`;
+    await dialog.confirm(msg);
     /** @Description 以此删除 */
     for await (let item of books) {
-      await data.remove(DataStore.bookshelf, {
-        _id: item._id,
-      });
-      await data.remove(DataStore.bookBody, {
-        _id: item._id,
-      });
+      for await (let it of [data().bookshelf, data().bookBody])
+        await data.remove(it, { _id: item._id });
       /** @Description 重新加载 */
-      _shelf.load();
+      await _shelf.load();
     }
     toast.success(i18n.t("delete successfully"));
+  } catch {
+    console.log("取消了操作");
   }
-  catch {
-    console.log("取消了操作")
-  }
-
 };
+
 /** @Description 备份书籍 */
 _book.backup = async (items: Book[]) => {
   try {
@@ -121,7 +93,6 @@ _book.backup = async (items: Book[]) => {
         toast.error(`已存在同名文件${item.name}`);
       }
     }
-
     toast.info(
       `共导出${items.length}个 ,成功${result.success}个,失败${result.fail}个`
     );
@@ -135,7 +106,7 @@ _book.edit = (target: Book, callback?: Fn) => {
     <TextInput
       button
       onClick={async (value) => {
-        await _book.update(_.defaultsDeep({ name: value }, target), target._id);
+        await _book.update(target._id, { name: value });
         Pop.close();
         modal.close();
         callback!();

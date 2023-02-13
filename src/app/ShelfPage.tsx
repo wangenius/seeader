@@ -4,11 +4,12 @@ import _ from "lodash";
 import {useTranslation} from "react-i18next";
 import {useNav} from "@/hook/useNav";
 import {Docker, DockerButton, Mainer} from "./Docker";
-import {dialog, file} from "@/method";
 import {_book} from "@/data";
 import {useAppSelector} from "@/data/store";
 import {_shelf} from "@/data/method/_shelf";
 import {useEffectOnce} from "react-use";
+import {file} from "@/method/file";
+import {dialog} from "@/method/dialog";
 
 /** @Description 书架 */
 export const ShelfPage = memo(() => {
@@ -38,7 +39,7 @@ export const ShelfPage = memo(() => {
   return (
     <Once cs={"ShelfArea"}>
       <Docker state={!selectedBooks.length} width={width}>
-        <DockerButton label={"add book"} lc={_book.add} children={icons.add} />
+        <DockerButton label={"add book"} lc={_book.dialog_to_add} children={icons.add} />
         <DockerButton
           label={"change shelf"}
           lc={_shelf.import}
@@ -160,8 +161,9 @@ const BookCover = memo((props: Props.BookCover) => {
       <Once
         cs={"current"}
         open={item._id === book._id}
-        children={t("current reading")}
+        children={icons.loc}
       />
+
     </Once>
   );
 });
