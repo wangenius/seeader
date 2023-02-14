@@ -1,5 +1,4 @@
-export * from "./lib/dest";
-export * from "./lib/info";
+export * from "./lib";
 
 export type Query = {
   [key: string]: any;

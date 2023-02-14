@@ -1,5 +1,13 @@
 {
   "name": "seeader",
+  "version": "1.5.0",
+  "author": {
+    "name": "wangenius",
+    "email": "wangenius@qq.com",
+    "weibo": "https://weibo.com/u/6320492937",
+    "github": "https://github.com/wangenius"
+  },
+  "github": "https://github.com/wangenius/seeader",
   "files": {
     "settings": "settings.json"
   },

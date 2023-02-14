@@ -1,4 +1,5 @@
 @import "../@variants/constant";
+@import "../@variants/color";
 
 .Setting {
   height: $height_body;
@@ -20,6 +21,7 @@
     }
 
     .Button {
+      box-sizing: border-box;
       height: 40px;
       padding: 0 20px;
       margin: 5px 0;
@@ -41,14 +43,23 @@
       }
 
       .Options {
+        position: relative;
         width: max-content;
-        border: $b_settingBar;
-        border-radius: 8px;
+        border-radius: 12px;
         white-space: nowrap;
         padding: 1px;
+        background-color: #f8f8f8;
+
+        .actived {
+          @include dynamic_shadow;
+
+          background-color:$bc_button_focus;
+          top: 0;
+        }
 
 
         .Option {
+          z-index: 1;
           cursor: $pointer;
           display: inline-flex;
           @include FlexCenter;
@@ -58,21 +69,13 @@
           width: max-content;
           border-radius: 5px;
           position: relative;
-
-          &:hover {
-            background-color: #f1f1f1;
-
-            &::before {
-              transform: scale(1);
-              opacity: 1;
-            }
-          }
-
-          &[state="actived"] {
-            background-color: #2260ff;
+          transition: $trans_default;
+          &[state="selected"] {
             color: #ffffff;
           }
         }
+
+
       }
     }
   }

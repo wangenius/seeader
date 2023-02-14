@@ -11,7 +11,6 @@ import {
 import { dict_search } from "./dict";
 import {
   file_copy,
-  file_read,
   file_write,
   shell_open,
 } from "./FileHandler";
@@ -31,6 +30,7 @@ import {
 import { Channels } from "local";
 import { json_read, json_write } from "./json";
 import {book_add} from "./book";
+import {file} from "../method/file";
 
 export function ipc_win() {
   handle(Channels.window_toggleDevTools, window_toggleDevTools);
@@ -48,9 +48,11 @@ export function ipc_method() {
 
 export function ipc_file() {
   handle(Channels.file_write, file_write);
-  handle(Channels.file_read, file_read);
+  handle(Channels.file_read, (event, path) => file.read(path));
   handle(Channels.file_copy, file_copy);
   handle(Channels.shell_open, shell_open);
+  handle(Channels.json_save, json_write);
+
 }
 
 export function ipc_dialog() {
@@ -69,11 +71,8 @@ export function ipc_datastore() {
   handle(Channels.db_count, db_count);
 }
 
-export function ipc_json() {
-  handle(Channels.json_save, json_write);
-  handle(Channels.json_read, json_read);
-}
 
-export function ipc_book(){
+/** @Description  */
+export function ipc_code_msg(){
   handle(Channels.book_add,book_add)
 }

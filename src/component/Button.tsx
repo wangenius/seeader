@@ -34,12 +34,12 @@ export const Button = forwardRef((props: Props.Button.Default, ref) => {
 });
 
 export const IconButton = forwardRef((props: Props.Button.Icon, ref) => {
-  const { cs, icon, lc = fn, value, ...rest } = props;
+  const { cs, icon, lc = fn, value,size, ...rest } = props;
   return (
     <Once
       cs={clsx("IconButton", cs)}
       ref={ref}
-      children={<SVG icon={icon} />}
+      children={<SVG size={size} icon={icon} />}
       lc={() => lc(value)}
       {...rest}
     />

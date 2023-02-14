@@ -3,8 +3,9 @@ import { App } from "./App";
 import { BookPage } from "./BookPage";
 import { ShelfPage } from "./ShelfPage";
 import { SettingsPage } from "./SettingsPage";
-import { AppConfig } from "local";
+
 import { createBrowserHistory } from "history";
+import {app} from "@/method/app";
 
 export const history = createBrowserHistory();
 export const Router = () => (
@@ -12,9 +13,9 @@ export const Router = () => (
     <Routes>
       <Route path="/" element={<App />}>
         <Route path={""} element={<BookPage />} />
-        <Route path={AppConfig.router.reading} element={<BookPage />} />
-        <Route path={AppConfig.router.shelf} element={<ShelfPage />} />
-        <Route path={AppConfig.router.settings} element={<SettingsPage />} />
+        <Route path={app.config.router.reading} element={<BookPage />} />
+        <Route path={app.config.router.shelf} element={<ShelfPage />} />
+        <Route path={app.config.router.settings} element={<SettingsPage />} />
       </Route>
     </Routes>
   </HashRouter>

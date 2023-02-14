@@ -7,14 +7,13 @@
   height: $height_button;
   border-radius: $br_btn;
   position: relative;
-  max-width: 300px;
   user-select: none;
   white-space: nowrap;
-  padding: 0 5px;
+  padding: 0 20px;
   margin: 0 1px;
   background-color: $transparent;
   transition: $trans_default;
-  box-sizing: border-box;
+  box-sizing: content-box;
 
   &::after {
     content: "";
@@ -30,14 +29,21 @@
     font-family: $button_font;
     font-size: $fs_button;
     color: $color_button;
-    margin: 0 6px;
+
+  }
+  > div:first-child {
+    margin-left: 5px;
+  }
+  > div:last-child {
+    margin-right: 10px;
   }
 
   .start {
     display: inline-block;
     vertical-align: middle;
-    height: $size_icon;
-    width: $size_icon;
+    height: 24px;
+    width: 24px;
+
 
     svg {
       @include Max;

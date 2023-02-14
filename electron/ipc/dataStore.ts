@@ -1,11 +1,11 @@
-import {AppConfig, DataStore, Projection, Query, RemoveOptions} from "local";
+import {config, DataStore, Projection, Query, RemoveOptions} from "local";
 import Datastore from "nedb-promises";
 import {Dir_Data} from "../@constant/path";
 import * as fs from "fs";
 
 /** @Description 连接数据库 */
 const dataStoreConnector = (datastore: DataStore) => {
-  const path = Dir_Data.end(datastore + AppConfig.extension.database);
+  const path = Dir_Data.end(datastore + config.extension.database);
   try {
     fs.accessSync(path);
     return Datastore.create({

@@ -1,24 +1,16 @@
 import { _sets } from "@/data";
 import React from "react";
 import { dialog } from "@/method/dialog";
-import { AppConfig, Channels, Path } from "local";
+import { Channels, config } from "local";
 import _ from "lodash";
 import { toast } from "react-toastify";
-import { Once, Pop, TextInput } from "@/component";
-import i18n from "i18next";
+import { Once, Pop } from "@/component";
 
-export const app = (
-  channel: keyof typeof import("local").Channels,
-  ...args: any[]
-) => window.invoke(channel, ...args);
+export const app = (channel: keyof typeof Channels, ...args: any[]) =>
+  window.invoke(channel, ...args);
 
-app.paths = {
-  settings: Path.join(
-    window.paths.Dir_resources.path,
-    "config",
-    AppConfig.files.settings
-  ),
-};
+/** @Description 应用参数 */
+app.config = config;
 
 /** @Description 关闭App */
 app.close = async () => {
@@ -37,17 +29,7 @@ app.dev = () => app(Channels.window_toggleDevTools);
 app.about = () =>
   dialog("版本:1.0.1\n作者:wangenius\n联系邮箱:wangenius@qq.com\n微博:Iynnz");
 
-app.report = () => {
-  Pop.modal(
-    <Once style={{ maxWidth: "90vw", width: 600 }}>
-      <TextInput
-        placeholder={i18n.t("input what you want to report")}
-        onClick={function (): void {}}
-        button
-      />
-    </Once>
-  );
-};
+app.report = () => app.link("https://github.com/wangenius/seeader/issues/new");
 
 app.search = async (strings?: string) =>
   await app.new(`https://quark.sm.cn/s?q=${strings || window.getSelection()}`);
@@ -70,3 +52,5 @@ app.dict = async () => {
     />
   );
 };
+
+app.link = (url: string) => dialog.confirm(`是否打开外部链接:${url}`).then(()=>window.shell.openExternal(url))

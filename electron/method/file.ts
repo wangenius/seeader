@@ -5,7 +5,6 @@ import {checkFileExist} from "../ipc/FileHandler";
 
 export const file = ()=>{}
 
-
 file.read = async (path:string) => {
     try {
         await checkFileExist(path);

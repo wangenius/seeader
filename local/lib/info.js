@@ -1,18 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataStore = exports.Channels = exports.Style = exports.defaultSettings = exports.SettingsOptions = exports.AppConfig = void 0;
-/** @Description CHANNELS */
-exports.AppConfig = require("../json/appInfo.json");
-exports.SettingsOptions = require("../json/settingsOptions.json");
-exports.defaultSettings = require("../json/defaultSettings.json");
-exports.Style = require("../json/style.json");
+exports.DataStore = exports.Channels = void 0;
 var Channels;
 (function (Channels) {
     Channels["book_add"] = "book_add";
     Channels["window_toggleDevTools"] = "window_toggleDevTools";
     Channels["app_close"] = "app_close";
     Channels["dialog_message"] = "dialog_message";
-    Channels["json_read"] = "json_read";
     Channels["json_save"] = "json_save";
     Channels["dialog_open"] = "dialog_open";
     Channels["dialog_save"] = "dialog_save";

@@ -1,12 +1,37 @@
-import { Dest } from "local";
-
+import path from "path";
 const root_packaged = __dirname.slice(0, __dirname.indexOf("resources") - 1);
 const root_dev = __dirname.slice(0, __dirname.indexOf("end") - 1);
 const Dir_default = __dirname;
+
+
+/** @Description  生成路径对象 */
+ class Dest {
+  path: string;
+
+  [props: string]: any;
+
+  constructor(path: string) {
+    this.path = path;
+  }
+
+  exit(): Dest {
+    return new Dest(this.path.slice(0, this.path.lastIndexOf("\\")));
+  }
+
+  enter(...props: string[]): Dest {
+    return new Dest(path.join(this.path, ...props));
+  }
+
+  end(...props: string[]): string {
+    return path.join(this.path, ...props);
+  }
+}
+
 /** @Description 运行环境 */
 export const isPackaged = __filename.includes("app.asar");
 /** @Description 项目根目录 */
 export const Dir_root = new Dest(isPackaged ? root_packaged : root_dev);
+
 
 /** @Description 资源文件地址
  *  包括 asar
@@ -21,6 +46,9 @@ export const Dir_asar = isPackaged ? Dir_resources.enter("app.asar") : Dir_root;
 
 /** @Description 后端文件地址 */
 export const Dir_end = Dir_root.enter(isPackaged ? "end" : "electron");
+
+
+export const Dir_constant = Dir_end.enter("@constant")
 /** @Description 后端文件地址 */
 export const Dir_module = Dir_asar.enter("node_modules").enter("a_root");
 /** 静态文件目录*/
@@ -34,8 +62,12 @@ export const Dir_Data = Dir_resources.enter("data");
 export const Dirs = {
   Dir_root,
   Dir_statics,
+  Dir_constant,
   root_packaged,
-  isPackaged,root_dev,Dir_end,Path_icon,
+  isPackaged,
+  root_dev,
+  Dir_end,
+  Path_icon,
   Dir_asar,
   Dir_resources,
   Dir_Data,

@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 
+/** @Description try and catch with toast */
 export const toa =
   (fn: Fn, suc: string = "执行成功", fail: string = "执行失败") =>
   (...props: any) => {

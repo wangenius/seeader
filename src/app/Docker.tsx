@@ -70,7 +70,7 @@ export const Docker = forwardRef((props: Props.Docker, ref) => {
   );
 });
 
-export const Mainer = memo(
+export const Mainer =
   forwardRef((props: Props.Mainer, ref) => {
     const { condition = true, children, width = 250, ...rest } = props;
     const { w_width } = useWindows();
@@ -88,14 +88,14 @@ export const Mainer = memo(
       </Once>
     );
   })
-);
+
 /** @Description DockerButton */
 export const DockerButton = (props: Props.Once) => {
   const Ref = useRef<HTMLElement>();
   const { t } = useTranslation();
 
   const [spring, api] = useSpring(() => ({
-    marginTop: 5,
+    marginTop: 0,
     config: config.gentle,
   }));
 
@@ -105,7 +105,7 @@ export const DockerButton = (props: Props.Once) => {
       onMouseLeave: tip.out,
       onDrag: (state) => {
         api.start({
-          marginTop: state.active ? state.movement[1] : 5,
+          marginTop: state.active ? state.movement[1] : 0,
         });
       },
     },

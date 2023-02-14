@@ -12,7 +12,7 @@ interface Window extends Window {
   paths: any;
 
   /** @Description 导入文件 */
-  file(filepath: string): any;
+  req(filepath: string): any;
 
   [propsName: string]: any;
 }

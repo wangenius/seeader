@@ -81,12 +81,14 @@ declare namespace Props {
       extends Omit<Default, "startIcon" | "endIcon" | "children"> {
       /** @Description icon */
       icon: ReactNode;
+      size?:number;
     }
   }
 
   /** @Description svgBtn base attr */
   export interface SvgIcon extends Once {
     icon: ReactNode;
+    size?: number;
   }
 
   /** @Description

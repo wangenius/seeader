@@ -1,7 +1,6 @@
-import {Divider, icons, Once, SVG} from "@/component";
+import {Divider, Exp, icons, Once, Spring} from "@/component";
 import React, {memo, useMemo, useState} from "react";
 import _ from "lodash";
-import {useTranslation} from "react-i18next";
 import {useNav} from "@/hook/useNav";
 import {Docker, DockerButton, Mainer} from "./Docker";
 import {_book} from "@/data";
@@ -10,15 +9,18 @@ import {_shelf} from "@/data/method/_shelf";
 import {useEffectOnce} from "react-use";
 import {file} from "@/method/file";
 import {dialog} from "@/method/dialog";
+import {useSpring} from "@react-spring/web";
+import {useDrag} from "@use-gesture/react";
+import {config} from "react-spring";
 
 /** @Description 书架 */
 export const ShelfPage = memo(() => {
   /** @Description 书架方法 */
   const shelf = useAppSelector((state) => state.shelf);
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
-  const width = 60;
+  const width = 50;
   useEffectOnce(() => {
-    _shelf.load();
+    _shelf.load().then();
   });
   const onSelected = (item: Book) => {
     setSelectedBooks((prevState) =>
@@ -39,7 +41,11 @@ export const ShelfPage = memo(() => {
   return (
     <Once cs={"ShelfArea"}>
       <Docker state={!selectedBooks.length} width={width}>
-        <DockerButton label={"add book"} lc={_book.dialog_to_add} children={icons.add} />
+        <DockerButton
+          label={"add book"}
+          lc={_book.dialog_to_add}
+          children={icons.add}
+        />
         <DockerButton
           label={"change shelf"}
           lc={_shelf.import}
@@ -123,7 +129,6 @@ const BookCover = memo((props: Props.BookCover) => {
     selectedExist,
     selected = false,
   } = props;
-  const { t } = useTranslation();
   const to = useNav();
   const book = useAppSelector((state) => state.book);
 
@@ -139,6 +144,15 @@ const BookCover = memo((props: Props.BookCover) => {
     [item, book]
   );
 
+  const spring = useSpring({
+    from: {
+      width: "0%",
+    },
+    to: {
+      width: progress,
+    },
+  });
+
   const rc: Click = () =>
     selected ? onCancelSelected(item) : onSelected(item);
 
@@ -153,17 +167,29 @@ const BookCover = memo((props: Props.BookCover) => {
       : _book.open(item).then(to.reading);
   };
 
-  return (
-    <Once rc={rc} lc={lc} cs={"book"} state={selected ? "selected" : undefined}>
-      <SVG cs={"selected"} icon={icons.done} />
-      <Once cs={"BookTitle"} children={item.name} />
-      <Once cs={"progress"} children={progress} />
-      <Once
-        cs={"current"}
-        open={item._id === book._id}
-        children={icons.loc}
-      />
+  const [springBook,api] = useSpring(()=>({
+    x:0,y:0,zIndex:0,
+  }))
 
-    </Once>
+  const bind = useDrag(({active,movement:[mx,my]})=>{
+    api.start({
+      x: active ? mx : 0,
+      y: active ? my : 0,
+      zIndex:active?1:0,
+      config:config.wobbly
+    })
+  },{
+    filterTaps:true,
+    axis:"lock",
+    bounds:{top:-20,bottom:20,left:-100,right:100}
+  })
+
+  return (
+    <Spring {...bind()} spring={springBook} rc={rc} lc={lc} cs={"book"} state={selected ? "selected" : undefined}>
+      <Once cs={"selected"} />
+      <Exp cs={"BookTitle"} children={item.name} />
+      <Once cs={"current"} open={item._id === book._id} children={icons.loc} />
+      <Spring spring={spring} cs={"progress"} />
+    </Spring>
   );
 });

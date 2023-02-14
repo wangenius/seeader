@@ -149,14 +149,13 @@ scroll*/
   height: 30px;
   border-radius: 8px;
   position: relative;
-  max-width: 300px;
   user-select: none;
   white-space: nowrap;
-  padding: 0 5px;
+  padding: 0 20px;
   margin: 0 1px;
   background-color: transparent;
   transition: all 200ms ease;
-  box-sizing: border-box;
+  box-sizing: content-box;
 }
 .Button * {
   pointer-events: none;
@@ -174,13 +173,18 @@ scroll*/
   font-family: "Noto_Medium", "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
   font-size: 0.815rem;
   color: #71717a;
-  margin: 0 6px;
+}
+.Button > div:first-child {
+  margin-left: 5px;
+}
+.Button > div:last-child {
+  margin-right: 10px;
 }
 .Button .start {
   display: inline-block;
   vertical-align: middle;
-  height: 16px;
-  width: 16px;
+  height: 24px;
+  width: 24px;
 }
 .Button .start svg {
   height: 100%;
@@ -1187,6 +1191,8 @@ scroll*/
 .Header {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 30px;
   min-height: 30px;
@@ -1198,45 +1204,6 @@ scroll*/
   position: relative;
   overflow: visible;
   background-color: #ffffff;
-}
-.Header .expandable {
-  border-radius: 20px;
-  z-index: 2;
-  position: relative;
-  backdrop-filter: blur(5px);
-  padding: 0;
-}
-.Header .expandable .item {
-  position: absolute;
-  border-radius: 20px;
-  cursor: url("/public/icon/hand.png"), pointer;
-  width: 100px;
-  height: 100px;
-}
-.Header .expandable .item:hover {
-  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px;
-}
-.Header .expandable .item svg {
-  scale: 0.8;
-}
-.Header .expandable .item:nth-of-type(2) {
-  left: 30px;
-}
-.Header .expandable .item:nth-of-type(3) {
-  left: 150px;
-}
-.Header .expandable .item:nth-of-type(4) {
-  left: 270px;
-}
-.Header .expandable .drag {
-  margin-bottom: 20px;
-  color: white;
-}
-.Header .expandable .drag svg {
-  fill: #f6f6f6;
-}
-.Header .expandable .drag[state=expand] svg {
-  fill: #818080;
 }
 .Header .Hangover {
   height: 100%;
@@ -1258,6 +1225,7 @@ scroll*/
 }
 .Header .Button {
   background-color: #ffffff;
+  max-width: 380px;
   height: 24px;
   border-radius: 12px;
   padding: 0;
@@ -1346,127 +1314,105 @@ scroll*/
   width: 100%;
   height: calc(100vh - 30px);
   z-index: 1;
-  background-image: radial-gradient(rgba(68, 76, 247, 0.24) 0.9px, #ffffff 0.9px);
-  background-size: 18px 18px;
 }
 .ShelfArea .Docker {
   height: fit-content;
   padding: 0 5px 5px 5px;
 }
 .ShelfArea .Docker .body .DockerButton {
-  width: 50px;
-  height: 50px;
-  margin-top: 5px;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  margin-top: 0;
   border-radius: 14px;
   justify-content: center;
   align-content: center;
   cursor: url("/public/icon/hand.png"), pointer;
   overflow: visible;
   position: relative;
+  box-sizing: content-box;
   touch-action: none;
 }
+.ShelfArea .Docker .body .DockerButton svg {
+  opacity: 0.64;
+}
 .ShelfArea .Docker .body .DockerButton:hover {
-  background-color: #dedede;
+  background-color: rgba(235, 236, 239, 0.71);
 }
 .ShelfArea .Docker .body .DockerButton:active {
   scale: 0.96;
 }
 .ShelfArea .Body {
-  display: grid;
   width: calc(100% - 85px);
   overflow: visible;
-  grid-gap: 20px 20px;
-  grid-template-columns: repeat(auto-fill, 160px);
-  grid-template-rows: repeat(auto-fill, 200px);
-  transform-style: preserve-3d;
-  transition: all 0.3s ease-in-out;
 }
 .ShelfArea .Body .book {
   position: relative;
   cursor: pointer;
-  height: 200px;
-  width: 160px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 15px;
+  height: 60px;
+  width: 100%;
   border-radius: 12px;
-  padding: 0;
-  touch-action: none;
   transition: all 0.15s ease;
-  text-align: center;
-  background-color: #3c70ec;
-  overflow: visible;
-  box-sizing: border-box;
+  background-color: #fafafa;
+  touch-action: none;
 }
 .ShelfArea .Body .book:hover {
-  outline: 0;
-  box-shadow: 0 0 0 4px rgba(70, 24, 238, 0.4);
+  box-shadow: 0 0 0 4px rgba(200, 211, 225, 0.56);
 }
 .ShelfArea .Body .book:active {
   scale: 0.96;
 }
 .ShelfArea .Body .book .selected {
-  position: absolute;
+  margin: 10px;
   display: block;
   width: 1.4rem;
   height: 1.4rem;
-  border: 3px solid #b5bfd9;
+  min-width: 1.4rem;
+  min-height: 1.4rem;
+  border: 4px solid rgba(220, 220, 222, 0.64);
   border-radius: 50%;
-  top: 0.25rem;
-  left: 0.25rem;
   opacity: 0;
   transform: scale(0);
   transform-origin: center;
   transition: all 0.25s ease;
-  background-color: #fce599;
+  background-color: #6281b2;
   z-index: 1;
   overflow: hidden;
   white-space: nowrap;
 }
-.ShelfArea .Body .book .selected svg {
-  box-sizing: border-box;
-  padding: 2px;
-  width: 100%;
-  stroke-width: 5px;
-  height: 100%;
-  fill: #3c70ec;
-}
 .ShelfArea .Body .book .BookTitle {
-  padding: 12px;
-  margin: 20px auto;
   text-align: justify;
   user-select: none;
-  color: #ffffff;
-}
-.ShelfArea .Body .book .Tip {
-  background-color: #7da953;
-  height: 16px;
-  border-radius: 12px;
-  padding: 0 6px;
-  font-size: 0.72rem;
-  color: #ffffff;
-  position: absolute;
-  bottom: 4px;
-  right: 4px;
+  font-size: 0.92rem;
+  color: #2a2a2a;
+  z-index: 1;
+  letter-spacing: 0.06rem;
 }
 .ShelfArea .Body .book .current {
-  position: absolute;
-  bottom: 5px;
-  right: 5px;
   color: white;
   font-size: 0.72rem;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
+  margin-right: 15px;
+  margin-left: 25px;
+}
+.ShelfArea .Body .book .current svg {
+  fill: #5e7491;
 }
 .ShelfArea .Body .book .progress {
-  color: #ffffff;
-  font-size: 0.72rem;
   position: absolute;
-  bottom: 5px;
-  left: 8px;
-}
-.ShelfArea .Body .book[state=current] {
-  box-shadow: rgb(229, 198, 198) 0 0 0 5px;
+  height: 100%;
+  background-color: rgba(228, 232, 238, 0.49);
+  top: 0;
+  left: 0;
 }
 .ShelfArea .Body .book[state=selected] {
-  box-shadow: 0 0 0 4px #b5c9fc;
+  box-shadow: 0 0 0 4px rgba(200, 211, 225, 0.86);
 }
 .ShelfArea .Body .book[state=selected] .selected {
   transform: scale(1);
@@ -1491,6 +1437,28 @@ Flex
 /*
 
 scroll*/
+/*font size*/
+/*border radius*/
+/*border*/
+/*padding*/
+/*height and size*/
+/*width*/
+/*cursor*/
+/*transition*/
+/*z index*/
+/*border*/
+/*font*/
+/*shadow*/
+/*
+Flex
+*/
+/*
+
+scroll*/
+/*hover before 遮罩
+*/
+/*char*/
+/*background*/
 .Setting {
   height: calc(100vh - 30px);
   width: 100%;
@@ -1509,6 +1477,7 @@ scroll*/
   margin: 0.1pc 0;
 }
 .Setting .Docker .Button {
+  box-sizing: border-box;
   height: 40px;
   padding: 0 20px;
   margin: 5px 0;
@@ -1524,13 +1493,30 @@ scroll*/
   margin-bottom: 20px;
 }
 .Setting .Body .SettingBox .Options {
+  position: relative;
   width: max-content;
-  border: 1px solid rgba(9, 30, 66, 0.1);
-  border-radius: 8px;
+  border-radius: 12px;
   white-space: nowrap;
   padding: 1px;
+  background-color: #f8f8f8;
+}
+.Setting .Body .SettingBox .Options .actived {
+  background-color: #2d5fe5;
+  top: 0;
+}
+.Setting .Body .SettingBox .Options .actived::after {
+  content: "";
+  position: absolute;
+  top: 40%;
+  width: 80%;
+  left: 10%;
+  height: 60%;
+  background-color: inherit;
+  z-index: -1;
+  filter: blur(15px) brightness(100%) opacity(0.4);
 }
 .Setting .Body .SettingBox .Options .Option {
+  z-index: 1;
   cursor: url("/public/icon/hand.png"), pointer;
   display: inline-flex;
   align-items: center;
@@ -1541,16 +1527,9 @@ scroll*/
   width: max-content;
   border-radius: 5px;
   position: relative;
+  transition: all 200ms ease;
 }
-.Setting .Body .SettingBox .Options .Option:hover {
-  background-color: #f1f1f1;
-}
-.Setting .Body .SettingBox .Options .Option:hover::before {
-  transform: scale(1);
-  opacity: 1;
-}
-.Setting .Body .SettingBox .Options .Option[state=actived] {
-  background-color: #2260ff;
+.Setting .Body .SettingBox .Options .Option[state=selected] {
   color: #ffffff;
 }
 

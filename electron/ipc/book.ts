@@ -1,13 +1,18 @@
 import { file } from "../method/file";
 import { data } from "./dataStore";
-import { DataStore, Path } from "local";
+import {DataStore} from "local";
 import _ from "lodash";
-
+const pathParser = (path: string) => {
+  const array = _.last(path.split(/\\/g)) || path;
+  const name = array.slice(0, array.lastIndexOf("."));
+  const ext = array.slice(array.lastIndexOf("."), array.length);
+  return { array: array, name: name, ext: ext };
+};
 export const book_add: Motion = async (event, path:string) => {
   /*判断中含有该书*/
   const res = await data.select(DataStore.bookshelf, { path: path });
   if (res.length)
-    return { code:0, msg: `已经添加过该书籍《${Path.parser(path).name}》` };
+    return { code:0, msg: `已经添加过该书籍《${pathParser(path).name}》` };
   /*从文件读取string*/
   const text = await file.read(path);
   const { Chapters, total, titles } = await textToBook(text);
@@ -15,7 +20,7 @@ export const book_add: Motion = async (event, path:string) => {
   const { _id } = await data.insert(DataStore.bookBody, Chapters);
   const book = {
     _id: _id,
-    name: Path.parser(path).name,
+    name: pathParser(path).name,
     path: path,
     total: total,
     progress: 0,

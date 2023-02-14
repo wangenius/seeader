@@ -4,7 +4,7 @@ import zh from "./zh/zh.json";
 import en from "./en/en.json";
 import { _sets } from "@/data";
 
-export const i18nInit = () =>
+export const i18nInit = () => {
   i18n.use(initReactI18next).init({
     returnNull: false,
     resources: {
@@ -16,4 +16,5 @@ export const i18nInit = () =>
     interpolation: {
       escapeValue: false,
     },
-  });
+  }).then()
+}

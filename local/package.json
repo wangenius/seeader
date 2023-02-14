@@ -1,13 +1,14 @@
 {
   "name": "local",
-  "version": "1.3.0",
+  "version": "1.5.0",
   "description": "this project",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "a_root_complier": "tsc -p tsconfig.json",
-    "watch": "tsc -w"
+    "watch": "tsc -p tsconfig.json -w",
+    "publish_push": "yalc publish --push"
   },
   "author": {
     "name": "wangenius",
@@ -15,5 +16,5 @@
   },
   "license": "ISC",
   "type": "commonjs",
-  "files": ["lib/**/*","index.ts","json"]
+  "files": ["lib/**/*","config/**/*","index.ts"]
 }

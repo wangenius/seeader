@@ -20,8 +20,14 @@ required!
   );
 
 /** @Description svg container local element => div */
-export const SVG = ({ open, cs, icon, ...rest }: Props.SvgIcon) => (
-  <Once open={open} cs={clsx("SvgIcon", cs)} children={icon} {...rest} />
+export const SVG = ({ open, cs, icon, size, ...rest }: Props.SvgIcon) => (
+  <Once
+    open={open}
+    cs={clsx("SvgIcon", cs)}
+    style={{ width: size, height: size }}
+    children={icon}
+    {...rest}
+  />
 );
 
 export const LoadingRing = memo((props: Props.Once) => (

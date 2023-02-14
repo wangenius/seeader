@@ -3,10 +3,10 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {Pop} from "@/component";
 import {useAppSelector} from "@/data/store";
 import {useTranslation} from "react-i18next";
-import {AppConfig} from "local";
+import {app} from "@/method/app";
 
 /** @Description router name */
-const router = AppConfig.router;
+const router = app.config.router;
 
 /** @Description 使用nav router*/
 export function useNav() {
@@ -21,12 +21,12 @@ export function useNav() {
   useLayoutEffect(Pop.close, [param]);
 
   abstract class Nav {
-    static label = isShelf ? book.name : t("shelf");
+    static label = isShelf ? t("shelf") : book.name;
     static shelf = () => nav("../" + router.shelf);
-    static settings = () =>  nav("../" + router.settings);
+    static settings = () => nav("../" + router.settings);
     static reading = () => nav("../" + router.reading);
     static switch = () => (isShelf ? this.reading() : this.shelf());
-    static switchSettings = ()=>isSettings?nav(-1):Nav.settings()
+    static switchSettings = () => (isSettings ? nav(-1) : Nav.settings());
   }
 
   return Nav;

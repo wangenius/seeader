@@ -1,12 +1,8 @@
 {
   "version": "v1",
   "packages": {
-    "a_root": {
-      "signature": "a9a2df1a73655de542688e82dd84be22",
-      "file": true
-    },
     "local": {
-      "signature": "d7f038562fe60f343d7af0192f9ee37e",
+      "signature": "42a8e4ca71c0fe35e929acacba54f2f4",
       "file": true
     }
   }

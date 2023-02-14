@@ -1,6 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import _ from "lodash";
-import {defaultSettings} from "local";
 import {_sets} from "@/data";
 import {file} from "@/method/file";
 
@@ -13,6 +12,6 @@ export const settingsStore = createSlice({
     changeSettings: (state, action: PayloadAction<Partial<Setting>>) =>
       _.defaultsDeep(action.payload, state),
     /** @Description 恢复设置 */
-    reset: () => defaultSettings,
+    reset: () => _sets.default,
   },
 });

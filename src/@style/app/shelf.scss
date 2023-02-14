@@ -1,30 +1,10 @@
 @import "../@variants/constant";
 @import "../@variants/color";
 
-
- @mixin book_shadow {
-&::after {
-  content: "";
-  position: absolute;
-  top: 10%;
-  width: 100%;
-  left: 0;
-  height: 80%;
-  background-color: inherit;
-  z-index: -1;
-  filter: blur(15px) brightness(100%) opacity(0.3);
-}
-}
-
 .ShelfArea {
   width: $full;
   height: $height_body;
   z-index: 1;
-  background-image: radial-gradient(
-    rgba(68, 76, 247, 0.24) 0.9px,
-    #ffffff 0.9px
-  );
-  background-size: 18px 18px;
 
   .Docker {
     height: fit-content;
@@ -32,55 +12,53 @@
 
     .body {
       .DockerButton {
-        width: 50px;
-        height: 50px;
-        margin-top: 5px;
+        width: 30px;
+        height: 30px;
+        padding: 5px;
+        margin-top: 0;
         border-radius: 14px;
         justify-content: center;
         align-content: center;
         cursor: $pointer;
         overflow: visible;
         position: relative;
+        box-sizing: content-box;
         touch-action: none;
+        svg {
+          opacity: 0.64;
+        }
 
         &:hover {
-          background-color: #dedede;
+          background-color: rgba(235, 236, 239, 0.71);
         }
 
         &:active {
           scale: 0.96;
+
         }
       }
     }
   }
 
   .Body {
-    display: grid;
     width: calc($full - 85px);
     overflow: visible;
-    grid-gap: 20px 20px;
-    grid-template-columns: repeat(auto-fill, 160px);
-    grid-template-rows: repeat(auto-fill, 200px);
-    transform-style: preserve-3d;
-    transition: all 0.3s ease-in-out;
 
     .book {
       position: relative;
       cursor: pointer;
-      height: 200px;
-      width: 160px;
+      @include FlexCenter;
+      @include xFlex;
+      margin-bottom: 15px;
+      height: 60px;
+      width: $full;
       border-radius: 12px;
-      padding: 0;
+      transition: all 0.15s ease;
+      background-color: #fafafa;
       touch-action: none;
-      transition:all 0.15s ease;
-      text-align: center;
-      background-color: #3c70ec;
-      overflow: visible;
-      box-sizing: border-box;
 
       &:hover {
-        outline: 0;
-        box-shadow: 0 0 0 4px rgba(70, 24, 238, 0.4);
+        box-shadow: 0 0 0 4px rgba(200, 211, 225, 0.56);
       }
 
       &:active {
@@ -88,75 +66,56 @@
       }
 
       .selected {
-        position: absolute;
+        margin: 10px;
         display: block;
         width: 1.4rem;
         height: 1.4rem;
-        border: 3px solid #b5bfd9;
+        min-width: 1.4rem;
+        min-height: 1.4rem;
+        border: 4px solid rgba(220, 220, 222, 0.64);
         border-radius: 50%;
-        top: 0.25rem;
-        left: 0.25rem;
         opacity: 0;
         transform: scale(0);
         transform-origin: center;
-        transition:  all 0.25s ease;
-        background-color: #fce599;
+        transition: all 0.25s ease;
+        background-color: #6281b2;
         z-index: 1;
         overflow: hidden;
         white-space: nowrap;
-        svg{
-          box-sizing: border-box;
-          padding: 2px;
-          width: 100%;
-          stroke-width: 5px;
-          height: 100%;
-          fill: #3c70ec;
-        }
       }
 
       .BookTitle {
-        padding: 12px;
-        margin: 20px auto;
         text-align: justify;
         user-select: none;
-        color: #ffffff;
+        font-size: 0.92rem;
+        color: #2a2a2a;
+        z-index: 1;
+        letter-spacing: 0.06rem;
       }
 
-      .Tip {
-        background-color: #7da953;
-        height: 16px;
-        border-radius: 12px;
-        padding: 0 6px;
-        font-size: $fs_mark;
-        color: #ffffff;
-        position: absolute;
-        bottom: 4px;
-        right: 4px;
-      }
       .current {
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
         color: white;
         font-size: $fs_mark;
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
+        margin-right: 15px;
+        margin-left: 25px;
+
+        svg {
+          fill: #5e7491;
+        }
       }
 
       .progress {
-        color: #ffffff;
-        font-size: $fs_mark;
         position: absolute;
-        bottom: 5px;
-        left: 8px;
-      }
-
-      &[state="current"] {
-        box-shadow: rgb(229, 198, 198) 0 0 0 5px;
+        height: $full;
+        background-color: rgba(228, 232, 238, 0.49);
+        top: 0;
+        left: 0;
       }
 
       &[state="selected"] {
-        box-shadow: 0 0 0 4px #b5c9fc;
+        box-shadow: 0 0 0 4px rgba(200, 211, 225, 0.86);
 
         .selected {
           transform: scale(1);

@@ -21,10 +21,10 @@ export const _book = () => store.getState().book;
 _book.dispatch = (book: Partial<Book>) =>
   store.dispatch(bookSlice.actions.changeBook(book));
 
-_book.close = ()=>{
-  _book.switch([initialBook])
-  _chapter.dispatch()
-}
+_book.close = () => {
+  _book.switch([initialBook]);
+  _chapter.dispatch();
+};
 
 /** @Description change redux book totally*/
 _book.switch = (book: Book[]) =>
@@ -32,12 +32,14 @@ _book.switch = (book: Book[]) =>
 
 _book.dialog_to_add = async () => {
   const [path] = await dialog.file("添加书籍", "txt", ["txt", "epub"]);
-  await _book.add(path);
+  const a = await _book.add(path);
+  if (a.code === 0) return toast.error(a.msg);
+  await _shelf.load();
   toast.success(i18n.t("add successfully"));
 };
 
 /** @Description add book and refresh shelf */
-_book.add = (path: string) => app("book_add", path).then(_shelf.load);
+_book.add = (path: string) => app("book_add", path);
 
 /** @description 从数据库中加载书籍信息 */
 _book.load = (target: Book = _book()) =>

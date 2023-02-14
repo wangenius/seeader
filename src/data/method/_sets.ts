@@ -5,28 +5,31 @@
 import {settingsStore} from "@/data/store/settingsSlice";
 import {store} from "@/data/store";
 import {toast} from "react-toastify";
-import {defaultSettings} from "local";
 import i18n from "i18next";
 import {dialog} from "@/method/dialog";
 import {file} from "@/method/file";
-import {app} from "@/method/app";
+import {path} from "@/method/path";
+import {SETTINGS} from "local";
 
 /** @Description default to set*/
 export const _sets = (settings: Partial<Setting>) =>
   store.dispatch(settingsStore.actions.changeSettings(settings));
 
-
 /** @Description 返回当前setting store */
 _sets.value = (): Setting => store.getState().settings;
 /** @Description constant path of settings abs */
-_sets.path = app.paths.settings;
+_sets.path = path.sub.settings;
+
+/** @Description default settings  config */
+_sets.default = SETTINGS;
+
 /** @Description save */
 _sets.save = () => file.json_save(_sets.path, _sets.value());
 
 /** @Description reset */
 _sets.reset = async () => {
   await _sets.language();
-  _sets(defaultSettings);
+  _sets(_sets.default);
   toast.success(i18n.t("reset successfully"));
 };
 /** @Description export */

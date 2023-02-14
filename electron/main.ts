@@ -12,16 +12,15 @@ import autoReload from "electron-reload";
 import {appExit} from "./ipc/Windows";
 import {Dir_asar, Dir_resources, Dir_statics, isPackaged, Path_icon,} from "./@constant/path";
 import {
-  ipc_book,
+  ipc_code_msg,
   ipc_datastore,
   ipc_dialog,
   ipc_file,
-  ipc_json,
   ipc_method,
   ipc_win,
 } from "./ipc/ipc";
 import fs from "fs/promises";
-import {AppConfig, defaultSettings} from "local";
+import {config, SETTINGS} from "local";
 
 /** @Description 窗口特性 */
 const BrowserConfig: BrowserWindowConstructorOptions = {
@@ -68,8 +67,9 @@ async function createWindow(): Promise<BrowserWindow> {
   return mainWindows;
 }
 
+/** @Description  */
 function initialSet() {
-  /** @Description 设置config文件夹 */
+  /** @Description 设置可更改config文件夹 */
   const dir = Dir_resources.enter("config");
   fs.access(dir.path).catch(() => fs.mkdir(dir.path));
 
@@ -77,7 +77,7 @@ function initialSet() {
   fs.access(dir.end("settings.json")).catch(() => {
     return fs.writeFile(
       dir.end("settings.json"),
-      JSON.stringify(defaultSettings)
+      JSON.stringify(SETTINGS)
     );
   });
 }
@@ -85,13 +85,12 @@ function initialSet() {
 /*app完成*/
 app.whenReady().then(async () => {
   initialSet();
-  ipc_book();
+  ipc_code_msg();
   ipc_datastore();
   ipc_method();
   ipc_file();
   ipc_win();
   ipc_dialog();
-  ipc_json();
   // 创建窗口
   const mainWindows = await createWindow();
   traySet(mainWindows);
@@ -126,5 +125,5 @@ function traySet(windows: BrowserWindow) {
     },
   ]);
   tray.setContextMenu(contextMenu);
-  tray.setToolTip(isPackaged ? AppConfig.name : "dev");
+  tray.setToolTip(isPackaged ? config.name : "dev");
 }
