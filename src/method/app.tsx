@@ -1,30 +1,32 @@
-import { _sets } from "@/data";
 import React from "react";
 import { dialog } from "@/method/dialog";
 import { Channels, config } from "local";
 import _ from "lodash";
 import { toast } from "react-toastify";
 import { Once, Pop } from "@/component";
+import { _sets } from "@/data/method/_sets";
 
-export const app = (channel: keyof typeof Channels, ...args: any[]) =>
+export const app = (channel: Channels, ...args: any[]) =>
   window.invoke(channel, ...args);
 
 /** @Description 应用参数 */
 app.config = config;
+/** @Description 应用地址 */
+app.path = window.paths;
 
 /** @Description 关闭App */
 app.close = async () => {
   await _sets.save();
   if (_sets.value().common.minWithTray) return await app("window_close");
-  if (await dialog.confirm("确认退出？")) await app("app_close");
+  await app("app_exit");
 };
 
-app.new = (url: string) => app(Channels.window_new, url);
+app.new = (url: string) => app("window_new", url);
 
 app.copy = (text: string = window.getSelection()!.toString()) =>
   window.clipboard.writeText(text);
 
-app.dev = () => app(Channels.window_toggleDevTools);
+app.dev = () => app("window_toggleDevTools");
 
 app.about = () =>
   dialog("版本:1.0.1\n作者:wangenius\n联系邮箱:wangenius@qq.com\n微博:Iynnz");
@@ -41,7 +43,7 @@ app.dict = async () => {
     );
 
   const content = await app(
-    Channels.dict_search,
+    "dict_search",
     _.lowerCase(window.getSelection()!.toString())
   );
   if (!content.definition) return toast.warning("暂无释义");
@@ -53,4 +55,7 @@ app.dict = async () => {
   );
 };
 
-app.link = (url: string) => dialog.confirm(`是否打开外部链接:${url}`).then(()=>window.shell.openExternal(url))
+app.link = (url: string) =>
+  dialog
+    .confirm(`是否打开外部链接:${url}`)
+    .then(() => window.shell.openExternal(url));

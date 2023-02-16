@@ -1,10 +1,11 @@
 import * as React from "react";
-import {forwardRef, memo} from "react";
+import {forwardRef, memo, useImperativeHandle, useRef} from "react";
 import {Exp, Once, SVG} from "@/component";
 import _ from "lodash";
 import clsx from "clsx";
-import {fn} from "@/method";
+import {fn} from "@/method/common";
 import {useTranslation} from "react-i18next";
+import {tip} from "@/component/Tip";
 
 /** @Description button
  *
@@ -53,12 +54,18 @@ export const ListButton = memo(
   forwardRef((props: Props.Button.InList, ref) => {
     const { isActive, primary, secondary, lc = fn, value, cs, ...rest } = props;
     const { t } = useTranslation();
+
+    const Ref = useRef()
+
+      useImperativeHandle(ref,()=>Ref.current)
     return (
       <Once
-        ref={ref}
+        ref={Ref}
         state={isActive ? "active" : undefined}
         cs={clsx("ListButton", cs)}
         lc={() => lc(value)}
+        rc={tip(secondary,Ref,"bottom")}
+        onMouseLeave={tip.out}
         {...rest}
       >
         <Once cs={"primary"} children={_.capitalize(t(primary))} />

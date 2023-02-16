@@ -15,3 +15,25 @@ div {
 .Hangover {
   flex: 1;
 }
+
+.panel {
+
+  padding: 5px;
+  background-color: white;
+  border-radius: 12px;
+  height: 300px;
+  width: 500px;
+  .title{
+    height: 40px;
+    line-height: 40px;
+    padding-left: 10px;
+    font-size: 1rem;
+    color: rgba(0,0,0,0.6);
+  }
+  .body {
+    @include ScrollBar;
+    overflow-y: scroll;
+    width: $full;
+    height: 240px;
+  }
+}

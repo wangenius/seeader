@@ -1,7 +1,7 @@
 interface Window extends Window {
   /** @Description communicate with electron */
   invoke(
-    channel: keyof typeof import("local").Channels,
+    channel: keyof typeof import("local").Channels | string,
     ...args: any[]
   ): Promise<any>;
   /** @Description clipboard */
@@ -12,7 +12,7 @@ interface Window extends Window {
   paths: any;
 
   /** @Description 导入文件 */
-  req(filepath: string): any;
+  req<T>(filepath: string): T;
 
   [propsName: string]: any;
 }

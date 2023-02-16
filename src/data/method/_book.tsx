@@ -1,53 +1,59 @@
 import {data} from "@/method/data";
-import {file} from "@/method/file";
-import {toast} from "react-toastify";
 import {_shelf} from "@/data/method/_shelf";
-import i18n from "i18next";
 import {bookSlice, initialBook} from "@/data/store/bookSlice";
 import {store} from "@/data/store";
 import {modal, Pop, TextInput} from "@/component";
-import {_chapter} from "@/data";
 import {app} from "@/method/app";
 import {dialog} from "@/method/dialog";
+import {err} from "@/method/common";
+import React from "react";
+import {DavContentPanel} from "@/compace/Panel";
+import {_chapter} from "@/data/method/_chapter";
 
 /** @Description
  *
- * book methods
+ * main methods
  *
- * redux book */
+ * redux main */
 export const _book = () => store.getState().book;
 
-/** @Description change redux book state*/
-_book.dispatch = (book: Partial<Book>) =>
-  store.dispatch(bookSlice.actions.changeBook(book));
+/** @Description change redux main state*/
+_book.lap = (book: Partial<Book>) =>
+  store.dispatch(bookSlice.actions.lap(book));
 
+/** @Description change redux main totally*/
+_book.ban = (book: Book[]) => store.dispatch(bookSlice.actions.ban(book[0]));
+
+/** @Description close book */
 _book.close = () => {
-  _book.switch([initialBook]);
+  _book.ban([initialBook]);
   _chapter.dispatch();
 };
 
-/** @Description change redux book totally*/
-_book.switch = (book: Book[]) =>
-  store.dispatch(bookSlice.actions.switchBook(book[0]));
+/** @Description add main and refresh shelf */
+_book.add = (path: string) => app("book_add", path);
 
-_book.dialog_to_add = async () => {
+/** @Description select local file to add */
+_book.addFromLocal = async () => {
   const [path] = await dialog.file("添加书籍", "txt", ["txt", "epub"]);
-  const a = await _book.add(path);
-  if (a.code === 0) return toast.error(a.msg);
+  const { code, msg } = await _book.add(path);
+  code === 0 && err(msg);
   await _shelf.load();
-  toast.success(i18n.t("add successfully"));
+  return { msg: "添加成功" };
 };
 
-/** @Description add book and refresh shelf */
-_book.add = (path: string) => app("book_add", path);
+/** @Description add book from cloud */
+_book.addFromCloud = async () => Pop.modal(<DavContentPanel />);
 
 /** @description 从数据库中加载书籍信息 */
 _book.load = (target: Book = _book()) =>
-  data.select<Book>(data().bookshelf, { _id: target._id }).then(_book.switch);
+  data<Book>("shelf", { _id: target._id }).then(_book.ban).then(_chapter.load);
 
-/** @Description open book 1. update current 2. load next */
-_book.open = async (book: Book) =>
-  await _book.update().then(() => _book.load(book));
+/** @Description open main 1. update current 2. load next */
+_book.open = (book: Book) =>
+  data
+    .update("shelf", { _id: _book()._id }, _book())
+    .then(() => _book.load(book));
 
 /** @Description 不带参数更新当前书籍到db */
 _book.update = async (
@@ -55,54 +61,38 @@ _book.update = async (
   targetBook: Partial<Book> = _book()
 ) =>
   await data
-    .update<Book>(data().bookshelf, { _id: id }, targetBook)
-    .then(() => _book.load)
+    .update("shelf", { _id: id }, targetBook)
+    .then(() => _book.load())
     .then(_shelf.load);
 
+/** @Description 图书删除 */
 _book.delete = async (books: Book[]) => {
-  try {
-    /** @Description 确认 */
-    let msg = `确定删除选中书籍:\n${books.map((item) => item.name + "\n")}`;
-    await dialog.confirm(msg);
-    /** @Description 以此删除 */
-    for await (let item of books) {
-      for await (let it of [data().bookshelf, data().bookBody])
-        await data.remove(it, { _id: item._id });
-      /** @Description 重新加载 */
-      await _shelf.load();
-    }
-    toast.success(i18n.t("delete successfully"));
-  } catch {
-    console.log("取消了操作");
-  }
+  let msg = `确定删除选中书籍:\n${books.map((item) => item.name + "\n")}`;
+  await dialog.confirm(msg);
+  for await (let item of books)
+    await app("book_delete", item._id).then(_shelf.load);
+  return { msg: "删除成功" };
 };
 
 /** @Description 备份书籍 */
-_book.backup = async (items: Book[]) => {
-  try {
-    /*选择目录地址*/
-    const [path] = await dialog.directory();
-    let result = {
-      success: 0,
-      fail: 0,
-    };
-    /*顺序复制书籍到置顶目录*/
-    for (const item of items) {
-      const a = await file.copy(item.path, `${path}\\${item.name}.txt`);
-      if (a) result.success++;
-      else {
-        result.fail++;
-        toast.error(`已存在同名文件${item.name}`);
-      }
-    }
-    toast.info(
-      `共导出${items.length}个 ,成功${result.success}个,失败${result.fail}个`
-    );
-  } catch (e) {
-    toast.error(e as string);
-  }
+_book.backupLocal = async (items: Book[]) => {
+  const [path] = await dialog.directory();
+  const { code, msg } = await app("book_backup", path, items);
+  code === 0 && err("false");
+  return { msg };
 };
 
+/** @Description 备份书籍Cloud  */
+_book.backupCloud = async (books: Book[]) => {
+  let msg = `确定上传选中书籍:\n${books.map((item) => item.name + "\n")}`;
+  await dialog.confirm(msg);
+  let paths = books.map((item) => item.path);
+  const res = await app("book_upload", paths);
+  if (res.code !== 1) err("上传失败");
+  return res;
+};
+
+/** @Description 编辑 */
 _book.edit = (target: Book, callback?: Fn) => {
   Pop.modal(
     <TextInput
@@ -117,3 +107,18 @@ _book.edit = (target: Book, callback?: Fn) => {
     />
   );
 };
+
+/** @Description info */
+_book.info = (book: Book) =>
+  app("dialog_message", {
+    title: "提示",
+    message: `书籍名称: ${book.name}\n书籍id: ${book._id}\n原始路径: ${
+      book.path
+    }\n总计: ${book.total}章\n当前进度: 第${book.progress + 1}章`,
+    noLink: true,
+    buttons: ["确定", "打开本地位置"],
+    cancelId: 0,
+    icon: "./public/icon.ico",
+  }).then((res) => {
+    if (res.response === 1) return app("showItemInFolder", book.path);
+  });

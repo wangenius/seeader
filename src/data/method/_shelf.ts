@@ -1,40 +1,34 @@
 import {data} from "@/method/data";
 import {dialog} from "@/method/dialog";
-import {toast} from "react-toastify";
 import {store} from "@/data/store";
 import {shelfSlice} from "@/data/store/shelfSlice";
-import {_book} from "@/data";
-import {file} from "@/method/file";
+import {app} from "@/method/app";
+import {err} from "@/method/common";
 
 /** @Description 更新store shelf 对象 */
 export const _shelf = () => store.getState().shelf;
 
 /** @Description update store */
-_shelf.patch = (books: Book[]) =>
-  store.dispatch(shelfSlice.actions.change(books));
+_shelf.lap = (books: Book[]) => store.dispatch(shelfSlice.actions.lap(books));
 
 /** @Description load  from database */
-_shelf.load = () => data.select<Book>(data().bookshelf).then(_shelf.patch);
+_shelf.load = () => data("shelf").then(_shelf.lap);
 
 /** @Description export */
 _shelf.export = async () => {
-  try {
-    const path = await dialog.save("bookshelf.json");
-    await file.save(path, JSON.stringify(_shelf()));
-    toast.success("导出成功");
-  } catch (e) {
-    toast.error(e as string);
-  }
+    const path = await dialog.save("export.shelf", "shelf", ["shelf"]);
+    const {code} = await app("shelf_export", path);
+    if (code === 0) err("导出失败");
+    return "导出成功";
 };
 
 /** @Description import */
 _shelf.import = async () => {
-  try {
-    const [path] = await dialog.file("打开书架", "json", ["json"]);
-    const shelf = file.json_read<Shelf>(path);
-    for (let book of shelf.books) await _book.add(book.path);
-    toast.success("导入成功");
-  } catch (e) {
-    toast.error(e as string);
-  }
+    const [path] = await dialog.file("打开书架", "shelf", ["shelf"]);
+    const {code, body} = await app("shelf_import", path);
+    await _shelf.load();
+    if (code === 1) return {msg: `成功导入${body.total}个`};
+    if (code === 0) return {
+        msg: `共导入${body.total}个，成功${body.success}个，失败${body.fail}个。具体内容查看resources目录下的temp.log日志文件。`
+    }
 };

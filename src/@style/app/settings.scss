@@ -45,16 +45,18 @@
       .Options {
         position: relative;
         width: max-content;
-        border-radius: 12px;
+        border-radius: 14px;
         white-space: nowrap;
         padding: 1px;
-        background-color: #f8f8f8;
+        background-color: #f5f6f8;
 
         .actived {
           @include dynamic_shadow;
-
           background-color:$bc_button_focus;
-          top: 0;
+          height: 86%;
+          top: 7%;
+          border-radius: 12px;
+          position: absolute;
         }
 
 

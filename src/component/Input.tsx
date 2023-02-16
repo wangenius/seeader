@@ -1,12 +1,66 @@
-import React, { forwardRef, LegacyRef, memo, useEffect, useRef } from "react";
+import React, {
+  forwardRef,
+  LegacyRef,
+  memo,
+  useLayoutEffect,
+  useRef,
+} from "react";
 import { IconButton, Once, Spring } from "./index";
 import { MdOutlineArrowRightAlt } from "react-icons/md";
-import { fn } from "@/method";
+import { fn } from "@/method/common";
 import { useTranslation } from "react-i18next";
 import { TFuncKey } from "i18next";
 import _ from "lodash";
 import { useEvent } from "@/hook/useEvent";
 import { useSpring } from "@react-spring/web";
+
+export const Input = memo(
+  forwardRef((props: React.InputHTMLAttributes<any>, ref: LegacyRef<any>) => {
+    const {
+      onChange,
+      placeholder,
+      defaultValue,
+      onClick = fn,
+      ...other
+    } = props;
+    return (
+      <Once cs={"Input"}>
+        <input
+          spellCheck={false}
+          defaultValue={defaultValue}
+          onChange={onChange}
+          {...other}
+          placeholder={placeholder}
+          ref={ref}
+        />
+      </Once>
+    );
+  })
+);
+interface InputSuit extends React.InputHTMLAttributes<any> {
+
+    onDone?(value: string): any;
+    title: string | TFuncKey;
+    defaultValue: string | TFuncKey;
+
+}
+export const InputSuit = memo(
+  (props: InputSuit) => {
+    const { t } = useTranslation();
+    const { title, onDone = fn, ...rest } = props;
+    return (
+      <Once cs={"SettingBox"}>
+        <Once cs={"title"}>{t(title as TFuncKey)}</Once>
+        <Input
+          onChange={(event) =>
+              onDone(event.target.value)
+          }
+          {...rest}
+        />
+      </Once>
+    );
+  }
+);
 
 export const TextInput = memo(
   forwardRef((props: Props.Input.Text, ref: LegacyRef<any>) => {
@@ -43,23 +97,17 @@ export const TextInput = memo(
 );
 
 /** @Description 选择器 */
-export const Selector = (props: Props.Input.Selector) => {
+export const Selector = memo((props: Props.Input.Selector) => {
   const { onClick = fn, value, title, children, open = true } = props;
   const { t } = useTranslation();
   const Ref = useRef<HTMLDivElement>();
 
   const [spring, api] = useSpring(() => ({
     from: {
-      height: "86%",
-      top: "7%",
-      borderRadius: "11px",
-      position: "absolute",
       width: 0,
       left: 0,
-      opacity: 0,
     },
     to: {
-      opacity: 1,
       width: Ref.current?.clientWidth,
       left: Ref.current?.offsetLeft,
     },
@@ -68,10 +116,14 @@ export const Selector = (props: Props.Input.Selector) => {
     },
   }));
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     let left = Ref.current?.offsetLeft;
     let width = Ref.current?.clientWidth;
-    api.start({ left: left, width: width, config: { duration: 200 } });
+    api.start({
+      left: left,
+      width: width,
+      config: { duration: Ref.current ? 200 : 0 },
+    });
   });
 
   return (
@@ -97,4 +149,4 @@ export const Selector = (props: Props.Input.Selector) => {
       </Once>
     </Once>
   );
-};
+});

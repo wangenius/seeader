@@ -9,27 +9,25 @@ import {
   Tray,
 } from "electron";
 import autoReload from "electron-reload";
-import {appExit} from "./ipc/Windows";
-import {Dir_asar, Dir_resources, Dir_statics, isPackaged, Path_icon,} from "./@constant/path";
+import {App} from "./main/app";
+import {Dir_asar, Dir_resources, Dir_statics, isPackaged, path_icon,} from "./@constant/path";
 import {
-  ipc_code_msg,
+  ipc_obj,
   ipc_datastore,
-  ipc_dialog,
-  ipc_file,
   ipc_method,
   ipc_win,
-} from "./ipc/ipc";
+} from "./ipc";
 import fs from "fs/promises";
 import {config, SETTINGS} from "local";
 
 /** @Description 窗口特性 */
 const BrowserConfig: BrowserWindowConstructorOptions = {
   titleBarStyle: "hidden",
-  width: 560,
+  width: 1080,
   height: 760,
   minWidth: 560,
   minHeight: 660,
-  icon: Path_icon,
+  icon: path_icon,
   // show:false,
   webPreferences: {
     /*提供预加载接口*/
@@ -58,12 +56,12 @@ async function createWindow(): Promise<BrowserWindow> {
     new Notification({
       title: "提示",
       body: "窗口最小化至托盘",
-      icon: Path_icon,
+      icon: path_icon,
     }).show();
     mainWindows.hide(); // 隐藏主程序窗口
   });
 
-  mainWindows.webContents.openDevTools()
+  // mainWindows.webContents.openDevTools()
   return mainWindows;
 }
 
@@ -80,17 +78,28 @@ function initialSet() {
       JSON.stringify(SETTINGS)
     );
   });
+  /** @Description 创建初始设置项参数 */
+  fs.access(dir.end("account.json")).catch(() => {
+    return fs.writeFile(
+      dir.end("account.json"),
+      JSON.stringify({
+        webdav:{
+          url:"https://dav.jianguoyun.com/dav/",
+          account:"wangenius@qq.com",
+          password:"am48t7v9a5ac6wan"
+        }
+      })
+    );
+  });
 }
 
 /*app完成*/
 app.whenReady().then(async () => {
   initialSet();
-  ipc_code_msg();
+  ipc_obj();
   ipc_datastore();
   ipc_method();
-  ipc_file();
   ipc_win();
-  ipc_dialog();
   // 创建窗口
   const mainWindows = await createWindow();
   traySet(mainWindows);
@@ -111,7 +120,7 @@ app.whenReady().then(async () => {
 
 /** @Description 托盘设置 */
 function traySet(windows: BrowserWindow) {
-  const icon = nativeImage.createFromPath(Path_icon);
+  const icon = nativeImage.createFromPath(path_icon);
   const tray = new Tray(icon);
   tray.on("double-click", () => windows.show());
   const contextMenu = Menu.buildFromTemplate([
@@ -121,7 +130,7 @@ function traySet(windows: BrowserWindow) {
     },
     {
       label: "退出",
-      click: () => appExit(windows),
+      click: () => App.exit(windows),
     },
   ]);
   tray.setContextMenu(contextMenu);

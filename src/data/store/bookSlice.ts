@@ -13,9 +13,9 @@ export const bookSlice = createSlice({
   name: "book",
   initialState: initialBook,
   reducers: {
-    changeBook: (state, action: PayloadAction<Partial<Book>>) =>
+    lap: (state, action: PayloadAction<Partial<Book>>) =>
       _.defaultsDeep(action.payload, state),
-    switchBook: (state, action: PayloadAction<Book>) => action.payload,
+    ban: (state, action: PayloadAction<Book>) => action.payload,
     closeBook: () => initialBook,
     nextProgress: (state) => {
       state.progress++;

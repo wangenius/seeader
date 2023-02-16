@@ -1,6 +1,28 @@
 @import "../@variants/constant";
 @import "../@variants/color";
 
+.Input {
+  width: 360px;
+  height: 40px;
+  background-color: rgba(239, 241, 246, 0.45);
+  border-radius: $br_default;
+  &:hover {
+    background-color: $bc_ico_hover;
+  }
+  &:focus-within {
+    background-color: $bc_ico_hover;
+  }
+  input {
+    height: $full;
+    width: $full;
+    font-family: "Noto_Medium", "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
+    background-color: transparent;
+    text-indent: 15px;
+    outline: none;
+    border: none;
+  }
+}
+
 .TextInput {
   width: $full;
   transition: $trans_default;

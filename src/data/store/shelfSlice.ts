@@ -10,7 +10,7 @@ export const shelfSlice = createSlice({
   name: "shelf",
   initialState: initialShelf,
   reducers: {
-    change: (state, action: PayloadAction<Book[]>) => {
+    lap: (state, action: PayloadAction<Book[]>) => {
       state.books = action.payload;
     },
   },

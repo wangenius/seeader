@@ -1,42 +1,50 @@
-/** @Description settings method
- *
- *
- * */
 import {settingsStore} from "@/data/store/settingsSlice";
 import {store} from "@/data/store";
 import {toast} from "react-toastify";
 import i18n from "i18next";
 import {dialog} from "@/method/dialog";
-import {file} from "@/method/file";
-import {path} from "@/method/path";
-import {SETTINGS} from "local";
+import {Settings, SETTINGS} from "local";
+import {app} from "@/method/app";
 
 /** @Description default to set*/
-export const _sets = (settings: Partial<Setting>) =>
-  store.dispatch(settingsStore.actions.changeSettings(settings));
+export const _sets = (settings: Partial<Settings>) =>
+  store.dispatch(settingsStore.actions.lap(settings));
+
+_sets.ban = (settings: Settings) =>
+  store.dispatch(settingsStore.actions.ban(settings));
 
 /** @Description 返回当前setting store */
-_sets.value = (): Setting => store.getState().settings;
+_sets.value = (): Settings => store.getState().settings;
+
 /** @Description constant path of settings abs */
-_sets.path = path.sub.settings;
+_sets.path = app.path.Dir_resources.path + app.config.res_file.settings;
 
 /** @Description default settings  config */
 _sets.default = SETTINGS;
 
+/** @Description value from local file */
+_sets.localValue = (): Settings => window.req<Settings>(_sets.path);
+
 /** @Description save */
-_sets.save = () => file.json_save(_sets.path, _sets.value());
+_sets.save = () => app("sets_save", _sets.value());
 
 /** @Description reset */
 _sets.reset = async () => {
   await _sets.language();
-  _sets(_sets.default);
+  _sets.ban(SETTINGS);
   toast.success(i18n.t("reset successfully"));
 };
 /** @Description export */
 _sets.export = async () => {
   try {
-    const path = await dialog.save("settings.json", "保存配置文件到");
-    await file.json_save(path, _sets.value());
+    await _sets.save();
+    const path = await dialog.save(
+      "settings.json",
+      "json",
+      ["json"],
+      "保存配置文件到"
+    );
+    await app("sets_export", path);
     toast.success("导出成功");
   } catch (e) {
     toast.error(e as string);
@@ -63,6 +71,16 @@ _sets.language = async (language: Language = "en") =>
   await i18n
     .changeLanguage(language)
     .then(() => _sets({ preference: { language: language } }));
+
+_sets.webdav_server = (server: string) =>
+  _sets({ sync: { webdav: { server: server } } });
+_sets.webdav_account = (account: string) => {
+  _sets({ sync: { webdav: { account: account } } });
+};
+_sets.webdav_password = (password: string) =>
+  _sets({ sync: { webdav: { password: password } } });
+_sets.webdav_root = (root: string) =>
+  _sets({ sync: { webdav: { root: root } } });
 
 /** @Description 改变close mode */
 _sets.closeMode = (value: boolean) => _sets({ common: { minWithTray: value } });

@@ -23,11 +23,11 @@ declare interface Book {
 
 /** @Description 书籍正文接口 */
 declare interface Chapters {
-  /** @Description Book id */
+  /** @Description chapter id */
   _id?: string;
-
-  /** @Description 章节序号和章节内容 */
-  [propsName: number]: Chapter;
+  index:number;
+  title:string[];
+  content:string[];
 }
 
 /** @Description 章节内容 */

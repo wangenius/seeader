@@ -5,7 +5,7 @@ import {Pop} from "./Pop";
 import {Divider} from "./Divider";
 import _ from "lodash";
 import clsx from "clsx";
-import {fn} from "@/method";
+import {fn} from "@/method/common";
 import {Spring} from "./Spring";
 import {useSpring} from "@react-spring/web";
 import {TFuncKey} from "i18next";

@@ -1,5 +1,5 @@
 import {createRef, forwardRef, memo, useImperativeHandle} from "react";
-import {fn} from "@/method";
+import {fn} from "@/method/common";
 import clsx from "clsx";
 
 /** base memo component */

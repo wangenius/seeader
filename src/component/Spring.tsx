@@ -1,6 +1,6 @@
 import {animated} from "@react-spring/web";
 import React, {forwardRef, memo, ReactNode} from "react";
-import {fn} from "@/method";
+import {fn} from "@/method/common";
 
 /** @Description Spring 动画组件 */
 export const Spring = memo(

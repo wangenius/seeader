@@ -15,6 +15,10 @@ $Contents_Height: calc(100% - $Title_Height);
       padding: 0 5px 10px 5px;
       width: 100%;
       .ListButton {
+        .primary {
+          min-width: 30px;
+        }
+
         &[state="active"] {
           position: sticky;
           top: 0;

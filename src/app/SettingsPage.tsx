@@ -1,13 +1,13 @@
-import {Button, Divider, Exp, IconButton, icons, Once, Selector,} from "@/component";
+import {Button, Divider, Exp, IconButton, icons, InputSuit, Once, Selector,} from "@/component";
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Docker, Mainer} from "./Docker";
 import {useEvent} from "@/hook/useEvent";
-import {_sets} from "@/data/method/_sets";
 import {useAppSelector} from "@/data/store";
-import {toa} from "@/method";
+import {toa} from "@/method/common";
 import {app} from "@/method/app";
 import {config, options} from "local";
+import {_sets} from "@/data/method/_sets";
 
 /** @Description settings */
 export const SettingsPage = () => {
@@ -31,8 +31,13 @@ export const SettingsPage = () => {
         <Button label={t("common")} value={0} lc={changeTab} />
         <Button label={t("preference")} value={1} lc={changeTab} />
         <Button label={t("reading")} value={2} lc={changeTab} />
+        <Button label={t("sync")} value={4} lc={changeTab} />
         <Divider />
-        <Button label={t("devTools")} lc={app.dev} />
+        <Button
+          label={t("devTools")}
+          open={!app.path.isPackaged}
+          lc={app.dev}
+        />
         <Button label={t("report issue")} lc={app.report} />
         <Button label={t("about")} value={3} lc={changeTab} />
         <Exp />
@@ -100,8 +105,31 @@ export const SettingsPage = () => {
           />
           <IconButton
             size={30}
-            lc={toa(() => app.copy(config.author.email),"已复制邮箱地址")}
+            lc={toa(() => app.copy(config.author.email), "已复制邮箱地址")}
             icon={icons.mail}
+          />
+        </Once>
+        <Once open={tab === 4}>
+          <InputSuit
+            title={"server"}
+            onDone={_sets.webdav_server}
+            defaultValue={_sets.value().sync.webdav.server}
+          />
+          <InputSuit
+            title={"account"}
+            onDone={_sets.webdav_account}
+            defaultValue={_sets.value().sync.webdav.account}
+          />
+          <InputSuit
+            type={"password"}
+            title={"password"}
+            onDone={_sets.webdav_password}
+            defaultValue={_sets.value().sync.webdav.password}
+          />
+          <InputSuit
+            title={"root"}
+            onDone={_sets.webdav_root}
+            defaultValue={_sets.value().sync.webdav.root}
           />
         </Once>
       </Mainer>

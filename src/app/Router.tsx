@@ -12,7 +12,7 @@ export const Router = () => (
   <HashRouter>
     <Routes>
       <Route path="/" element={<App />}>
-        <Route path={""} element={<BookPage />} />
+        <Route path={""} element={<ShelfPage />} />
         <Route path={app.config.router.reading} element={<BookPage />} />
         <Route path={app.config.router.shelf} element={<ShelfPage />} />
         <Route path={app.config.router.settings} element={<SettingsPage />} />

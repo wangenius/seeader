@@ -5,7 +5,7 @@ import { config } from "react-spring";
 import { useDrag, useGesture } from "@use-gesture/react";
 import { Once, Spring } from "@/component";
 import { MdMoreHoriz } from "react-icons/md";
-import { fn } from "@/method";
+import { fn } from "@/method/common";
 import { useTranslation } from "react-i18next";
 import { tip } from "@/component/Tip";
 

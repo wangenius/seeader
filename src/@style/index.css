@@ -104,6 +104,45 @@ div {
   flex: 1;
 }
 
+.panel {
+  padding: 5px;
+  background-color: white;
+  border-radius: 12px;
+  height: 300px;
+  width: 500px;
+}
+.panel .title {
+  height: 40px;
+  line-height: 40px;
+  padding-left: 10px;
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+.panel .body {
+  overflow-y: scroll;
+  width: 100%;
+  height: 240px;
+}
+.panel .body::-webkit-scrollbar {
+  display: block;
+  width: 14px;
+  background-color: transparent;
+  background-clip: content-box;
+}
+.panel .body::-webkit-scrollbar-thumb {
+  background-color: rgba(140, 140, 140, 0.3);
+  height: 60px;
+  border-radius: 20px;
+  border: 3px solid #fff;
+}
+.panel .body::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(140, 140, 140, 0.5);
+}
+.panel .body::-webkit-scrollbar-track {
+  margin: 20px 0;
+  background-color: transparent;
+}
+
 /*font size*/
 /*border radius*/
 /*border*/
@@ -239,6 +278,7 @@ scroll*/
   transition: all 200ms ease;
   padding: 8px 16px;
   margin: 2px 0;
+  white-space: nowrap;
 }
 .ListButton > div {
   font-size: 0.815rem;
@@ -250,7 +290,7 @@ scroll*/
   color: #0f172a;
 }
 .ListButton[state=active] {
-  background-color: #2d5fe5;
+  background-color: #323234;
 }
 .ListButton[state=active]::after {
   content: "";
@@ -700,6 +740,28 @@ scroll*/
 */
 /*char*/
 /*background*/
+.Input {
+  width: 360px;
+  height: 40px;
+  background-color: rgba(239, 241, 246, 0.45);
+  border-radius: 8px;
+}
+.Input:hover {
+  background-color: rgba(210, 215, 232, 0.26);
+}
+.Input:focus-within {
+  background-color: rgba(210, 215, 232, 0.26);
+}
+.Input input {
+  height: 100%;
+  width: 100%;
+  font-family: "Noto_Medium", "HarmonyOS Sans SC", "HarmonyOS Sans", "sans-serif";
+  background-color: transparent;
+  text-indent: 15px;
+  outline: none;
+  border: none;
+}
+
 .TextInput {
   width: 100%;
   transition: all 200ms ease;
@@ -1118,6 +1180,9 @@ scroll*/
   margin: 20px 0;
   background-color: transparent;
 }
+.BookPage .Docker .list .ListButton .primary {
+  min-width: 30px;
+}
 .BookPage .Docker .list .ListButton[state=active] {
   position: sticky;
   top: 0;
@@ -1344,7 +1409,8 @@ scroll*/
 }
 .ShelfArea .Body {
   width: calc(100% - 85px);
-  overflow: visible;
+  height: calc(100vh - 30px);
+  overflow-y: scroll;
 }
 .ShelfArea .Body .book {
   position: relative;
@@ -1495,14 +1561,17 @@ scroll*/
 .Setting .Body .SettingBox .Options {
   position: relative;
   width: max-content;
-  border-radius: 12px;
+  border-radius: 14px;
   white-space: nowrap;
   padding: 1px;
-  background-color: #f8f8f8;
+  background-color: #f5f6f8;
 }
 .Setting .Body .SettingBox .Options .actived {
-  background-color: #2d5fe5;
-  top: 0;
+  background-color: #323234;
+  height: 86%;
+  top: 7%;
+  border-radius: 12px;
+  position: absolute;
 }
 .Setting .Body .SettingBox .Options .actived::after {
   content: "";

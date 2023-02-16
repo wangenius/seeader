@@ -3,15 +3,15 @@ import React, {memo, useMemo, useState} from "react";
 import _ from "lodash";
 import {useNav} from "@/hook/useNav";
 import {Docker, DockerButton, Mainer} from "./Docker";
-import {_book} from "@/data";
 import {useAppSelector} from "@/data/store";
 import {_shelf} from "@/data/method/_shelf";
 import {useEffectOnce} from "react-use";
-import {file} from "@/method/file";
-import {dialog} from "@/method/dialog";
 import {useSpring} from "@react-spring/web";
 import {useDrag} from "@use-gesture/react";
 import {config} from "react-spring";
+import {_book} from "@/data/method/_book";
+import {app} from "@/method/app";
+import {toa} from "@/method/common";
 
 /** @Description 书架 */
 export const ShelfPage = memo(() => {
@@ -43,19 +43,24 @@ export const ShelfPage = memo(() => {
       <Docker state={!selectedBooks.length} width={width}>
         <DockerButton
           label={"add book"}
-          lc={_book.dialog_to_add}
+          lc={toa(_book.addFromLocal)}
           children={icons.add}
         />
         <DockerButton
-          label={"change shelf"}
-          lc={_shelf.import}
-          children={icons.box}
+          label={"add cloud books"}
+          lc={_book.addFromCloud}
+          children={icons.download}
         />
         <Divider />
         <DockerButton
+          label={"import shelf"}
+          lc={toa(_shelf.import)}
+          children={icons.boxAdd}
+        />
+        <DockerButton
           label={"export shelf"}
-          lc={_shelf.export}
-          children={icons.export}
+          lc={toa(_shelf.export)}
+          children={icons.boxPack}
         />
       </Docker>
       <Docker state={!!selectedBooks.length} width={width}>
@@ -67,15 +72,20 @@ export const ShelfPage = memo(() => {
           children={icons.edit}
         />
         <DockerButton
-          label={"export"}
-          lc={() => _book.backup(selectedBooks)}
+          label={"back up"}
+          lc={toa(() => _book.backupLocal(selectedBooks))}
           children={icons.copy}
+        />
+        <DockerButton
+          label={"upload"}
+          lc={toa(() => _book.backupCloud(selectedBooks))}
+          children={icons.upload}
         />
         <Divider />
         <DockerButton
           label={"delete book"}
           lc={async () => {
-            await _book.delete(selectedBooks);
+            await toa(() => _book.delete(selectedBooks))();
             selectedBooks.map((item) => {
               onCancelSelected(item);
             });
@@ -84,23 +94,12 @@ export const ShelfPage = memo(() => {
         />
         <DockerButton
           label={"show in folder"}
-          lc={() => file.openInFolder(selectedBooks[0].path)}
+          lc={() => app("showItemInFolder", selectedBooks[0].path)}
           children={icons.showInFolder}
         />
         <DockerButton
           label={"book info"}
-          lc={() =>
-            dialog(
-              selectedBooks[0].name +
-                "\n" +
-                selectedBooks[0]._id +
-                "\n" +
-                selectedBooks[0].path +
-                "\n" +
-                selectedBooks[0].total +
-                "章"
-            )
-          }
+          lc={() => _book.info(selectedBooks[0])}
           children={icons.info}
         />
       </Docker>
@@ -167,25 +166,37 @@ const BookCover = memo((props: Props.BookCover) => {
       : _book.open(item).then(to.reading);
   };
 
-  const [springBook,api] = useSpring(()=>({
-    x:0,y:0,zIndex:0,
-  }))
+  const [springBook, api] = useSpring(() => ({
+    x: 0,
+    y: 0,
+    zIndex: 0,
+  }));
 
-  const bind = useDrag(({active,movement:[mx,my]})=>{
-    api.start({
-      x: active ? mx : 0,
-      y: active ? my : 0,
-      zIndex:active?1:0,
-      config:config.wobbly
-    })
-  },{
-    filterTaps:true,
-    axis:"lock",
-    bounds:{top:-20,bottom:20,left:-100,right:100}
-  })
+  const bind = useDrag(
+    ({ active, movement: [mx, my] }) => {
+      api.start({
+        x: active ? mx : 0,
+        y: active ? my : 0,
+        zIndex: active ? 1 : 0,
+        config: config.wobbly,
+      });
+    },
+    {
+      filterTaps: true,
+      axis: "lock",
+      bounds: { top: -20, bottom: 20, left: -100, right: 100 },
+    }
+  );
 
   return (
-    <Spring {...bind()} spring={springBook} rc={rc} lc={lc} cs={"book"} state={selected ? "selected" : undefined}>
+    <Spring
+      {...bind()}
+      spring={springBook}
+      rc={rc}
+      lc={lc}
+      cs={"book"}
+      state={selected ? "selected" : undefined}
+    >
       <Once cs={"selected"} />
       <Exp cs={"BookTitle"} children={item.name} />
       <Once cs={"current"} open={item._id === book._id} children={icons.loc} />

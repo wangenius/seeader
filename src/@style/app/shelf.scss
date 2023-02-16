@@ -42,7 +42,8 @@
 
   .Body {
     width: calc($full - 85px);
-    overflow: visible;
+    height: $height_body;
+    overflow-y: scroll;
 
     .book {
       position: relative;

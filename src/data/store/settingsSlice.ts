@@ -1,17 +1,16 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import _ from "lodash";
-import {_sets} from "@/data";
-import {file} from "@/method/file";
+import {_sets} from "@/data/method/_sets";
+import {Settings} from "local";
 
 /** @Description 设置slice */
 export const settingsStore = createSlice({
   name: "settings",
-  initialState: file.json_read<Setting>(_sets.path),
+  initialState: window.req<Settings>(_sets.path),
   reducers: {
     /** @Description 更改设置 */
-    changeSettings: (state, action: PayloadAction<Partial<Setting>>) =>
+    lap: (state, action: PayloadAction<Partial<Settings>>) =>
       _.defaultsDeep(action.payload, state),
-    /** @Description 恢复设置 */
-    reset: () => _sets.default,
+    ban: (state, action: PayloadAction<Settings>) => action.payload,
   },
 });

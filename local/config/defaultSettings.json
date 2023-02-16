@@ -14,5 +14,13 @@
     "paragraphSpacing": 0.6,
     "fontFamily": "noto",
     "dictionary": "local"
+  },
+  "sync":{
+    "webdav":{
+      "server":"https://",
+      "account":"",
+      "password":"",
+      "root":"/seeader"
+    }
   }
 }

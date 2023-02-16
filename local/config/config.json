@@ -8,6 +8,9 @@
     "github": "https://github.com/wangenius"
   },
   "github": "https://github.com/wangenius/seeader",
+  "res_file": {
+    "settings": "\\config\\settings.json"
+  },
   "files": {
     "settings": "settings.json"
   },

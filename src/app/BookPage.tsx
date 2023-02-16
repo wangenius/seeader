@@ -15,9 +15,10 @@ import { useGesture } from "@use-gesture/react";
 import { config } from "react-spring";
 import { useAppSelector } from "@/data/store";
 import { _sets } from "@/data/method/_sets";
-import {_chapter} from "@/data";
-import {toa} from "@/method";
+import {toa} from "@/method/common";
 import {app} from "@/method/app";
+import {tip} from "@/component/Tip";
+import {_chapter} from "@/data/method/_chapter";
 
 /** @Description 书页 */
 export const BookPage = () => {
@@ -53,6 +54,7 @@ const BookDocker = () => {
       <Once cs={"list"} ref={ListRef}>
         {book.titles.map((item: { title: string | undefined }, key: number) => (
           <ListButton
+
             key={key}
             value={key}
             isActive={key === book.progress}
@@ -85,11 +87,6 @@ const BookMainer = () => {
     lineHeight: settings.reading.lineHeight,
     paddingBottom: settings.reading.paragraphSpacing + "pc",
   };
-
-  /** @Description 标题 */
-  const title = `第${book.progress + 1}章  ${
-    book.titles[book.progress]?.title
-  }`;
 
   const [spring, api] = useSpring(() => ({
     x: 0,
@@ -151,13 +148,13 @@ const BookMainer = () => {
         cs={"BodyTitle"}
         rc={rc}
         lc={_sets.contentDocker}
-        children={title}
+        children={book.titles[book.progress]?.title}
       />
       <Divider />
-      {chapter.map((item: any, keys: React.Key) => (
+      {chapter?.map((item: any, keys: React.Key) => (
         <Once cs={"BodyPara"} style={alterStyle} key={keys} children={item} />
       ))}
-      <LoadingRing open={!chapter.length} />
+      <LoadingRing open={!chapter?.length} />
     </Mainer>
   );
 };

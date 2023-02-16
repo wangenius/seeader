@@ -3,10 +3,11 @@ import { ModalContainer, Once, PopContainer } from "@/component";
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { TipContainer } from "@/component/Tip";
-import { _book, _sets } from "@/data";
 import { useAppSelector } from "@/data/store";
 import { useEffect } from "react";
 import i18next from "i18next";
+import {_book} from "@/data/method/_book";
+import {_sets} from "@/data/method/_sets";
 
 export const App = () => {
   const book = useAppSelector((state) => state.book);

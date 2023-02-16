@@ -17,3 +17,7 @@
 /module/*.d.ts
 /module/**/*.js
 /module/**/*.d.ts
+/local/lib/config.d.ts
+/local/lib/config.js
+/local/lib/index.d.ts
+/local/lib/index.js
