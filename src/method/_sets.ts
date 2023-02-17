@@ -1,10 +1,9 @@
-import {settingsStore} from "@/data/store/settingsSlice";
-import {store} from "@/data/store";
+import {settingsStore} from "@/store/settingsSlice";
+import {store} from "@/store/store";
 import {toast} from "react-toastify";
 import i18n from "i18next";
-import {dialog} from "@/method/dialog";
 import {Settings, SETTINGS} from "local";
-import {app} from "@/method/app";
+import {v} from "@/method/v";
 
 /** @Description default to set*/
 export const _sets = (settings: Partial<Settings>) =>
@@ -17,7 +16,7 @@ _sets.ban = (settings: Settings) =>
 _sets.value = (): Settings => store.getState().settings;
 
 /** @Description constant path of settings abs */
-_sets.path = app.path.Dir_resources.path + app.config.res_file.settings;
+_sets.path = v.PATHS.config.settings
 
 /** @Description default settings  config */
 _sets.default = SETTINGS;
@@ -26,7 +25,7 @@ _sets.default = SETTINGS;
 _sets.localValue = (): Settings => window.req<Settings>(_sets.path);
 
 /** @Description save */
-_sets.save = () => app("sets_save", _sets.value());
+_sets.save = () => v.i("sets_save", _sets.value());
 
 /** @Description reset */
 _sets.reset = async () => {
@@ -38,13 +37,7 @@ _sets.reset = async () => {
 _sets.export = async () => {
   try {
     await _sets.save();
-    const path = await dialog.save(
-      "settings.json",
-      "json",
-      ["json"],
-      "保存配置文件到"
-    );
-    await app("sets_export", path);
+    await v.i("sets_export");
     toast.success("导出成功");
   } catch (e) {
     toast.error(e as string);
@@ -67,7 +60,7 @@ _sets.paragraphSpacing = (spacing: number) =>
   _sets({ reading: { paragraphSpacing: spacing } });
 
 /** @Description 改变语言 */
-_sets.language = async (language: Language = "en") =>
+_sets.language = async (language: string = "en") =>
   await i18n
     .changeLanguage(language)
     .then(() => _sets({ preference: { language: language } }));

@@ -4,7 +4,7 @@ import { memo, ReactNode } from "react";
 import { Ring } from "@uiball/loaders";
 import clsx from "clsx";
 
-const required = require.context(`../svg`, true, /\.svg$/);
+const required = require.context(`../../public/svg`, true, /\.svg$/);
 /** @Description icons是图标包 直接跟上variable名即可 variable名为文件名*/
 export const icons: { [propsName: string]: ReactNode } = {};
 

@@ -12,7 +12,7 @@ module.exports = {
     addWebpackModuleRule({
       test: /\.svg$/,
       loader: 'svg-sprite-loader',
-      include: path.resolve(__dirname, './src/svg') // 只带自己人玩
+      include: path.resolve(__dirname, './public/svg') // 只带自己人玩
     }),
     addWebpackModuleRule({
       test: /\.(png|jpg|gif)$/i,

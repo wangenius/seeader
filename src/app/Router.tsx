@@ -1,21 +1,18 @@
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { App } from "./App";
-import { BookPage } from "./BookPage";
-import { ShelfPage } from "./ShelfPage";
-import { SettingsPage } from "./SettingsPage";
+import { Book } from "./Book";
+import { Shelf } from "./Shelf";
+import { Settings } from "./Settings";
+import {v} from "@/method/v";
 
-import { createBrowserHistory } from "history";
-import {app} from "@/method/app";
-
-export const history = createBrowserHistory();
 export const Router = () => (
   <HashRouter>
     <Routes>
       <Route path="/" element={<App />}>
-        <Route path={""} element={<ShelfPage />} />
-        <Route path={app.config.router.reading} element={<BookPage />} />
-        <Route path={app.config.router.shelf} element={<ShelfPage />} />
-        <Route path={app.config.router.settings} element={<SettingsPage />} />
+        <Route path={""} element={<Shelf />} />
+        <Route path={v.CONFIG.router.reading} element={<Book />} />
+        <Route path={v.CONFIG.router.shelf} element={<Shelf />} />
+        <Route path={v.CONFIG.router.settings} element={<Settings />} />
       </Route>
     </Routes>
   </HashRouter>

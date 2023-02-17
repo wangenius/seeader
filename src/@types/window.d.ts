@@ -9,21 +9,19 @@ interface Window extends Window {
   /** @Description showItemInFolder etc */
   shell: import("electron").Shell;
   /** @Description 绝对路径 */
-  paths: any;
-
+  PATHS: any;
   /** @Description 导入文件 */
   req<T>(filepath: string): T;
-
-  [propsName: string]: any;
 }
 
 declare const window: Window;
 
+/** @Description define svg */
 declare module "*.svg" {
   const content: React.StatelessComponent<React.SVGAttributes<SVGElement>>;
   export default content;
 }
-
+/** @Description define png */
 declare module "*.png" {
   const content: React.StatelessComponent<
     React.ImgHTMLAttributes<HTMLDivElement>

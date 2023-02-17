@@ -1,9 +1,9 @@
-import {store} from "@/data/store";
-import {chapterSlice} from "@/data/store/chapterSlice";
-import {data} from "@/method/data";
+import {store} from "@/store/store";
+import {chapterSlice} from "@/store/chapterSlice";
 import {toast} from "react-toastify";
-import {bookSlice} from "@/data/store/bookSlice";
-import {_book} from "@/data/method/_book";
+import {bookSlice} from "@/store/bookSlice";
+import {_book} from "@/method/_book";
+import {v} from "@/method/v";
 
 
 /** @Description 返回当前章节index  number*/
@@ -18,7 +18,7 @@ _chapter.load = () => {
   /** @Description loading */
   _chapter.dispatch();
   /** @Description 选择 */
-  data<Chapters>(_book()._id, { index: _book().progress })
+  v.fetchData<Chapter>(_book()._id, { index: _book().progress })
     .then((res) => {
       if (!res.length) return _chapter.dispatch();
       _chapter.dispatch(res[0]?.content);

@@ -187,18 +187,10 @@ declare namespace Props {
     spring?: SpringValues<PickAnimated<{}>>;
   }
 
-  export interface DragZone {
-    width: number;
-    height: number;
-    left: number;
-    top: number;
-  }
-
   export interface BookCover {
     /** @Description bookItem */
     item: Book;
     /** @Description selected 状态 */
-
     selected?: boolean;
     /** @Description 当有其他对象选中时 */
     selectedExist?: boolean;

@@ -1,30 +1,21 @@
-import React, { useEffect, useRef } from "react";
-import {
-  Divider,
-  ListButton,
-  LoadingRing,
-  Menu,
-  Once,
-  Pop,
-  Spring,
-} from "@/component";
-import { useHotkeys } from "react-hotkeys-hook";
-import { Docker, Mainer } from "./Docker";
-import { useSpring } from "@react-spring/web";
-import { useGesture } from "@use-gesture/react";
-import { config } from "react-spring";
-import { useAppSelector } from "@/data/store";
-import { _sets } from "@/data/method/_sets";
+import React, {useRef} from "react";
+import {Divider, ListButton, LoadingRing, Menu, Once, Pop, Spring,} from "@/component";
+import {useHotkeys} from "react-hotkeys-hook";
+import {Docker, Mainer} from "@/compace/Docker";
+import {useSpring} from "@react-spring/web";
+import {useGesture} from "@use-gesture/react";
+import {config} from "react-spring";
+import {useAppSelector} from "@/store/store";
+import {_sets} from "@/method/_sets";
 import {toa} from "@/method/common";
-import {app} from "@/method/app";
-import {tip} from "@/component/Tip";
-import {_chapter} from "@/data/method/_chapter";
+import {_chapter} from "@/method/_chapter";
+import {v} from "@/method/v";
 
 /** @Description 书页 */
-export const BookPage = () => {
-  const book = useAppSelector(state=>state.book)
+export const Book = () => {
+  const book = useAppSelector((state) => state.book);
   return (
-    <Once open={book.path !== ""} cs={"BookPage"}>
+    <Once open={book.path !== ""} cs={"Book"}>
       <BookDocker />
       <BookMainer />
     </Once>
@@ -33,7 +24,6 @@ export const BookPage = () => {
 
 /** @Description 目录部分 */
 const BookDocker = () => {
-  /** @Description list of contents ref */
   const ListRef = useRef<any>();
   const settings = useAppSelector((state) => state.settings);
   const book = useAppSelector((state) => state.book);
@@ -52,9 +42,8 @@ const BookDocker = () => {
       changeState={_sets.contentDocker}
     >
       <Once cs={"list"} ref={ListRef}>
-        {book.titles.map((item: { title: string | undefined }, key: number) => (
+        {book.titles.map((item, key) => (
           <ListButton
-
             key={key}
             value={key}
             isActive={key === book.progress}
@@ -70,7 +59,6 @@ const BookDocker = () => {
 
 /** @Description 书正文部分 */
 const BookMainer = () => {
-  /** @Description body ref */
   const settings = useAppSelector((state) => state.settings);
   const book = useAppSelector((state) => state.book);
   const chapter = useAppSelector((state) => state.chapter);
@@ -125,10 +113,10 @@ const BookMainer = () => {
               {
                 type: "item",
                 label: "copy",
-                onClick: toa(app.copy,"复制成功"),
+                onClick: toa(v.copy, "复制成功"),
               },
-              { type: "item", label: "translate", onClick: app.dict },
-              { type: "item", label: "search", onClick: app.search },
+              { type: "item", label: "translate", onClick: v.dict },
+              { type: "item", label: "search", onClick: v.search },
             ],
           }}
         </Menu>,

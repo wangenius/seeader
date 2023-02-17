@@ -1,16 +1,16 @@
 import {Button, Divider, Exp, IconButton, icons, InputSuit, Once, Selector,} from "@/component";
 import React, {useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Docker, Mainer} from "./Docker";
+import {Docker, Mainer} from "@/compace/Docker";
 import {useEvent} from "@/hook/useEvent";
-import {useAppSelector} from "@/data/store";
+import {useAppSelector} from "@/store/store";
 import {toa} from "@/method/common";
-import {app} from "@/method/app";
 import {config, options} from "local";
-import {_sets} from "@/data/method/_sets";
+import {_sets} from "@/method/_sets";
+import {v} from "@/method/v";
 
 /** @Description settings */
-export const SettingsPage = () => {
+export const Settings = () => {
   const { t } = useTranslation();
   const settings = useAppSelector((state) => state.settings);
   /** @Description tab */
@@ -35,10 +35,10 @@ export const SettingsPage = () => {
         <Divider />
         <Button
           label={t("devTools")}
-          open={!app.path.isPackaged}
-          lc={app.dev}
+          open={!v.PATHS.isPackaged}
+          lc={v.dev}
         />
-        <Button label={t("report issue")} lc={app.report} />
+        <Button label={t("report issue")} lc={v.report} />
         <Button label={t("about")} value={3} lc={changeTab} />
         <Exp />
         <Button
@@ -95,17 +95,17 @@ export const SettingsPage = () => {
         <Once open={tab === 3}>
           <IconButton
             size={30}
-            lc={() => app.link(config.author.weibo)}
+            lc={() => v.link(config.author.weibo)}
             icon={icons.weibo}
           />
           <IconButton
             size={30}
-            lc={() => app.link(config.github)}
+            lc={() => v.link(config.github)}
             icon={icons.github}
           />
           <IconButton
             size={30}
-            lc={toa(() => app.copy(config.author.email), "已复制邮箱地址")}
+            lc={toa(() => v.copy(config.author.email), "已复制邮箱地址")}
             icon={icons.mail}
           />
         </Once>

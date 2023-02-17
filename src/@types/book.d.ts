@@ -1,8 +1,9 @@
 /** @define 正文内容 */
 declare type Content = string;
 
+/** @Description 书架对象 */
 declare interface Shelf {
-  books:Book[]
+  books: Book[];
 }
 
 /** @Description 定义基本书籍对象接口，包含id，名称，路径，标题和章节标题，当前进度等等 */
@@ -22,17 +23,14 @@ declare interface Book {
 }
 
 /** @Description 书籍正文接口 */
-declare interface Chapters {
+declare interface Chapter {
   /** @Description chapter id */
-  _id?: string;
-  index:number;
-  title:string[];
-  content:string[];
-}
-
-/** @Description 章节内容 */
-declare interface Chapter extends chapterTitle {
-  /** @Description 章节内容 */
+  _id: string;
+  /** @Description chapter index */
+  index: number;
+  /** @Description chapter title */
+  title: string;
+  /** @Description chapter paragraphs */
   content: string[];
 }
 

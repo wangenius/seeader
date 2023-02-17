@@ -4,10 +4,10 @@ import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { bookSlice } from "./store/bookSlice";
-import { settingsStore } from "./store/settingsSlice";
-import {shelfSlice} from "@/data/store/shelfSlice";
-import {chapterSlice} from "@/data/store/chapterSlice";
+import { bookSlice } from "./bookSlice";
+import { settingsStore } from "./settingsSlice";
+import {shelfSlice} from "@/store/shelfSlice";
+import {chapterSlice} from "@/store/chapterSlice";
 
 
 type RootState = ReturnType<typeof store.getState>;

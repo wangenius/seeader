@@ -1,14 +1,9 @@
-import {Path} from "local";
-import {Fima} from "./file";
-import {parseEpub} from "@gxl/epub-parser";
+import { Path } from "local";
+import { Fima } from "./file";
+import { parseEpub } from "@gxl/epub-parser";
 import _ from "lodash";
 import Mdict from "js-mdict";
-import {Dir_statics} from "../@constant/path";
-interface ParseredBook {
-    Chapters: { index: number; title: string; content: string[] }[];
-    total: number;
-    titles: { index: number; title: string }[];
-}
+import { DIRS } from "../@constant/path";
 
 export abstract class Generator {
 
@@ -158,7 +153,7 @@ export abstract class Generator {
 
 }
 
-
+/** @Description language tool */
 export abstract class Detector {
     /** @Description string is Empty */
     static isEmpty(text) {
@@ -167,7 +162,10 @@ export abstract class Detector {
 
 
     static translate(text:string){
-        const dict = new Mdict(Dir_statics.enter("mdx").end("h1.mdx"));
+        const dict = new Mdict(DIRS.STATICS.enter("mdx").end("h1.mdx"));
         return dict.lookup(text);
+    }
+    static ud(item:any){
+        return item === undefined
     }
 }

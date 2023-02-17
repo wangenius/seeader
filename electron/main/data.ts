@@ -1,26 +1,32 @@
 import { config, Projection, Query, RemoveOptions } from "local";
 import Datastore from "nedb-promises";
-import { Dir_Data } from "../@constant/path";
+import {DIRS} from "../@constant/path";
 
-export abstract class Dastore {
+/** @Description 数据库 */
+export abstract class db {
+  /** @Description connector */
   static connect(storename: string) {
-    const path = Dir_Data.end(storename + config.extension.database);
+    const path = DIRS.DATA.end(storename + config.extension.database);
     return Datastore.create({ filename: path, autoload: true });
   }
 
+  /** @Description insert */
   static insert(store: string, query: any) {
-    return Dastore.connect(store).insert(query);
+    return db.connect(store).insert(query);
   }
 
-  static select(store: string, query: any, projection?: Projection<any>) {
-    return Dastore.connect(store).find(query, projection);
+  /** @Description select */
+  static select(store: string, query: any={}, projection?: Projection<any>) {
+    return db.connect(store).find(query, projection);
   }
 
+  /** @Description delete */
   static delete(store: string, query: any, options?: RemoveOptions) {
-    return Dastore.connect(store).remove(query, options);
+    return db.connect(store).remove(query, options);
   }
 
+  /** @Description update */
   static update(store: string, before: Query, after: Query) {
-    return Dastore.connect(store).update(before, after);
+    return db.connect(store).update(before, after);
   }
 }

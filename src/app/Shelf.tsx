@@ -2,19 +2,19 @@ import {Divider, Exp, icons, Once, Spring} from "@/component";
 import React, {memo, useMemo, useState} from "react";
 import _ from "lodash";
 import {useNav} from "@/hook/useNav";
-import {Docker, DockerButton, Mainer} from "./Docker";
-import {useAppSelector} from "@/data/store";
-import {_shelf} from "@/data/method/_shelf";
+import {Docker, DockerButton, Mainer} from "@/compace/Docker";
+import {useAppSelector} from "@/store/store";
+import {_shelf} from "@/method/_shelf";
 import {useEffectOnce} from "react-use";
 import {useSpring} from "@react-spring/web";
 import {useDrag} from "@use-gesture/react";
 import {config} from "react-spring";
-import {_book} from "@/data/method/_book";
-import {app} from "@/method/app";
+import {_book} from "@/method/_book";
 import {toa} from "@/method/common";
+import {v} from "@/method/v";
 
 /** @Description 书架 */
-export const ShelfPage = memo(() => {
+export const Shelf = memo(() => {
   /** @Description 书架方法 */
   const shelf = useAppSelector((state) => state.shelf);
   const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
@@ -94,7 +94,7 @@ export const ShelfPage = memo(() => {
         />
         <DockerButton
           label={"show in folder"}
-          lc={() => app("showItemInFolder", selectedBooks[0].path)}
+          lc={() => v.i("showItemInFolder", selectedBooks[0].path)}
           children={icons.showInFolder}
         />
         <DockerButton
